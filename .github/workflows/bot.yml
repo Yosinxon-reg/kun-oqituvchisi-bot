@@ -1,0 +1,35 @@
+name: Kun o'qituvchisi bot
+
+on:
+  schedule:
+    - cron: "7 * * * *"      # har soat tekshiradi; bot bitta ishga ~5,7 soat ishlaydi
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bot
+  cancel-in-progress: false   # oldingisi tugashi bilan keyingisi darhol boshlanadi
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Botni ishga tushirish
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          STATE_KEY: ${{ secrets.STATE_KEY }}
+          RUN_SECONDS: "20400"
+          GIT_SYNC: "1"
+        run: |
+          git config user.name "kun-oqituvchisi-bot"
+          git config user.email "bot@users.noreply.github.com"
+          python -u bot.py
