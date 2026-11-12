@@ -169,37 +169,60 @@ def parse_fields(text):
             "sana": day, "fan": rest}
 
 
-def parse(text):
-    """-> (ism | None, (filial, maktab) | None)"""
+def _line_name(line):
+    """Qator boshidagi 2-3 ta Bosh harfli so'z -> (ism, qolgan qism)."""
+    line = re.sub(r"^[^\wʻ‘’'`]+", "", line).strip()          # emoji/belgilarni olib tashlash
+    line = re.sub(r"^(f\.?i\.?sh\.?|ustoz|o'qituvchi|öqituvçi)\s*[:\-]\s*", "", line, flags=re.I)
+    words = line.split()
+    name = []
+    for w in words:
+        wc = w.strip(".,;:")
+        if (re.match(WORD + "$", wc) and not _stop(wc) and not find_filial(wc)
+                and not (wc.isupper() and len(wc) > 2) and len(name) < 3):
+            name.append(wc)
+        else:
+            break
+    if len(name) < 2:
+        return None, ""
+    return clean_name(" ".join(name)), " ".join(words[len(name):]).strip(" ,.-–")
+
+
+def parse_full(text):
+    """-> dict(ism, fil, sana, fan) yoki None"""
     text = (text or "").strip()
     if not text:
-        return None, None
+        return None
     pf = parse_fields(text)
     if pf:
-        return pf["ism"], pf["fil"]
+        return pf
     fil = find_filial(text)
-    toks = [t for t in SEP.split(text) if t and t.strip()]
-    name = None
-    for t in toks:
-        t2 = clean_name(re.sub(r"^(f\.?i\.?sh\.?|ustoz|o'qituvchi)\s*[:\-]\s*", "", t, flags=re.I))
-        if re.search(r"\d", t2) or _is_filial_token(t2):
+    lines = [ln for ln in re.split(r"[\n·•|;]+", text) if ln.strip()]
+    for ln in lines:
+        core = re.sub(r"[^\w\s'ʻ‘’`]", " ", ln).strip()
+        if not core or re.search(r"\d", core):
             continue
-        if NAME_RE.match(t2) and not _stop(t2):
-            name = t2
-            break
-    if not name:  # ajratgichsiz: "Karimov Anvar Chilonzor"
-        words = [w for w in re.split(r"\s+", text) if w and not re.search(r"\d", w)
-                 and not find_filial(w)]
-        caps = [w.strip(".,:;") for w in words if re.match(WORD, w) and not _stop(w)]
-        if 2 <= len(caps) <= 4:
-            name = clean_name(" ".join(caps))
-    return name, fil
+        letters = [c for c in core if c.isalpha()]
+        if letters and all(c.isupper() for c in letters):   # sarlavha qatori (KUN ÖQITUVÇISI ...)
+            continue
+        if find_filial(core) and len(core.split()) <= 3:      # «Farğona maktabi» qatori
+            continue
+        name, rest = _line_name(ln)
+        if name:
+            return {"ism": name, "fil": fil, "sana": None, "fan": rest}
+    return None
+
+
+def parse(text):
+    """-> (ism | None, (filial, maktab) | None)"""
+    r = parse_full(text)
+    return (r["ism"], r["fil"]) if r else (None, find_filial(text or ""))
 
 
 STOP = {"texnologiya", "robototexnika", "shaxmat", "rasm", "kamondan", "gimnastika", "futbol",
         "taekvondo", "ot", "sporti", "bugun", "kun", "ustozi", "ustoz", "video", "dars", "darsi",
         "filial", "filiali", "maktab", "registon", "school", "o'qituvchisi", "mashg'ulot",
-        "matematika", "ingliz", "tili", "rus", "arab", "tarbiya", "boshlang'ich", "musiqa", "raqs"}
+        "matematika", "ingliz", "tili", "rus", "arab", "tarbiya", "boshlang'ich", "musiqa", "raqs",
+        "maktabi", "öqituvçisi", "nominatsiyasi", "hurmatli", "sana", "natija"}
 
 
 def _stop(name):
@@ -219,27 +242,49 @@ def issue(st, name, filial, maktab, day, source="", fan=""):
     while raqam in used:          # raqam hech qachon takrorlanmasin
         raqam += 1
     st["next"] = raqam + 1
-    st["log"].append({"n": raqam, "ism": name, "filial": filial, "sana": day.isoformat(),
-                      "manba": source[:200]})
+    rec = {"n": raqam, "ism": name, "filial": filial, "maktab": maktab, "fan": fan,
+           "sana": day.isoformat(), "manba": source[:200], "sent": False}
+    st["log"].append(rec)
     st["log"] = st["log"][-3000:]
     save_state(st, f"№ {raqam}")   # raqam yuborishdan OLDIN saqlanadi
-    if st.get("dizayn", "eski") == "eski" and render is not None:
-        jpg = render.render(maktab, name, raqam, day)
-    else:
-        v = st.get("dizayn", "v3")
-        if not os.path.exists(os.path.join(render2.TPL, f"{v}_{maktab}.png")):
-            v = "v3"
-        jpg = render2.render(v, maktab, name, raqam, day, filial)
-    sana = f"{day.day}-{render.OYLAR[day.month - 1]}, {day.year}"
-    try:
-        caption = st["izoh"].format(ism=name, filial=filial, raqam=f"{raqam:04d}",
-                                    sana=sana, maktab=maktab.capitalize(), fan=fan)
-    except (KeyError, IndexError, ValueError):
-        caption = st["izoh"]
-    fname = f"Tashakkurnoma_{raqam:04d}_{re.sub(r'[^A-Za-z0-9]+', '_', name)}.jpg"
-    tg("sendDocument", chat_id=st["owner"], caption=caption[:1024],
-       files={"document": (fname, jpg, "image/jpeg")})
+    send_record(st, rec)
     return raqam
+
+
+def send_record(st, rec):
+    """Tashakkurnomani chizib egaga yuboradi; muvaffaqiyatli bo'lsa sent=True."""
+    try:
+        day = dt.date.fromisoformat(rec["sana"])
+        maktab = rec.get("maktab") or ("turkiston" if "turkis" in rec["filial"].lower() else "registon")
+        name, filial, raqam, fan = rec["ism"], rec["filial"], rec["n"], rec.get("fan", "")
+        if st.get("dizayn", "eski") == "eski" and render is not None:
+            jpg = render.render(maktab, name, raqam, day)
+        else:
+            v = st.get("dizayn", "v3")
+            if not os.path.exists(os.path.join(render2.TPL, f"{v}_{maktab}.png")):
+                v = "v3"
+            jpg = render2.render(v, maktab, name, raqam, day, filial)
+        sana = f"{day.day}-{render2.OYLAR[day.month - 1]}, {day.year}"
+        try:
+            caption = st["izoh"].format(ism=name, filial=filial, raqam=f"{raqam:04d}",
+                                        sana=sana, maktab=maktab.capitalize(), fan=fan)
+        except (KeyError, IndexError, ValueError):
+            caption = st["izoh"]
+        fname = f"Tashakkurnoma_{raqam:04d}_{re.sub(r'[^A-Za-z0-9]+', '_', name)}.jpg"
+        if tg("sendDocument", chat_id=st["owner"], caption=caption[:1024],
+              files={"document": (fname, jpg, "image/jpeg")}) is not None:
+            rec["sent"] = True
+    except Exception:
+        traceback.print_exc()
+
+
+def resend_unsent(st):
+    pending = [r for r in st["log"] if r.get("sent") is False]
+    for r in pending:
+        send_record(st, r)
+        time.sleep(1)
+    if pending:
+        save_state(st, "yuborildi")
 
 
 HELP = ("Assalomu alaykum! Men «Kun o'qituvchisi» tashakkurnomalarini tayyorlayman.\n\n"
@@ -352,11 +397,11 @@ def handle_group(st, m, manual=False):
     if not text.strip() or text.startswith("/"):
         return False
     day = dt.datetime.fromtimestamp(m["date"], TZ).date()
-    pf = parse_fields(text)
+    pf = parse_full(text)
     if pf and pf["sana"]:
         day = pf["sana"]
     fan = pf["fan"] if pf else ""
-    name, fil = parse(text)
+    name, fil = (pf["ism"], pf["fil"]) if pf else (None, None)
     if not name:
         say(st["owner"], "⚠️ Guruhdagi xabardan ustoz ismini aniqlay olmadim:\n\n"
             f"{text[:400]}\n\nQo'lda: /yangi Ism Familiya; Filial")
@@ -412,6 +457,8 @@ def main():
         {"command": "holat", "description": "Bot holati"}])
     start = time.time()
     print("bot ishga tushdi", flush=True)
+    if st["owner"]:
+        resend_unsent(st)
     while not RUN_SECONDS or time.time() - start < RUN_SECONDS:
         ups = tg("getUpdates", offset=st["offset"], timeout=50,
                  allowed_updates=["message", "channel_post", "callback_query", "my_chat_member"])
