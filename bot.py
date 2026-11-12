@@ -181,16 +181,20 @@ def split_name(s):
 
 def parse_post(text):
     """Kun öqituvçisi postini o'qiydi. -> dict, None (bu post emas) yoki {'xato': ...}"""
-    if not text or "natija" not in text.lower():
+    if not text:
         return None
     low = _norm(text)
-    if "nominatsiya" in low or "joriy natijalari" in low:
+    if "nominatsiya" in low or "joriy natijalari" in low or "kunlik umumiy natijalar" in low:
         return None                                      # natija postlari — o'qilmaydi
     fields = [(k.strip(), v.strip()) for k, v in FIELD.findall(text)]
     f = {_norm(k): v for k, v in fields}
-    natija = next((v for k, v in f.items() if k.startswith("natija")), "")
-    if "kun" not in _norm(natija):
-        return None                                      # «Kun öqituvçisi» emas
+    has_ustoz = "ustoz" in f or any(_norm(k).endswith(("oqituvcisi", "oqituvchisi")) for k, _ in fields)
+    if not has_ustoz:
+        # guruhdagi oddiy yozuv; lekin «Sana/Filial» bor bo'lsa — ustoz qatori yo'qligini aytamiz
+        if "filial" in f or "sana" in f:
+            return {"xato": "«Ustoz:» qatori topilmadi"}
+        return None
+    # Guruhda faqat «Kun öqituvçisi» yoziladi — «Natija» qatori bo'lmasa ham qabul qilinadi
     fil = find_filial(next((v for k, v in f.items() if k.startswith("filial")), "")) or find_filial(text)
     ism, fan = None, ""
     if "ustoz" in f:
