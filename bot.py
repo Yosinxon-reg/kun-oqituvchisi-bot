@@ -123,7 +123,8 @@ def default_state():
         "audit": [],
         # ismlar tekşiruvi
         "regmon": None, "chats": {}, "aliases": {}, "roster_add": [], "roster": None, "qmsg": {},
-        "ism_live": None,
+        "ism_live": None, "outbox_sent": [],
+        "ism_vaqt": "17:45", "ism_kun": {"2026-11-13": "16:45"},   # bir martalik kunlik istisno
     }
 
 
@@ -708,7 +709,8 @@ def schedule_tick(st, t):
     today = t.date().isoformat()
     hm = (t.hour, t.minute)
     h, mi = map(int, st["vaqt"].split(":"))
-    if hm >= (17, 45) and f"{today}|ismlar" not in st["packages"]:
+    iv = st.get("ism_kun", {}).get(today) or st.get("ism_vaqt", "17:45")
+    if hm >= tuple(map(int, iv.split(":"))) and f"{today}|ismlar" not in st["packages"]:
         st["packages"][f"{today}|ismlar"] = {"ts": t.isoformat(), "ids": [], "steps": []}
         ism_report(st, t.date())
         st["ism_live"] = today
@@ -1120,6 +1122,7 @@ Ismlar tekşiruvi (rasmiy röyxat):
 /ismlar — oçiq savollar (qayta yuboriladi)
 /royxat [Filial] — röyxat holati
 /ustoz_qosh Familiya Ism; Filial; fan — röyxatga qöşiş
+/ismvaqt 17:45 — ismlar tekşiruvi vaqti · /ismhozir — hozir yuboriş
 /regmon — RegMon guruhi holati (guruhda /regmon deb yozsangiz, şu guruh belgilanadi)
 Yangi röyxat: .txt faylini şu çatga yuboring."""
 
@@ -1326,6 +1329,18 @@ def handle_private(st, m):
         audit(st, "royxat+", f"{ism} {fil[0]}")
         say(st, f"✅ Röyxatga qöşildi: {names.display(ism)} — {fil[0]}")
         return True
+    elif cmd == "/ismvaqt":
+        if re.match(r"^\d{1,2}:\d{2}$", arg):
+            st["ism_vaqt"] = arg.zfill(5)
+            say(st, f"✅ Ismlar tekşiruvi vaqti: har kuni {st['ism_vaqt']}")
+            return True
+        say(st, f"Ismlar tekşiruvi: har kuni {st.get('ism_vaqt', '17:45')}. Özgartiriş: /ismvaqt 17:45")
+    elif cmd == "/ismhozir":
+        ism_report(st, t.date())
+        st["packages"][f"{t.date().isoformat()}|ismlar"] = {"ts": t.isoformat(), "ids": [], "steps": ["qölda"]}
+        st["ism_live"] = t.date().isoformat()
+        say(st, "✅ Ismlar tekşiruvi hozir yuborildi.")
+        return True
     elif cmd == "/regmon":
         rg = st.get("regmon")
         say(st, (f"RegMon guruhi: «{st['chats'].get(str(rg), rg)}»" if rg else "RegMon guruhi hali aniqlanmagan.") +
@@ -1349,6 +1364,45 @@ def handle_private(st, m):
     else:
         say(st, "Buyruqni tuşunmadim. /help")
     return False
+
+
+# ================================================================ outbox: RegMon guruhiga material (video, rasm)
+OUTBOX = os.path.join(os.path.dirname(os.path.abspath(__file__)), "outbox")
+_last_pull = [0.0]
+
+
+def outbox_tick(st):
+    """outbox/ papkasidagi yangi fayllar (repo orqali) RegMon guruhiga bir marta yuboriladi. Izoh — şu nomli .txt."""
+    if GIT_SYNC and time.time() - _last_pull[0] > 300:
+        _last_pull[0] = time.time()
+        subprocess.run(["git", "pull", "-q", "--rebase", "-X", "ours"], capture_output=True)
+    if not st.get("regmon") or not os.path.isdir(OUTBOX):
+        return False
+    changed = False
+    for fn in sorted(os.listdir(OUTBOX)):
+        ext = fn.rsplit(".", 1)[-1].lower()
+        if ext not in ("mp4", "jpg", "jpeg", "png", "pdf"):
+            continue
+        path = os.path.join(OUTBOX, fn)
+        key = f"{fn}|{os.path.getsize(path)}"
+        if key in st["outbox_sent"]:
+            continue
+        txt = os.path.join(OUTBOX, fn.rsplit(".", 1)[0] + ".txt")
+        cap = open(txt, encoding="utf-8").read().strip() if os.path.exists(txt) else ""
+        st["outbox_sent"].append(key)               # avval belgilanadi — takror yuborilmasin
+        save_state(st, f"outbox {fn}")
+        with open(path, "rb") as fh:
+            if ext == "mp4":
+                ok = tg("sendVideo", chat_id=st["regmon"], caption=cap[:1024], supports_streaming="true",
+                        files={"video": (fn, fh, "video/mp4")})
+            elif ext == "pdf":
+                ok = tg("sendDocument", chat_id=st["regmon"], caption=cap[:1024], files={"document": (fn, fh, "application/pdf")})
+            else:
+                ok = tg("sendPhoto", chat_id=st["regmon"], caption=cap[:1024], files={"photo": (fn, fh, "image/jpeg")})
+        audit(st, "outbox", f"{fn}: {'yuborildi' if ok else 'XATO'}")
+        say(st, f"{'✅' if ok else '⚠️'} RegMon guruhiga yuborildi: {fn}" if ok else f"⚠️ {fn} RegMon guruhiga yuborilmadi — tekşiraman.")
+        changed = True
+    return changed
 
 
 # ================================================================ asosiy sikl
@@ -1399,6 +1453,10 @@ def main():
                 traceback.print_exc()
         try:
             changed |= schedule_tick(st, now())
+        except Exception:
+            traceback.print_exc()
+        try:
+            changed |= outbox_tick(st)
         except Exception:
             traceback.print_exc()
         if ups or changed:
