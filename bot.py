@@ -129,6 +129,7 @@ def default_state():
         # ismlar tekşiruvi
         "regmon": None, "chats": {}, "aliases": {}, "roster_add": [], "roster": None, "qmsg": {},
         "ism_live": None, "outbox_sent": [],
+        "tahrir": None, "topics": {}, "tahrir_q": {},
         "ism_vaqt": "17:45", "ism_kun": {"2026-11-13": "16:45"},   # bir martalik kunlik istisno
     }
 
@@ -959,11 +960,12 @@ def ism_report(st, day):
     yoq = [r for r in open_q if r["nc"]["holat"] == "yoq"]
     pre = "" if st.get("regmon") else "ℹ️ RegMon guruhi hali aniqlanmagan — şu sababli sizga yuborildi. Guruhda /regmon deb yozing.\n\n"
     if not auto and not open_q:
-        tg("sendMessage", chat_id=chat, text=pre + f"📋 ISMLAR TEKŞIRUVI — {sana_txt(day)}\n\n✅ Barça ismlar röyxatga mos ({len(ok)} ta).")
+        tg("sendMessage", chat_id=chat, text=pre + f"📋 ISMLAR TEKŞIRUVI — {sana_txt(day)}\n\n✅ Barça ismlar röyxatga mos ({len(ok)} ta)."
+           + tahrir_lines(st, day))
         return
     tg("sendMessage", chat_id=chat, text=pre + f"📋 ISMLAR TEKŞIRUVI — {sana_txt(day)}\n\n"
        f"✅ Töğri yozilganlar: {len(ok)} ta\n✏️ Avtomatik töğrilanganlar: {len(auto)} ta\n"
-       f"❓ Aniqlaştiriş kerak: {len(sav)} ta\n❗ Röyxatda yöq: {len(yoq)} ta" +
+       f"❓ Aniqlaştiriş kerak: {len(sav)} ta\n❗ Röyxatda yöq: {len(yoq)} ta" + tahrir_lines(st, day) +
        ("\n\nQuyidagi har bir savolga javob bering. Qaror qilinmaguncha taşakkurnoma kutib turadi, savol har kuni 17:45 da qayta çiqadi."
         if open_q else ""))
     if auto:
@@ -1114,6 +1116,8 @@ def finish_q(st, chat, mid, r, res):
 
 def handle_callback(st, cq):
     data = cq.get("data") or ""
+    if data.startswith("t|") and (cq.get("message") or {}).get("chat", {}).get("id") == st.get("tahrir"):
+        return handle_tahrir_cb(st, cq)
     msg = cq.get("message") or {}
     chat = msg.get("chat", {}).get("id")
     if not data.startswith("n|") or chat not in (st.get("regmon"), st.get("owner")):
@@ -1170,6 +1174,88 @@ def note_chat(st, chat, frm=None, text=""):
         audit(st, "regmon", f"egasi belgiladi: {title} ({cid})")
         tg("sendMessage", chat_id=cid, text="✅ Bu guruh ismlar tekşiruvi uçun belgilandi. Har kuni 17:45 da savollar şu yerga keladi.")
         say(st, f"✅ RegMon guruhi belgilandi: «{title}».")
+
+
+def note_topic(st, m):
+    """«Tahrir uchun» guruhi mavzularini (sahifalarini) qayd etiş."""
+    cid = m["chat"]["id"]
+    t = _norm(m["chat"].get("title", ""))
+    if st.get("tahrir") is None and "tahrir" in t:
+        st["tahrir"] = cid
+        audit(st, "tahrir", f"guruh aniqlandi: {m['chat'].get('title')} ({cid})")
+        say(st, f"✅ «{m['chat'].get('title')}» guruhi aniqlandi. Har kuni 17:00 da har bir mavzuga sörov yuboriladi.")
+    if cid != st.get("tahrir"):
+        return
+    tid = m.get("message_thread_id")
+    if not tid or not m.get("is_topic_message", True):
+        return
+    name = ((m.get("forum_topic_created") or {}).get("name") or (m.get("forum_topic_edited") or {}).get("name") or
+            ((m.get("reply_to_message") or {}).get("forum_topic_created") or {}).get("name"))
+    tp = st["topics"].setdefault(str(cid), {})
+    if str(tid) not in tp or name:
+        if str(tid) not in tp:
+            audit(st, "mavzu", f"{name or tid}")
+        tp[str(tid)] = name or tp.get(str(tid)) or f"Mavzu {tid}"
+
+
+def tahrir_tick(st, t):
+    """17:00 — har bir mavzuga: «Bugun yana Kun öqituvçisi çiqarasizmi?» (Ha / Yöq)."""
+    if not st.get("tahrir"):
+        st["tahrir"] = next((int(k) for k, v in st["chats"].items() if "tahrir" in _norm(v)), None)
+    cid = st.get("tahrir")
+    today = t.date().isoformat()
+    key = f"{today}|tahrir"
+    if not cid or (t.hour, t.minute) < (17, 0) or key in st["packages"]:
+        return False
+    st["packages"][key] = {"ts": t.isoformat(), "ids": [], "steps": []}
+    tps = st["topics"].get(str(cid), {})
+    if not tps:
+        say(st, "ℹ️ «Tahrir uchun» guruhida mavzular hali aniqlanmagan — har bir mavzuga bittadan xabar yozing.")
+        return True
+    q = st["tahrir_q"].setdefault(today, {})
+    for tid, name in tps.items():
+        res = tg("sendMessage", chat_id=cid, message_thread_id=int(tid),
+                 text=f"❓ {sana_txt(t.date())}: bugun yana «Kun öqituvçisi» çiqarasizmi?",
+                 reply_markup={"inline_keyboard": [[{"text": "✅ Ha", "callback_data": f"t|{today}|{tid}|ha"},
+                                                     {"text": "❌ Yöq", "callback_data": f"t|{today}|{tid}|yoq"}]]})
+        q[tid] = {"nom": name, "msg": res["message_id"] if res else None, "javob": None, "kim": None, "ts": None}
+        time.sleep(0.3)
+    audit(st, "tahrir", f"{today}: {len(tps)} ta mavzuga sörov")
+    return True
+
+
+def handle_tahrir_cb(st, cq):
+    _, day, tid, ans = cq["data"].split("|")
+    q = st["tahrir_q"].get(day, {}).get(tid)
+    if not q:
+        tg("answerCallbackQuery", callback_query_id=cq["id"], text="Sörov topilmadi.")
+        return False
+    q.update(javob=ans, kim=who(cq.get("from")), ts=now().isoformat(timespec="seconds"))
+    txt = "✅ Ha — yana çiqariladi" if ans == "ha" else "❌ Yöq — bugun boşqa yöq"
+    tg("answerCallbackQuery", callback_query_id=cq["id"], text=txt)
+    tg("editMessageText", chat_id=cq["message"]["chat"]["id"], message_id=cq["message"]["message_id"],
+       text=f"❓ {sana_txt(D(day))}: bugun yana «Kun öqituvçisi» çiqarasizmi?\n\n{txt}\n👤 {q['kim']}",
+       reply_markup={"inline_keyboard": [[{"text": "✅ Ha", "callback_data": f"t|{day}|{tid}|ha"},
+                                           {"text": "❌ Yöq", "callback_data": f"t|{day}|{tid}|yoq"}]]})
+    audit(st, "tahrir-javob", f"{day} {q['nom']}: {ans} — {q['kim']}")
+    return True
+
+
+def tahrir_lines(st, day):
+    q = st["tahrir_q"].get(day.isoformat(), {})
+    if not q:
+        return ""
+    ha = [v["nom"] for v in q.values() if v["javob"] == "ha"]
+    yoq = [v["nom"] for v in q.values() if v["javob"] == "yoq"]
+    jy = [v["nom"] for v in q.values() if not v["javob"]]
+    L = ["", "🗂 Tahrir guruhi javoblari:"]
+    if ha:
+        L.append("✅ Yana çiqaradi: " + ", ".join(ha))
+    if yoq:
+        L.append("❌ Bugun boşqa yöq: " + ", ".join(yoq))
+    if jy:
+        L.append("⏳ Javob bermagan: " + ", ".join(jy))
+    return "\n".join(L)
 
 
 def handle_roster_doc(st, m):
@@ -1541,6 +1627,10 @@ def main():
                             changed |= bool(ingest(st, m))
                         else:                         # RegMon va boşqa guruhlar — manba emas
                             note_chat(st, m["chat"], m.get("from"), m.get("text") or "")
+                            if (m.get("text") or "").split("@")[0].strip().lower() == "/tahrir" and \
+                                    (m.get("from") or {}).get("id") == st.get("owner"):
+                                st["tahrir"] = m["chat"]["id"]
+                            note_topic(st, m)
                             if m["chat"]["id"] == st.get("regmon") and m.get("reply_to_message"):
                                 handle_answer_msg(st, m)
                             changed = True
@@ -1550,6 +1640,10 @@ def main():
                 traceback.print_exc()
         try:
             changed |= schedule_tick(st, now())
+        except Exception:
+            traceback.print_exc()
+        try:
+            changed |= tahrir_tick(st, now())
         except Exception:
             traceback.print_exc()
         try:
