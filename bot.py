@@ -62,6 +62,11 @@ def find_filial(text):
     for k, v in FILIAL.items():
         if k in low:
             return v
+    # imlo xatosi bilan yozilgan filial (masalan «Tinçlk», «Yunusobd»): bitta harf farqi
+    for w in re.findall(r"[a-z]{5,}", low):
+        for k, v in FILIAL.items():
+            if len(k) >= 6 and names.lev(w, k) <= 1:
+                return v
     return None
 
 
@@ -769,8 +774,17 @@ def apply_check(st, r, force=False):
     if old.get("qaror") and not force:
         return
     nc = names.check(st, r["ism"], r["filial"], f"{r.get('fan', '')} {r.get('dars', '')}")
-    nc.update(qaror=None, xabar=False, auto_xabar=False)
+    nc.update(qaror=None, xabar=False, auto_xabar=old.get("auto_xabar", False) and nc["holat"] == "auto")
     r["nc"] = nc
+    if old.get("xabar") and nc["holat"] in ("ok", "auto"):          # post tahrirlanib savol özi hal böldi
+        for k, rid in list(st["qmsg"].items()):
+            if rid == r["id"]:
+                c, mid = k.split(":")
+                tg("editMessageText", chat_id=int(c), message_id=int(mid),
+                   text=f"✅ #{r['id']}: post tahrirlandi — endi «{nc['rasmiy']}» ({r['filial']}). Savol yopildi.")
+                del st["qmsg"][k]
+    elif old.get("xabar"):
+        nc["xabar"] = True
     before = r.get("cert_ism")
     r["ism_r"] = nc["rasmiy"] if nc["holat"] in ("ok", "auto") else None
     if r["cert_sent"] and r["ism_r"] and before and r["ism_r"] != before:
@@ -848,11 +862,44 @@ def auto_keyboard(rs):
     return {"inline_keyboard": rows}
 
 
+PARSE_SABAB = ("topilmadi", "Natija", "natija aniq emas")
+
+
+def refresh_from_text(st, r):
+    """Oxirgi tahrir qilingan matndan maʼlumotlarni yangilaş (postlar kun davomida tahrirlanadi)."""
+    if r["holat"] == "bekor" or r.get("qolda") or not r.get("matn"):
+        return
+    p = parse_post(r["matn"])
+    if not p:
+        return
+    before = (r["ism"], r["filial"], r["holat"])
+    for k in ("ism", "filial", "maktab"):
+        if p[k]:
+            r[k] = p[k]
+    r["ism_n"] = name_key(r["ism"] or "")
+    if p["fan"]:
+        r["fan"] = p["fan"]
+    if r["holat"] == "tekshir" and any(x in (r.get("sabab") or "") for x in PARSE_SABAB):
+        if p["tasdiq"]:
+            r["holat"], r["sabab"] = "hisob", ""
+            recheck_cap(st, r)
+        else:
+            r["sabab"] = p["sabab"]
+    if (r["ism"], r["filial"], r["holat"]) != before:
+        audit(st, "yangilandi", f"#{r['id']}: {before} -> {(r['ism'], r['filial'], r['holat'])}")
+        r["tuzatildi"] = bool(r["cert_sent"])
+
+
 def ism_report(st, day):
-    """17:45: kunlik ismlar tekşiruvi. Ochiq savollar har kuni qayta çiqadi — hech kim qolib ketmaydi."""
+    """Kunlik ismlar tekşiruvi (oxirgi soatda): avval barça postlar oxirgi tahriri böyiça qayta öqiladi."""
     chat = ism_target(st)
     if not chat:
         return
+    for r in st["results"]:
+        if r["holat"] in ("hisob", "tekshir"):
+            refresh_from_text(st, r)
+            if not (r.get("nc") or {}).get("qaror"):
+                apply_check(st, r, force=True)
     iso = day.isoformat()
     act = [r for r in st["results"] if r["holat"] in ("hisob", "tekshir") and r.get("nc")]
     today = [r for r in act if r["sana"] == iso]
@@ -1199,6 +1246,7 @@ def handle_private(st, m):
                 r["filial"], r["maktab"] = fil
             if len(parts) > 2 and parts[2]:
                 r["fan"] = parts[2]
+            r["qolda"] = True
             apply_check(st, r, force=True)
             if held(r):
                 r["ism_r"] = names.display(ism)
