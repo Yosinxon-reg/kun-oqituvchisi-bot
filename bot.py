@@ -890,6 +890,55 @@ def refresh_from_text(st, r):
         r["tuzatildi"] = bool(r["cert_sent"])
 
 
+def fan_of(r):
+    """Natijaning fani: postdagi fan matni, bölmasa röyxatdagi mos ustozning fani."""
+    fs = names.fan_set(f"{r.get('fan', '')}")
+    if len(fs) == 1:
+        return next(iter(fs))
+    nc = r.get("nc") or {}
+    if nc.get("nomzodlar") and (nc["holat"] in ("ok", "auto") or nc.get("qaror")):
+        return nc["nomzodlar"][0]["fan"]
+    if fs:
+        return sorted(fs)[0]
+    return "Fan aniqlanmagan"
+
+
+def fan_summary(st, day):
+    iso = day.isoformat()
+    for r in st["results"]:
+        if r["sana"] == iso and r["holat"] in ("hisob", "tekshir"):
+            refresh_from_text(st, r)
+    cnt = {}
+    for r in counted(st, day=iso):
+        f = fan_of(r)
+        cnt[f] = cnt.get(f, 0) + 1
+    rows = sorted(cnt.items(), key=lambda kv: (-kv[1], kv[0]))
+    body = "\n".join(f"{f} — {n} ta" for f, n in rows) or "Hozirça natija yöq"
+    return f"📚 {sana_txt(day)} — fanlar kesimida «Kun öqituvçisi»\n\n{body}\n\nJami: {sum(cnt.values())} ta", rows
+
+
+def fan_tick(st, t):
+    """17:00 — RegMon guruhiga fanlar kesimi; 18:00 — özgarğan bölsa qayta."""
+    if not st.get("regmon"):
+        return False
+    today = t.date().isoformat()
+    hm = (t.hour, t.minute)
+    k1, k2 = f"{today}|fanlar", f"{today}|fanlar2"
+    h, mi = map(int, st["vaqt"].split(":"))
+    if hm >= (17, 0) and k1 not in st["packages"]:
+        txt, rows = fan_summary(st, t.date())
+        st["packages"][k1] = {"ts": t.isoformat(), "ids": [], "steps": [], "rows": rows}
+        tg("sendMessage", chat_id=st["regmon"], text=txt)
+        return True
+    if hm >= (h, mi) and k1 in st["packages"] and k2 not in st["packages"]:
+        txt, rows = fan_summary(st, t.date())
+        st["packages"][k2] = {"ts": t.isoformat(), "ids": [], "steps": [], "rows": rows}
+        if [list(x) for x in rows] != [list(x) for x in st["packages"][k1]["rows"]]:
+            tg("sendMessage", chat_id=st["regmon"], text=f"🔄 YANGILANDI ({st['vaqt']})\n" + txt)
+        return True
+    return False
+
+
 def ism_report(st, day):
     """Kunlik ismlar tekşiruvi (oxirgi soatda): avval barça postlar oxirgi tahriri böyiça qayta öqiladi."""
     chat = ism_target(st)
@@ -1501,6 +1550,10 @@ def main():
                 traceback.print_exc()
         try:
             changed |= schedule_tick(st, now())
+        except Exception:
+            traceback.print_exc()
+        try:
+            changed |= fan_tick(st, now())
         except Exception:
             traceback.print_exc()
         try:
