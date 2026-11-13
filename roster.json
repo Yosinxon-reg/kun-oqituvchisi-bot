@@ -1,0 +1,3281 @@
+{
+"manba": "Registon maktabi, Monitoring bölimi portali, 13.11.2026",
+"ustozlar": [
+{
+"ism": "Davronov Jasurbek",
+"filial": "Buxoro",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Mo'minova Mehriniso",
+"filial": "Buxoro",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Nishonova Hadichabegim",
+"filial": "Buxoro",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Nurmatov Nursulton",
+"filial": "Buxoro",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Bektemirova R.",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Fayziyeva Moxigul Amonovna",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Haqberdiyeva Feruza",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Muhammadova Marjona",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Namozova Manzura",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Norova N.",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Qalandarova Gulhayo Arslon qizi",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Rashidova Aziza Xoliqovna",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Salimova Mohinur Jamol qizi",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Serno Anastasiya",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Sharapova Angelina Zamirovna",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Xo'jayeva Nargiza Narzilloyevna",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Yuferova Milena Olegovna",
+"filial": "Buxoro",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Farhodov Feruz",
+"filial": "Buxoro",
+"fan": "Fizika",
+"tur": "asosiy"
+},
+{
+"ism": "Sattorov Sunnatillo G'ayratovich",
+"filial": "Buxoro",
+"fan": "Geografiya",
+"tur": "asosiy"
+},
+{
+"ism": "Naimov Davlatshoh",
+"filial": "Buxoro",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Qahramonov Ravshan",
+"filial": "Buxoro",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Abdullayeva Fotima Tolibovna",
+"filial": "Buxoro",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Axmadova Sarvinoz",
+"filial": "Buxoro",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Azimova Maftuna",
+"filial": "Buxoro",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Baratov Erkin",
+"filial": "Buxoro",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Idiyeva Lola",
+"filial": "Buxoro",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Jo'rayeva Nargiza Uktam qizi",
+"filial": "Buxoro",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Kahramanova Sevil",
+"filial": "Buxoro",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Maxmudova O'lmasxonning",
+"filial": "Buxoro",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Murtazoyeva Durdona Mustafo qizi",
+"filial": "Buxoro",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Mustafoyeva Mohiniso Oybek qizi",
+"filial": "Buxoro",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Norova Sarvinoz Karimovna",
+"filial": "Buxoro",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xolikova Zarina",
+"filial": "Buxoro",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Turdiyeva Nargiza Murodovna",
+"filial": "Buxoro",
+"fan": "Kimyo",
+"tur": "asosiy"
+},
+{
+"ism": "Fayziyeva Nazokat",
+"filial": "Buxoro",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Jumayeva Nigina",
+"filial": "Buxoro",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Kamolov Komiljon Rashid o'g'li",
+"filial": "Buxoro",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Kasimova Shaxinabonu Shavkatovna",
+"filial": "Buxoro",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Kenjayev Mirshodjon Murodjonovich",
+"filial": "Buxoro",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Nurmatova Roziya Ravshanovna",
+"filial": "Buxoro",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Radjabov Aziz Sherkulovich",
+"filial": "Buxoro",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Rasulov Asadbek",
+"filial": "Buxoro",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Yunusov Shaxboz",
+"filial": "Buxoro",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Zikrillayeva Feruza Abdurashid qizi",
+"filial": "Buxoro",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Nematilloyeva Hulkar Dilshod qizi",
+"filial": "Buxoro",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Toshpo'latova Zarina Hakimovna",
+"filial": "Buxoro",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "O'tkirova Rayxona To'lqinovna",
+"filial": "Buxoro",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Shodmonova Dilafruz",
+"filial": "Buxoro",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Zaripova Shaxnoza",
+"filial": "Buxoro",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Vohidova Yulduz",
+"filial": "Buxoro",
+"fan": "Tarbiya",
+"tur": "asosiy"
+},
+{
+"ism": "Salimova Dilnoza",
+"filial": "Buxoro",
+"fan": "Gimnastika",
+"tur": "amaliyot"
+},
+{
+"ism": "Ergashova Gulchehra",
+"filial": "Buxoro",
+"fan": "Kamondan o'q otish",
+"tur": "amaliyot"
+},
+{
+"ism": "Amonova Hilola",
+"filial": "Buxoro",
+"fan": "Muhandislik",
+"tur": "amaliyot"
+},
+{
+"ism": "Ulug'ova Nigina",
+"filial": "Buxoro",
+"fan": "Muhandislik",
+"tur": "amaliyot"
+},
+{
+"ism": "Kenjayev Mirshod",
+"filial": "Buxoro",
+"fan": "Robototexnika",
+"tur": "amaliyot"
+},
+{
+"ism": "Hasanova Oysuluv",
+"filial": "Buxoro",
+"fan": "Shaxmat",
+"tur": "amaliyot"
+},
+{
+"ism": "Yo'ldoshova Zarina",
+"filial": "Buxoro",
+"fan": "Taekvondo",
+"tur": "amaliyot"
+},
+{
+"ism": "Xodjayeva Malika",
+"filial": "Buxoro",
+"fan": "Tasviriy san'at",
+"tur": "amaliyot"
+},
+{
+"ism": "Tog`ay Marjona Qobilovna",
+"filial": "Çilonzor",
+"fan": "Adabiyot",
+"tur": "asosiy"
+},
+{
+"ism": "Abdazimova Risolat Bahodir qizi",
+"filial": "Çilonzor",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ashurova Nilufar Inomjon qizi",
+"filial": "Çilonzor",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ergashev Shoislom",
+"filial": "Çilonzor",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Saidmalik Maryam Ulug'bek qizi",
+"filial": "Çilonzor",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Abduganiyeva Shaxnoza Ilxomovna",
+"filial": "Çilonzor",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Djumatova Ozoda Saburovna",
+"filial": "Çilonzor",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Hamdamova Malika Axmad qizi",
+"filial": "Çilonzor",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Maratova Guljamal Arislanovna",
+"filial": "Çilonzor",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Nasretdinova Irodaxon Saidbaxramovna",
+"filial": "Çilonzor",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "O'lmasova Shahzoda Sultonali qizi",
+"filial": "Çilonzor",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Shodmonova Farangizbonu",
+"filial": "Çilonzor",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Toshpo'latova Aziza Norpo'lot qizi",
+"filial": "Çilonzor",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Xodjayeva Zuhra Ulmasovna",
+"filial": "Çilonzor",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Abduraxmonova N.",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Asatova Darya",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Batirova Nigina",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Garyayeva Rita",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Hamdamova Nafisa",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Kariyeva Nodirabegim",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Kodirova Shaxida Tursunbayevna",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Muxamadaminova Robiyaxon Maxmutxon qizi",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Sayidmurodova Madina Fayzullo qizi",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Shafikova Dilyara",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Sobirova Dilafruz",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Sobirova Sadoqat",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Soliyeva M.",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Xodjayeva Sh.",
+"filial": "Çilonzor",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Tursinova Rushana",
+"filial": "Çilonzor",
+"fan": "Fizika",
+"tur": "asosiy"
+},
+{
+"ism": "Sobirov Nurbek",
+"filial": "Çilonzor",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Suyunboyev Nurillobek",
+"filial": "Çilonzor",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Abduraxmanov Tolib",
+"filial": "Çilonzor",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ikramova Shaxodat",
+"filial": "Çilonzor",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Isayeva Xusnora",
+"filial": "Çilonzor",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "O'rinboyeva Mohidil",
+"filial": "Çilonzor",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ortiqova Kamola",
+"filial": "Çilonzor",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Rustamova Ulviya",
+"filial": "Çilonzor",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Samadova Rayhona",
+"filial": "Çilonzor",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Shoumarov Javohir",
+"filial": "Çilonzor",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Shoumarova Nargizaxon Baxodir qizi",
+"filial": "Çilonzor",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Turgunova Aygerim",
+"filial": "Çilonzor",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xabibullaxonova Muazzamxon",
+"filial": "Çilonzor",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Sobirov Kamron Shavkat ug`li",
+"filial": "Çilonzor",
+"fan": "Kimyo",
+"tur": "asosiy"
+},
+{
+"ism": "Bobobekova Shohisita",
+"filial": "Çilonzor",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Elchiyev Asrorbek",
+"filial": "Çilonzor",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Isroilov Komiljon",
+"filial": "Çilonzor",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Jurayeva Lobar",
+"filial": "Çilonzor",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Kamoliddinov Xondamir",
+"filial": "Çilonzor",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Xoliqova Iroda Norbutayevna",
+"filial": "Çilonzor",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Abduxalikova Uldaulet",
+"filial": "Çilonzor",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Odilova Shaxnoza",
+"filial": "Çilonzor",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Qobiljonov Abdulloh",
+"filial": "Çilonzor",
+"fan": "Tarbiya",
+"tur": "asosiy"
+},
+{
+"ism": "Xasanova Feruza",
+"filial": "Çilonzor",
+"fan": "Tarbiya",
+"tur": "asosiy"
+},
+{
+"ism": "Nishonov San`atbek Kayumovich",
+"filial": "Çilonzor",
+"fan": "Tarix",
+"tur": "asosiy"
+},
+{
+"ism": "Saidxo'jayev Sirojiddin",
+"filial": "Çilonzor",
+"fan": "Futbol va jismoniy tarbiya",
+"tur": "amaliyot"
+},
+{
+"ism": "Plotnikova Larisa",
+"filial": "Çilonzor",
+"fan": "Gimnastika",
+"tur": "amaliyot"
+},
+{
+"ism": "Abdig'aniyev Soibjon",
+"filial": "Çilonzor",
+"fan": "Kamondan o'q otish",
+"tur": "amaliyot"
+},
+{
+"ism": "Boboyorov Azizjon",
+"filial": "Çilonzor",
+"fan": "Muhandislik",
+"tur": "amaliyot"
+},
+{
+"ism": "Karimova Ro'zigul",
+"filial": "Çilonzor",
+"fan": "Muhandislik",
+"tur": "amaliyot"
+},
+{
+"ism": "Kamilov Ziyod",
+"filial": "Çilonzor",
+"fan": "Shaxmat",
+"tur": "amaliyot"
+},
+{
+"ism": "Fayazova Aziza",
+"filial": "Çilonzor",
+"fan": "Suzish",
+"tur": "amaliyot"
+},
+{
+"ism": "Saidxo'jayev Sirojiddin",
+"filial": "Çilonzor",
+"fan": "Taekvondo",
+"tur": "amaliyot"
+},
+{
+"ism": "Abdaliyeva Shirin",
+"filial": "Çilonzor",
+"fan": "Tasviriy san'at",
+"tur": "amaliyot"
+},
+{
+"ism": "Teshaboyeva Otikaxon Abdullayevna",
+"filial": "Farğona",
+"fan": "Adabiyot",
+"tur": "asosiy"
+},
+{
+"ism": "Jabborova Mubina Ne'matullayevna",
+"filial": "Farğona",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Jaloliddinova Muxlisaxon Yo'ldoshali qizi",
+"filial": "Farğona",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Maxkamova Muqaddasxon Sovridin qizi",
+"filial": "Farğona",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Solijonova Aziza",
+"filial": "Farğona",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Tursunaliyev Muhammadrizo",
+"filial": "Farğona",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xolmatova Nargiza",
+"filial": "Farğona",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Toxirjonov Ziynatilla",
+"filial": "Farğona",
+"fan": "Biologiya",
+"tur": "asosiy"
+},
+{
+"ism": "Alimova Nilufar Ergashovna",
+"filial": "Farğona",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Axrarova Dilnoza Mo'minovna",
+"filial": "Farğona",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Boyquziyeva Shoira Muradjanovna",
+"filial": "Farğona",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Fattaxova Karina",
+"filial": "Farğona",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Kamolova Dilafruz Saidmavlonovna",
+"filial": "Farğona",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Nurmatova Zebuniso Nodirovna",
+"filial": "Farğona",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Raxmonova Shaxnoza",
+"filial": "Farğona",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Abdullayeva M.",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Amzayeva E.",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Bakibayeva Muqaddas",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Egamberdiyeva Xaticha",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Ibragimova Nurchinoy Ziyodullo qizi",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Maxsudova Gulnoza",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Mirzayeva Dilnoza Mutalibovna",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Nuritdinova B.",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Sharopova Zarnigor",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Shevtsova Marina",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Sobirova Kamola",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Soliyeva Zarnigor",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Tagiyeva Intizor",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Tursunaliyeva Xumora",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Umarova S.",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Xo'janazarova D.",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Xodjayeva Shoxida",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Yunusaliyeva Gulchexra",
+"filial": "Farğona",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Aliqulov Islombek Abdulazizovich",
+"filial": "Farğona",
+"fan": "Fizika",
+"tur": "asosiy"
+},
+{
+"ism": "Dexqonov Shavkat",
+"filial": "Farğona",
+"fan": "Fizika",
+"tur": "asosiy"
+},
+{
+"ism": "Usmanov Shavkat",
+"filial": "Farğona",
+"fan": "Geografiya",
+"tur": "asosiy"
+},
+{
+"ism": "Aysarov Murod",
+"filial": "Farğona",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Haydarov Diyorbek",
+"filial": "Farğona",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Mirzaolimov Ilhomjon",
+"filial": "Farğona",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Sobirjonov Nodirbek",
+"filial": "Farğona",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Abdurahimova Shaxlo",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Abdusattorova Elvira Ruslanovna",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ahmadjanova Mushtariy Marat qizi",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Andreev Aleksey",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Asanova Nigina",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ergasheva Umidaxon",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ibrohimova Zarnigor",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Imarova Moxinur",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Jurayeva Gulrux Baxtiyorovna",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Nazariyon Shamsiya",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Nematullayeva Gulnozaxon Habibulla qizi",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Niyazaliyeva Mavluda",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ortiqova Lutfixonim",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Oxunjonova Xosiyatbi Voxidjon qizi",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Qosimova Moxiraxon Ilxomjon qizi",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Raxmatullayeva Shoxida",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Rustamova Yunonabonu Ravshanovna",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xadjayeva Nigora",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xasanova Farangiz",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Yo'ldoshaliyeva Maftunaxon",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Zakirov Kamronjon Xakimjonovich",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Qosimova Setora",
+"filial": "Farğona",
+"fan": "Kimyo",
+"tur": "asosiy"
+},
+{
+"ism": "Abdurasulov Jahongir",
+"filial": "Farğona",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Fidaniya Shayxutdinova",
+"filial": "Farğona",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Ganieva Xilola",
+"filial": "Farğona",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Kimsanova Diyora",
+"filial": "Farğona",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Maxmudov Bekzodjon",
+"filial": "Farğona",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Mirzaliyev Muhammadqodir",
+"filial": "Farğona",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Mo'ydinov Sarvarbek Oxunjon o'g'li",
+"filial": "Farğona",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Nabijonov Shahzodbek Xayrullo o'g'li",
+"filial": "Farğona",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Sonkina Lyubov",
+"filial": "Farğona",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Tojiboyev Azimjon",
+"filial": "Farğona",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Yigitaliyeva Oyposhshaxon Ilxamjon qizi",
+"filial": "Farğona",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Saidamatova Xalimabonu",
+"filial": "Farğona",
+"fan": "Ochiq mashg'ulot",
+"tur": "asosiy"
+},
+{
+"ism": "Xaydarova Nargizaxon Mutalibovna",
+"filial": "Farğona",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Aminova Dilshoda Ma'murovna",
+"filial": "Farğona",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Jo'rayeva Diyoraxon",
+"filial": "Farğona",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Nodirova Shoxsanamxon Baxtiyorjon qizi",
+"filial": "Farğona",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Raximova Sofiya Denisovna",
+"filial": "Farğona",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Boboyeva Feruza",
+"filial": "Farğona",
+"fan": "Tarbiya",
+"tur": "asosiy"
+},
+{
+"ism": "Chadayeva Alina",
+"filial": "Farğona",
+"fan": "Tarix",
+"tur": "asosiy"
+},
+{
+"ism": "Qosimova Nazokat Norqo'ziyevna",
+"filial": "Farğona",
+"fan": "Tarix",
+"tur": "asosiy"
+},
+{
+"ism": "G'ofurova Madinaxon",
+"filial": "Farğona",
+"fan": "Gimnastika",
+"tur": "amaliyot"
+},
+{
+"ism": "Akramova Sitoraxon",
+"filial": "Farğona",
+"fan": "Kamondan o'q otish",
+"tur": "amaliyot"
+},
+{
+"ism": "Savinova Marina",
+"filial": "Farğona",
+"fan": "Kamondan o'q otish",
+"tur": "amaliyot"
+},
+{
+"ism": "Erkinov Ozodbek",
+"filial": "Farğona",
+"fan": "Ot sporti",
+"tur": "amaliyot"
+},
+{
+"ism": "Urunbayev Sulton",
+"filial": "Farğona",
+"fan": "Ot sporti",
+"tur": "amaliyot"
+},
+{
+"ism": "Nematov Bekzod",
+"filial": "Farğona",
+"fan": "Robototexnika",
+"tur": "amaliyot"
+},
+{
+"ism": "Artiqov Nodir",
+"filial": "Farğona",
+"fan": "Shaxmat",
+"tur": "amaliyot"
+},
+{
+"ism": "Jabborova Fotima",
+"filial": "Farğona",
+"fan": "Shaxmat",
+"tur": "amaliyot"
+},
+{
+"ism": "Sayidamatova Halimabonu",
+"filial": "Farğona",
+"fan": "Suzish",
+"tur": "amaliyot"
+},
+{
+"ism": "Yunusov Soyibjon",
+"filial": "Farğona",
+"fan": "Taekvondo",
+"tur": "amaliyot"
+},
+{
+"ism": "Kurbonova Mushtariybegim",
+"filial": "Farğona",
+"fan": "Tasviriy san'at",
+"tur": "amaliyot"
+},
+{
+"ism": "Mo'ydinova Dilnozaxon",
+"filial": "Farğona",
+"fan": "Tasviriy san'at",
+"tur": "amaliyot"
+},
+{
+"ism": "Abduhalimova Mehribon",
+"filial": "Samarqand",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Fozilova Shaxrizoda",
+"filial": "Samarqand",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ilyosov Muhammaddiyor Zohid o'g'li",
+"filial": "Samarqand",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Merachev Faxriddin",
+"filial": "Samarqand",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Sabridinova Dilsora Farzodovna",
+"filial": "Samarqand",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Aminova Jasmina",
+"filial": "Samarqand",
+"fan": "Biologiya",
+"tur": "asosiy"
+},
+{
+"ism": "Anvarova Mohigul Alisher qizi",
+"filial": "Samarqand",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Artikova Oysha O'tkir qizi",
+"filial": "Samarqand",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Imomova Dilshoda",
+"filial": "Samarqand",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Jalolova Farangiz",
+"filial": "Samarqand",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Marsyanova Veronika Valerevna",
+"filial": "Samarqand",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Musayeva Muxayyo Akramovna",
+"filial": "Samarqand",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Naimova Soliha",
+"filial": "Samarqand",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Sa'dullayeva Rushana",
+"filial": "Samarqand",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Uraqova Shalola Akmal qizi",
+"filial": "Samarqand",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Yusupova Nodira",
+"filial": "Samarqand",
+"fan": "Bog'cha",
+"tur": "asosiy"
+},
+{
+"ism": "Abduraximova Zamira",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Abduxalilova D.",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Axmedova D.",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Axmedova S.",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Erkinova Mahina Ismoilovna",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Jiyanova Gulshan",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Mansurova Madina",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Marg'uba Isakulova",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Murodkulova Nilufar",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Nasimova Xilola",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Nurtayeva Nafisa Sultanmuratovna",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Omonova Indira",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Qurbonova Guljaxon",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Razzokova P",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Sultonova Feruza",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Xalilova Gulnora",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Xamdamova Dildora",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Xusanova F.",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Xusnitdinova Dilyana",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Yusupova Nigina Sherzodovna",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Ziyadullayeva Amira Otabek qizi",
+"filial": "Samarqand",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Kodirov Azamat Abdullayevich",
+"filial": "Samarqand",
+"fan": "Fizika",
+"tur": "asosiy"
+},
+{
+"ism": "Xaitova Nargiza",
+"filial": "Samarqand",
+"fan": "Geografiya",
+"tur": "asosiy"
+},
+{
+"ism": "Abduraxmonova Nargiza",
+"filial": "Samarqand",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Nematullayev Ruslan",
+"filial": "Samarqand",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Qarshiboyev Bekzod",
+"filial": "Samarqand",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Yahyoyev Davronbek",
+"filial": "Samarqand",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Abduxafizov Ma'rufjon Xurshedovich",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ayazova Sabina",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Baxromova Diyora Aslamovna",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Boymurodova Dilbar",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Eshmuradov Dilmurod",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Israilov Umedjon",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Maxmadaliyeva Sevinchbonu Navforovna",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Naimova Dilshoda",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Rahmonov Mirzobek",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Raisov Temur Djafarovich",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Rasulova Nozima",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Sharipov Azamat",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Subxonova Marjona",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Temurova Mavludaxon",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Toshnazarova Sohiba",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Turakulova Dildora",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Tursunqulov Bunyod Farxod o'g'li",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xaydarova Madina",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Yuldashova Nigora Ismatillayevna",
+"filial": "Samarqand",
+"fan": "Kimyo",
+"tur": "asosiy"
+},
+{
+"ism": "Abdumannonov Asadbek",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Azzamova Lola",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Fayzullayeva Sarvinoz",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Gavhar Mirsaidova",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Ibragimova Nargiza",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Mardonova Sanamoy",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Maxmadiyorov Javohir Jahon o'g'li",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Nabiyeva Klara",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Normurodov Jaxongir Uktamovich",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Normurodov Samandar",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Raxmatov Maqsudjon",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Ruzikulov Shaxboz Tulxinovich",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Shokirova Nasiba Najmidinovna",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Yusupov Nizomiddin",
+"filial": "Samarqand",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Abdunazarova Sevara",
+"filial": "Samarqand",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Gulnoza Vaxidova",
+"filial": "Samarqand",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Nuraliyeva O'g'iloy",
+"filial": "Samarqand",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Kamolova Mohinur Baxodirovna",
+"filial": "Samarqand",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Rasulova Kamilla O'ktamovna",
+"filial": "Samarqand",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Raxmanova Mehribon",
+"filial": "Samarqand",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Suvonova Oydin",
+"filial": "Samarqand",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Sobirov Romazon",
+"filial": "Samarqand",
+"fan": "Tarbiya",
+"tur": "asosiy"
+},
+{
+"ism": "Zayniyev A'zam",
+"filial": "Samarqand",
+"fan": "Tarbiya",
+"tur": "asosiy"
+},
+{
+"ism": "Ergashev Boburjon",
+"filial": "Samarqand",
+"fan": "Tarix",
+"tur": "asosiy"
+},
+{
+"ism": "Hakberdiyev Shahzod Anvarovich",
+"filial": "Samarqand",
+"fan": "Tarix",
+"tur": "asosiy"
+},
+{
+"ism": "Suvonova Iroda",
+"filial": "Samarqand",
+"fan": "Gimnastika",
+"tur": "amaliyot"
+},
+{
+"ism": "Nurmanova jasmina",
+"filial": "Samarqand",
+"fan": "Kamondan o'q otish",
+"tur": "amaliyot"
+},
+{
+"ism": "Sitora isoyeva",
+"filial": "Samarqand",
+"fan": "Kamondan o'q otish",
+"tur": "amaliyot"
+},
+{
+"ism": "Sharipova Dildora",
+"filial": "Samarqand",
+"fan": "Muhandislik",
+"tur": "amaliyot"
+},
+{
+"ism": "Tadjiyev Mansur",
+"filial": "Samarqand",
+"fan": "Muhandislik",
+"tur": "amaliyot"
+},
+{
+"ism": "Turakulova Intizor",
+"filial": "Samarqand",
+"fan": "Robototexnika",
+"tur": "amaliyot"
+},
+{
+"ism": "Abdusalomov Dalerjon",
+"filial": "Samarqand",
+"fan": "Shaxmat",
+"tur": "amaliyot"
+},
+{
+"ism": "Choriyeva Munira",
+"filial": "Samarqand",
+"fan": "Shaxmat",
+"tur": "amaliyot"
+},
+{
+"ism": "Cho'lponova Nigina",
+"filial": "Samarqand",
+"fan": "Suzish",
+"tur": "amaliyot"
+},
+{
+"ism": "Rustamov Husan",
+"filial": "Samarqand",
+"fan": "Taekvondo",
+"tur": "amaliyot"
+},
+{
+"ism": "Toshpo'latov Azizbek",
+"filial": "Samarqand",
+"fan": "Taekvondo",
+"tur": "amaliyot"
+},
+{
+"ism": "ЗАРИНА Мустафоева",
+"filial": "Samarqand",
+"fan": "Tasviriy san'at",
+"tur": "amaliyot"
+},
+{
+"ism": "Abduraimova Robiyabonu",
+"filial": "Turkiston",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Abduvoxidova Madinabonu",
+"filial": "Turkiston",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xaitboyeva Moxira Jamoladdin qizi",
+"filial": "Turkiston",
+"fan": "Biologiya",
+"tur": "asosiy"
+},
+{
+"ism": "Alibayeva Shaxnoza Arslanovna",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Ikromjonova G.",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Karimova D.",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Kurbonaliyeva Xurshida Alijon qizi",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Matkarimova Dilfuza",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Nig'matjonova Sh.",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Normamatova Mahliyo Komil qizi",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Qayumova Mohinur Shavkatovna",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Rajabova Dilafro'z",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Raximjonova Dilnura Abdiraxim qizi",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Shermetova Xilola Erkin qizi",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Vakilova Feruza",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Xakimjonova Nargiza",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Yerboyeva Guliston Urinboyevna",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Yuldasheva Manzura Erkin qizi",
+"filial": "Turkiston",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Djurayeva Shoxida",
+"filial": "Turkiston",
+"fan": "Fizika",
+"tur": "asosiy"
+},
+{
+"ism": "Azizov Sarvar",
+"filial": "Turkiston",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Abduraxmonov G'iyosjon",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Abduraxmonova Madinabonu Erkin qizi",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Bozorova Zilolaxon",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Elmurodova Shahzoda",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ibrogimova Shahodat Ahmat qizi",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Isomiddinova Validaxon Saidjonovna",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Jumaboyeva Zulayho Usmon qizi",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Kaydani Yekaterina",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "O'ktamova Dilshoda",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Qudratova Go'zal",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Rustamova Diyora",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Valijonov Farrux Alisher o'g'li",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Allaberdiyeva Elvina",
+"filial": "Turkiston",
+"fan": "Kimyo",
+"tur": "asosiy"
+},
+{
+"ism": "Akmalova Roziya",
+"filial": "Turkiston",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Baratov Akbar",
+"filial": "Turkiston",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Davlatova Lobar",
+"filial": "Turkiston",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Jamg'irov Diyorbek",
+"filial": "Turkiston",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Madinabonu Mavlonova",
+"filial": "Turkiston",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Shaxabiddinova Dilnoza",
+"filial": "Turkiston",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Uzoqboyev Shaxzod Yaxshiliq o'g'li",
+"filial": "Turkiston",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Vayisov Zohir Nurullo o'g'li",
+"filial": "Turkiston",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Xafizova Lola G'ayratovna",
+"filial": "Turkiston",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Ismatullayeva Sarvinoz Sobir qizi",
+"filial": "Turkiston",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Olimova Dildora",
+"filial": "Turkiston",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Jakbarova Shoista",
+"filial": "Turkiston",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Tursunova Sabrina",
+"filial": "Turkiston",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xolboyeva Malika",
+"filial": "Turkiston",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Bozorov Xudoyberdi",
+"filial": "Turkiston",
+"fan": "Tarbiya",
+"tur": "asosiy"
+},
+{
+"ism": "Shomuratova Kumushoy Isoq qizi",
+"filial": "Turkiston",
+"fan": "Tarix",
+"tur": "asosiy"
+},
+{
+"ism": "Orzuyev Sharafiddin",
+"filial": "Turkiston",
+"fan": "Futbol va jismoniy tarbiya",
+"tur": "amaliyot"
+},
+{
+"ism": "Serajiddinova Nazokat",
+"filial": "Turkiston",
+"fan": "Gimnastika",
+"tur": "amaliyot"
+},
+{
+"ism": "Kamolova Malika",
+"filial": "Turkiston",
+"fan": "Kamondan o'q otish",
+"tur": "amaliyot"
+},
+{
+"ism": "Raximova Dilrabo",
+"filial": "Turkiston",
+"fan": "Musiqa",
+"tur": "amaliyot"
+},
+{
+"ism": "Xamrayev Shaxram",
+"filial": "Turkiston",
+"fan": "Robototexnika",
+"tur": "amaliyot"
+},
+{
+"ism": "Isroilov Jo'raboy",
+"filial": "Turkiston",
+"fan": "Shaxmat",
+"tur": "amaliyot"
+},
+{
+"ism": "Abdukodirova Komila",
+"filial": "Turkiston",
+"fan": "Suzish",
+"tur": "amaliyot"
+},
+{
+"ism": "Erkinov Shoazim",
+"filial": "Turkiston",
+"fan": "Suzish",
+"tur": "amaliyot"
+},
+{
+"ism": "Orzuyev Sharafiddin",
+"filial": "Turkiston",
+"fan": "Taekvondo",
+"tur": "amaliyot"
+},
+{
+"ism": "Shomurodov Abdulloh",
+"filial": "Turkiston",
+"fan": "Taekvondo",
+"tur": "amaliyot"
+},
+{
+"ism": "Muratxodjayeva Muallam",
+"filial": "Tinçlik",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Tojiboyeva Lobarxon Baxromjon qizi",
+"filial": "Tinçlik",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Tulyaganova Dinara",
+"filial": "Tinçlik",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xalmatova Odinaxan Mirkazimjanovna",
+"filial": "Tinçlik",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Yaxyayev Fayzulloxon",
+"filial": "Tinçlik",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Payziyeva Sevara Rustam qizi",
+"filial": "Tinçlik",
+"fan": "Biologiya",
+"tur": "asosiy"
+},
+{
+"ism": "Abduraxmonova G.",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Achilova S.",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Arikulova Firuza Ismailovna",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Axmedova Dildora",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Bozorova Sevara",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Gulyamova Z.",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Jalilova Dilrabo Tahirovna",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Komilova Sh.",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Mamarasulova Sitora",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Maxmudova Zulayxo",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Nabiyeva Gulchexra Ganiyevna",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Narzilloyeva Niginabonu",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Parpiyeva Gulbaxor",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Samatova Munavarxon",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Sattorova Feruza Abdugafurovna",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Sodiqova Firuza",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "To'ychiyeva N",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Tuychiyeva Feruza",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Vafina I.",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Valixonova Tamilla",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Zokirova Jamilaxon Baxrom qizi",
+"filial": "Tinçlik",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Alimova Sayyora Kadirbergenovna",
+"filial": "Tinçlik",
+"fan": "Fizika",
+"tur": "asosiy"
+},
+{
+"ism": "Alamov Umid Hamroyevich",
+"filial": "Tinçlik",
+"fan": "Geografiya",
+"tur": "asosiy"
+},
+{
+"ism": "Boymurodov Faridjon Bunyod o'g'li",
+"filial": "Tinçlik",
+"fan": "Geografiya",
+"tur": "asosiy"
+},
+{
+"ism": "Erbekov Bobur",
+"filial": "Tinçlik",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Farhodov Jahongir",
+"filial": "Tinçlik",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Mirzaxo'jayev Xasanxon",
+"filial": "Tinçlik",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Mirzaxo'jayev Xusanxon",
+"filial": "Tinçlik",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Shaxriddinov Murodjon Najmiddinovich",
+"filial": "Tinçlik",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Abdusamatov Farruxbek",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "G'afforova Durdona",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Jo'rayeva Mohinur Baxodir qizi",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Karimova Mohinabonu Abrorjon qizi",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Karimova Sevinch Javlonovna",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Karimxodjayeva Dilzoda",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Komilova Zilola",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Maxamadaminova Iqbola",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Mirzaalimova Donoxon",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Nozimjonov Dilshodjon",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ollanazarova Yulduzoy",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Po`latova To`lganoy",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Qodirova Shahzoda Nodirjon qizi",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Rasulova Dilnura",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Saydaxmatov Xasan",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Shodiyeva Aziza",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Shukurova Shaxnoza",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Sirojiddinova Dilnozaxon",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Sobirbekova Manzura Xolbek qizi",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Yusupova Munojat Baxadirovna",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Yusupxodjayeva Munisa",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Abdusalomova Umuda Tovmuradovna",
+"filial": "Tinçlik",
+"fan": "Kimyo",
+"tur": "asosiy"
+},
+{
+"ism": "Abdiraimov Ne`matjon",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Bababyev Azizbek",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Hamzayev Javohir",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Ikromov Ilxomjon Islomjon o'g'li",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Isakov Shoxrux Shuxrat o'g'li",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Jo'rayev Oybek Farhod o'g'li",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Mahmudov Adhamjon Mansurjon o'g'li",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Roxataliyev Xikmatilla Xusanboy o'g'li",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Shohnazarov Alijon",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Shomurodov Ravshan Alisher o'g'li",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Xo'janazarov A'zamjon Abdumo'min o'g'li",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Xolmurodova Nilufar Bobomurod qizi",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Xushmurodov Ziyodullo",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Yuldoshev Jahongir",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Zokirova Ozoda",
+"filial": "Tinçlik",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Abdinazarova Dildora Qahramon qizi",
+"filial": "Tinçlik",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xamidullayeva Musharraf Sadriddin qizi",
+"filial": "Tinçlik",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Yulduzxon Yunusova",
+"filial": "Tinçlik",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ismailxodjayeva Ziyoda",
+"filial": "Tinçlik",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Mamatova Nazgul Muxividdinovna",
+"filial": "Tinçlik",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Murodullayeva Ruhshona Sadriddin qizi",
+"filial": "Tinçlik",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Tursunboyeva Aziza",
+"filial": "Tinçlik",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Ashurov Romazon",
+"filial": "Tinçlik",
+"fan": "Tarbiya",
+"tur": "asosiy"
+},
+{
+"ism": "Rustambekova Shoxsanam",
+"filial": "Tinçlik",
+"fan": "Tarbiya",
+"tur": "asosiy"
+},
+{
+"ism": "Ziyodullayev Sanjarxon",
+"filial": "Tinçlik",
+"fan": "Tarbiya",
+"tur": "asosiy"
+},
+{
+"ism": "Egamberdiyev Samandar Nodirjon o'g'li",
+"filial": "Tinçlik",
+"fan": "Tarix",
+"tur": "asosiy"
+},
+{
+"ism": "Jumabayeva Elvira Sarsenbay qizi",
+"filial": "Tinçlik",
+"fan": "Tarix",
+"tur": "asosiy"
+},
+{
+"ism": "Kadirova Arofat",
+"filial": "Tinçlik",
+"fan": "Futbol va jismoniy tarbiya",
+"tur": "amaliyot"
+},
+{
+"ism": "Ikromova Rayhona",
+"filial": "Tinçlik",
+"fan": "Gimnastika",
+"tur": "amaliyot"
+},
+{
+"ism": "Abdig'aniyev Soibjon",
+"filial": "Tinçlik",
+"fan": "Kamondan o'q otish",
+"tur": "amaliyot"
+},
+{
+"ism": "Erkinov Begali",
+"filial": "Tinçlik",
+"fan": "Muhandislik",
+"tur": "amaliyot"
+},
+{
+"ism": "Zaxro",
+"filial": "Tinçlik",
+"fan": "Muhandislik",
+"tur": "amaliyot"
+},
+{
+"ism": "Abdullayev Abduxalil",
+"filial": "Tinçlik",
+"fan": "Robototexnika",
+"tur": "amaliyot"
+},
+{
+"ism": "Adhamov Baxtiyor",
+"filial": "Tinçlik",
+"fan": "Robototexnika",
+"tur": "amaliyot"
+},
+{
+"ism": "Najmiddinov Sirojiddin",
+"filial": "Tinçlik",
+"fan": "Shaxmat",
+"tur": "amaliyot"
+},
+{
+"ism": "Abduraimov Jamshid",
+"filial": "Tinçlik",
+"fan": "Taekvondo",
+"tur": "amaliyot"
+},
+{
+"ism": "Nurillayeva Mohinur",
+"filial": "Tinçlik",
+"fan": "Tasviriy san'at",
+"tur": "amaliyot"
+},
+{
+"ism": "Gayubova Gulrux Xusenovna",
+"filial": "Yunusobod",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Narzullayev Muhammadamin",
+"filial": "Yunusobod",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Onarboyev Muhammadyusuf",
+"filial": "Yunusobod",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Sultanova Feruza Farxod qizi",
+"filial": "Yunusobod",
+"fan": "Arab tili",
+"tur": "asosiy"
+},
+{
+"ism": "Sultonova Moxichehra",
+"filial": "Yunusobod",
+"fan": "Biologiya",
+"tur": "asosiy"
+},
+{
+"ism": "Achilova N.",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Aliyeva Dilobarxon",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Chernisheva Regina",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Djumaniyazova Zulfizar",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Karimova B.",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Karimova Muhayyo Baxadirovna",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Kaxorova O.",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Madjitova Gulnoz",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Mirzakarimov Amina",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Musaqulova Maysara",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Odinayeva Xilola Baxtiyor qizi",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Qahhorova Munisxon Abdug'afforovna",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Rasulova Ruhsora",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Raxmonova Sug'diyona Shuxrat qizi",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Rixsiyeva M.",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Rustamova Iroda",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Ruziyeva M.",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Ubaydullayeva Fotima",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Xamrayeva Matluba Nimatullayevna",
+"filial": "Yunusobod",
+"fan": "Boshlang'ich ta'lim",
+"tur": "asosiy"
+},
+{
+"ism": "Tursunova Rushana",
+"filial": "Yunusobod",
+"fan": "Fizika",
+"tur": "asosiy"
+},
+{
+"ism": "Raximberdiyev Muzaffar Razzakovich",
+"filial": "Yunusobod",
+"fan": "Geografiya",
+"tur": "asosiy"
+},
+{
+"ism": "Ibodullo Nurulloyev",
+"filial": "Yunusobod",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Rajabov Temurbek",
+"filial": "Yunusobod",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Yarashev Xumoyun",
+"filial": "Yunusobod",
+"fan": "Informatika",
+"tur": "asosiy"
+},
+{
+"ism": "Abdusharipova Baxtigul",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Akramov A'zam",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Axmedov Otabek",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Azadova Xilola",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Bayzakova Maqpal",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Buvamirzayeva Risliqxon",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Djumanazarova Ikbol",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Egamberdiyeva Nargiza",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Nurmatova Moxlaroyim",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Oqilova Diyoraxon Jaxongir qizi",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Sharipova Arofat",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Sultonova Nilufar Mansurbek qizi",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xanjarov Kamron",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xanjarov Qudrat",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xikmatova Sevinch Axatilla qizi",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Xolmuratov G'ayratilla",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Yunusova Madina",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Zokirova Madinaxon",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"tur": "asosiy"
+},
+{
+"ism": "Imomova Nigora",
+"filial": "Yunusobod",
+"fan": "Kimyo",
+"tur": "asosiy"
+},
+{
+"ism": "Hasanova Ma'rifat",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Ma'rufjonov Murodjon Muzaffarjonovich",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Madetova Asem Muxtar qizi",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Mehmonov Javlonbek Obidjonovich",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Nilufar Umataliyeva",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Ochilov Avazbek Rafail o'g'li",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Rabbiyev Alisher",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Rahmonov Ilyos",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Razzoqov Surojbek",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Teshaboyev Ziyobek",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Xaqqulov Nodirbek",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Yangiboyev Jamshid",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"tur": "asosiy"
+},
+{
+"ism": "Davlatova Elshoda",
+"filial": "Yunusobod",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Kozimova Zebinis",
+"filial": "Yunusobod",
+"fan": "Ona tili",
+"tur": "asosiy"
+},
+{
+"ism": "Kazachuk Amaliya Nikolayevna",
+"filial": "Yunusobod",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Miliqulova Feruzaoy Muzaffar qizi",
+"filial": "Yunusobod",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Mirolimova Madina",
+"filial": "Yunusobod",
+"fan": "Rus tili",
+"tur": "asosiy"
+},
+{
+"ism": "Turopov Umirbek",
+"filial": "Yunusobod",
+"fan": "Tarbiya",
+"tur": "asosiy"
+},
+{
+"ism": "Naraliyeva Dilnoza",
+"filial": "Yunusobod",
+"fan": "Tarix",
+"tur": "asosiy"
+},
+{
+"ism": "Yorqinbekov Rustam",
+"filial": "Yunusobod",
+"fan": "Tarix",
+"tur": "asosiy"
+},
+{
+"ism": "Isakova Kamola",
+"filial": "Yunusobod",
+"fan": "Gimnastika",
+"tur": "amaliyot"
+},
+{
+"ism": "Rahmatullayev Abdulloh",
+"filial": "Yunusobod",
+"fan": "Kamondan o'q otish",
+"tur": "amaliyot"
+},
+{
+"ism": "Azimov Farxad",
+"filial": "Yunusobod",
+"fan": "Muhandislik",
+"tur": "amaliyot"
+},
+{
+"ism": "Djalolova Dildora",
+"filial": "Yunusobod",
+"fan": "Muhandislik",
+"tur": "amaliyot"
+},
+{
+"ism": "Usmonov Akmal",
+"filial": "Yunusobod",
+"fan": "Muhandislik",
+"tur": "amaliyot"
+},
+{
+"ism": "Shakirova Rayhon",
+"filial": "Yunusobod",
+"fan": "Robototexnika",
+"tur": "amaliyot"
+},
+{
+"ism": "O'razmuhammedova Maysa",
+"filial": "Yunusobod",
+"fan": "Shaxmat",
+"tur": "amaliyot"
+},
+{
+"ism": "Ibraximova Sevara",
+"filial": "Yunusobod",
+"fan": "Suzish",
+"tur": "amaliyot"
+},
+{
+"ism": "O'rinboyev Jamshid",
+"filial": "Yunusobod",
+"fan": "Taekvondo",
+"tur": "amaliyot"
+},
+{
+"ism": "Rizaqulova Maftuna",
+"filial": "Yunusobod",
+"fan": "Tasviriy san'at",
+"tur": "amaliyot"
+},
+{
+"ism": "Sharipova Dildora",
+"filial": "Yunusobod",
+"fan": "Tikuvchilik",
+"tur": "amaliyot"
+}
+]
+}

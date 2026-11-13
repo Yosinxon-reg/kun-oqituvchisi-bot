@@ -6,7 +6,8 @@ Asosiy qoidalar (egasi bergan topşiriq böyiça):
 * Sana — xabar guruhga yuborilgan sana (Asia/Tashkent), dars sanasi emas.
 * Nusxalar: bir xabar (chat+message_id) bir marta; bir xil media (file_unique_id) qayta kelsa — nusxa.
   Tahrir avvalgi yozuvni yangilaydi. Şubhali takrorlar tekşirişga chiqariladi.
-* Hamma narsa faqat egasining şaxsiy çatiga yuboriladi. Guruhga hech narsa yozilmaydi.
+* Hisob-kitob va taşakkurnomalar faqat egasining şaxsiy çatiga. Manba guruhiga hech narsa yozilmaydi.
+* Ismlar tekşiruvi (rasmiy röyxat böyiça) — har kuni 17:45 da RegMon guruhiga; javoblar doimiy saqlanadi.
 """
 import datetime as dt
 import hashlib
@@ -22,6 +23,7 @@ from zoneinfo import ZoneInfo
 
 import requests
 
+import names
 import render2
 
 TOKEN = os.environ.get("BOT_TOKEN", "")
@@ -119,6 +121,9 @@ def default_state():
         "milestones": {},             # "YYYY-MM|filial" -> [100, 200]
         "certs": [],                  # yuborilgan taşakkurnomalar jurnali
         "audit": [],
+        # ismlar tekşiruvi
+        "regmon": None, "chats": {}, "aliases": {}, "roster_add": [], "roster": None, "qmsg": {},
+        "ism_live": None,
     }
 
 
@@ -135,6 +140,9 @@ def load_state():
             st = migrate(old, st)
     if st["rec_snap"] is None:
         st["rec_snap"] = records_state(st, now().date())
+    for r in st["results"]:
+        if "nc" not in r:
+            apply_check(st, r)
     return st
 
 
@@ -366,8 +374,12 @@ def ingest(st, m, notify=True, edited=False):
             old["holat"] = "hisob" if p["tasdiq"] else "tekshir"
             old["sabab"] = p["sabab"]
             recheck_cap(st, old)
+        if (old["ism"], old["filial"]) != before[:2]:
+            apply_check(st, old, force=True)
+            if notify:
+                live_ism(st, old)
         if (old["ism"], old["filial"], old["holat"]) != before:
-            old["tuzatildi"] = True
+            old["tuzatildi"] = bool(old["cert_sent"])
             audit(st, "tahrir", f"#{old['id']}: {before} -> {(old['ism'], old['filial'], old['holat'])}")
             return True
         return False
@@ -393,7 +405,10 @@ def ingest(st, m, notify=True, edited=False):
             r["holat"], r["sabab"] = "tekshir", "şubhali takror: şu kuni şu ustozning aynan şu darsi bor"
         recheck_cap(st, r)
     st["results"].append(r)
-    audit(st, "yangi", f"#{r['id']} {r['ism']} | {r['filial']} | {r['holat']} {r['sabab']}")
+    apply_check(st, r)
+    audit(st, "yangi", f"#{r['id']} {r['ism']} | {r['filial']} | {r['holat']} {r['sabab']} | ism: {r['nc']['holat']}")
+    if notify:
+        live_ism(st, r)
     if notify and r["holat"] == "tekshir":
         say(st, f"⚠️ Tekşiriş kutilmoqda #{r['id']}\n{r['ism'] or '—'} · {r['filial'] or '—'}\nSabab: {r['sabab']}\n"
                 f"{r['link']}\n\nTasdiqlaş: /tasdiq {r['id']}   Bekor: /bekor {r['id']}\n"
@@ -610,8 +625,10 @@ def build_package(st, day):
     dcount = {}
     for r in new:
         dcount[r["filial"]] = dcount.get(r["filial"], 0) + 1
-    certs = sorted(new, key=lambda r: (-dcount[r["filial"]], ranks.get(r["filial"], 9), r["posted"], r["id"]))
-    return {"rating": r1, "counts": r2, "certs": certs, "order": order, "ranks": ranks}
+    allc = sorted(new, key=lambda r: (-dcount[r["filial"]], ranks.get(r["filial"], 9), r["posted"], r["id"]))
+    certs = [r for r in allc if not held(r)]
+    hold = [r for r in allc if held(r)]
+    return {"rating": r1, "counts": r2, "certs": certs, "held": hold, "order": order, "ranks": ranks}
 
 
 def render_cert(st, r):
@@ -639,6 +656,8 @@ def send_package(st, day, tur="yakuniy", sinov=False):
                 r["cert"], st["next"] = n, n + 1
                 used.add(n)
             r["paket"] = key
+        for r in pk["held"]:
+            r["paket"] = key
         st["packages"][key] = {"ts": now().isoformat(timespec="seconds"), "ids": [r["id"] for r in pk["certs"]],
                                "steps": []}
         st["order"], st["ranks"] = pk["order"], pk["ranks"]
@@ -654,23 +673,13 @@ def send_package(st, day, tur="yakuniy", sinov=False):
         if not sinov and r["cert_sent"] and not r.get("tuzatildi"):
             continue
         n = r["cert"] if r["cert"] is not None else 0
-        try:
-            img = render2.render(st.get("dizayn", "v3"), r["maktab"], r["ism"], n, D(r["sana"]), r["filial"])
-            cap = st["izoh"].format(ism=r["ism"], filial=r["filial"], fan=r["fan"], raqam=f"{n:04d}", sana=sana_txt(D(r["sana"])))
-            if r.get("tuzatildi") and r["cert_sent"]:
-                cap = "✏️ TUZATILGAN TAŞAKKURNOMA\n" + cap
-            if sinov:
-                cap = "🧪 SINOV\n" + cap
-            ok = tg("sendDocument", chat_id=st["owner"], caption=cap[:1024],
-                    files={"document": (f"Kun öqituvçisi {n}.jpg", img, "image/jpeg")})
-            if ok is not None and not sinov:
-                r["cert_sent"], r["tuzatildi"] = True, False
-                st["certs"].append({"n": n, "id": r["id"], "ism": r["ism"], "filial": r["filial"], "sana": r["sana"],
-                                    "paket": key, "ts": now().isoformat(timespec="seconds")})
-        except Exception:
-            traceback.print_exc()
-            say(st, f"⚠️ #{r['id']} {r['ism']} taşakkurnomasini tayyorlab bölmadi — tekşiraman.")
+        send_cert(st, r, n, key, sinov=sinov)
         time.sleep(0.5)
+    if pk["held"] and "held" not in steps:
+        say(st, (pref if sinov else "") + f"⏳ {len(pk['held'])} ta taşakkurnoma ism tasdiğini kutmoqda "
+            f"({'RegMon guruhida' if st.get('regmon') else 'sizga'} savol yuborilgan). Qaror bölişi bilan şu yerga keladi:\n" +
+            "\n".join(f"#{r['id']} {r['ism']} — {r['filial'] or '—'}" for r in pk["held"]))
+        steps.append("held")
     if rec_parts and "records" not in steps:
         import html as _h
         body = "\n\n".join(rec_parts)
@@ -686,18 +695,10 @@ def send_package(st, day, tur="yakuniy", sinov=False):
 
 def resend_certs(st):
     """Qayta işga tuşganda: paketga kirgan, lekin fayli yuborilmay qolgan taşakkurnomalar."""
-    left = [r for r in st["results"] if r["holat"] == "hisob" and r.get("paket") and not r["cert_sent"] and r["cert"]]
+    left = [r for r in st["results"] if r["holat"] == "hisob" and r.get("paket") and not r["cert_sent"] and r["cert"]
+            and not held(r)]
     for r in left:
-        try:
-            img = render2.render(st.get("dizayn", "v3"), r["maktab"], r["ism"], r["cert"], D(r["sana"]), r["filial"])
-            cap = st["izoh"].format(ism=r["ism"], filial=r["filial"], fan=r["fan"], raqam=f"{r['cert']:04d}", sana=sana_txt(D(r["sana"])))
-            if tg("sendDocument", chat_id=st["owner"], caption=cap[:1024],
-                  files={"document": (f"Kun öqituvçisi {r['cert']}.jpg", img, "image/jpeg")}) is not None:
-                r["cert_sent"] = True
-                st["certs"].append({"n": r["cert"], "id": r["id"], "ism": r["ism"], "filial": r["filial"], "sana": r["sana"],
-                                    "paket": r["paket"], "ts": now().isoformat(timespec="seconds")})
-        except Exception:
-            traceback.print_exc()
+        send_cert(st, r, r["cert"], r["paket"])
     if left:
         save_state(st, "qolgan taşakkurnomalar")
 
@@ -707,6 +708,13 @@ def schedule_tick(st, t):
     today = t.date().isoformat()
     hm = (t.hour, t.minute)
     h, mi = map(int, st["vaqt"].split(":"))
+    if hm >= (17, 45) and f"{today}|ismlar" not in st["packages"]:
+        st["packages"][f"{today}|ismlar"] = {"ts": t.isoformat(), "ids": [], "steps": []}
+        ism_report(st, t.date())
+        st["ism_live"] = today
+        did = True
+    else:
+        did = False
     if st.get("setup_day") == today:
         if hm >= (17, 0) and f"{today}|dastlabki" not in st["packages"] and hm < (h, mi):
             if send_package(st, t.date(), "dastlabki"):
@@ -717,7 +725,378 @@ def schedule_tick(st, t):
         if not send_package(st, t.date(), "yakuniy"):
             st["packages"][f"{today}|yakuniy"] = {"ts": t.isoformat(), "ids": [], "steps": ["boş"]}
         return True
-    return False
+    return did
+
+
+# ================================================================ ismlar tekşiruvi (rasmiy röyxat)
+def held(r):
+    nc = r.get("nc")
+    return bool(nc) and nc["holat"] in ("savol", "yoq") and not nc.get("qaror")
+
+
+def cname(r):
+    """Taşakkurnomadagi ism: tasdiqlangan rasmiy şakl (yangi alifboda)."""
+    return r.get("ism_r") or names.yangi(r["ism"] or "")
+
+
+def send_cert(st, r, n, key, sinov=False):
+    try:
+        ism = cname(r)
+        img = render2.render(st.get("dizayn", "v3"), r["maktab"], ism, n, D(r["sana"]), r["filial"])
+        cap = st["izoh"].format(ism=ism, filial=r["filial"], fan=r["fan"], raqam=f"{n:04d}", sana=sana_txt(D(r["sana"])))
+        if r.get("tuzatildi") and r["cert_sent"]:
+            cap = "✏️ TUZATILGAN TAŞAKKURNOMA\n" + cap
+        if sinov:
+            cap = "🧪 SINOV\n" + cap
+        ok = tg("sendDocument", chat_id=st["owner"], caption=cap[:1024],
+                files={"document": (f"Kun öqituvçisi {n}.jpg", img, "image/jpeg")})
+        if ok is not None and not sinov:
+            r["cert_sent"], r["tuzatildi"], r["cert_ism"] = True, False, ism
+            st["certs"].append({"n": n, "id": r["id"], "ism": ism, "filial": r["filial"], "sana": r["sana"],
+                                "paket": key, "ts": now().isoformat(timespec="seconds")})
+        return ok is not None
+    except Exception:
+        traceback.print_exc()
+        say(st, f"⚠️ #{r['id']} {r['ism']} taşakkurnomasini tayyorlab bölmadi — tekşiraman.")
+        return False
+
+
+def apply_check(st, r, force=False):
+    """Ismni röyxat bilan solişhtiriş. Avvalgi qaror bölsa (force bölmasa) özgartirilmaydi."""
+    old = r.get("nc") or {}
+    if old.get("qaror") and not force:
+        return
+    nc = names.check(st, r["ism"], r["filial"], f"{r.get('fan', '')} {r.get('dars', '')}")
+    nc.update(qaror=None, xabar=False, auto_xabar=False)
+    r["nc"] = nc
+    before = r.get("cert_ism")
+    r["ism_r"] = nc["rasmiy"] if nc["holat"] in ("ok", "auto") else None
+    if r["cert_sent"] and r["ism_r"] and before and r["ism_r"] != before:
+        r["tuzatildi"] = True
+
+
+def ism_target(st):
+    return st.get("regmon") or st.get("owner")
+
+
+def who(u):
+    if not u:
+        return "?"
+    n = " ".join(x for x in (u.get("first_name"), u.get("last_name")) if x)
+    return n + (f" (@{u['username']})" if u.get("username") else "")
+
+
+def q_text(st, r):
+    nc = r["nc"]
+    belgi = "❓ ANIQLAŞTIRIŞ KERAK" if nc["holat"] == "savol" else "❗ RÖYXATDA YÖQ"
+    L = [f"{belgi} · #{r['id']}",
+         f"📍 {r['filial'] or 'filial yozilmagan'} · {r['fan'] or 'fan yozilmagan'}",
+         f"📝 Postda: «{r['ism'] or '—'}»",
+         f"📅 {sana_txt(D(r['sana']))}" + (f" · {r['link']}" if r.get("link") else ""),
+         f"ℹ️ {nc['izoh']}"]
+    if nc["nomzodlar"]:
+        L += ["", "Öxşaşlari:"]
+        L += [f"{i}) {c['disp']} — {c['filial']}, {c['fan']} ({c['ball']}%)" for i, c in enumerate(nc["nomzodlar"], 1)]
+    if r["sana"] < now().date().isoformat():
+        L += ["", f"⏳ {sana_txt(D(r['sana']))}dan beri qaror kutmoqda"]
+    L += ["", "Tugmani bosing yoki şu xabarga «Javob berish» qilib yozing:",
+          "raqam (1, 2…) · yangi · postdagi · kiritilmasin · yoki Familiya Ism; Filial; fan"]
+    return "\n".join(L)
+
+
+def q_keyboard(r):
+    rows = [[{"text": f"{i}) {c['disp']}"[:60], "callback_data": f"n|{r['id']}|c{i}"}]
+            for i, c in enumerate(r["nc"]["nomzodlar"], 1)]
+    rows.append([{"text": "🆕 Yangi ustoz", "callback_data": f"n|{r['id']}|new"},
+                 {"text": "📝 Postdagi ism", "callback_data": f"n|{r['id']}|post"}])
+    rows.append([{"text": "❌ Kiritilmasin", "callback_data": f"n|{r['id']}|no"}])
+    return {"inline_keyboard": rows}
+
+
+def post_question(st, r):
+    chat = ism_target(st)
+    if not chat:
+        return
+    res = tg("sendMessage", chat_id=chat, text=q_text(st, r)[:4000], reply_markup=q_keyboard(r),
+             disable_web_page_preview=True)
+    if res:
+        st["qmsg"][f"{chat}:{res['message_id']}"] = r["id"]
+        r["nc"]["xabar"] = True
+
+
+def auto_line(r):
+    nc = r["nc"]
+    s = f"#{r['id']} «{r['ism']}» → «{nc['rasmiy']}» ({r['filial']}"
+    if nc["nomzodlar"]:
+        s += f", {nc['nomzodlar'][0]['fan']}"
+    s += ")"
+    if nc.get("izoh"):
+        s += f" — {nc['izoh']}"
+    return s
+
+
+def auto_keyboard(rs):
+    rows, row = [], []
+    for r in rs:
+        row.append({"text": f"↩️ #{r['id']}", "callback_data": f"n|{r['id']}|undo"})
+        if len(row) == 4:
+            rows.append(row); row = []
+    if row:
+        rows.append(row)
+    return {"inline_keyboard": rows}
+
+
+def ism_report(st, day):
+    """17:45: kunlik ismlar tekşiruvi. Ochiq savollar har kuni qayta çiqadi — hech kim qolib ketmaydi."""
+    chat = ism_target(st)
+    if not chat:
+        return
+    iso = day.isoformat()
+    act = [r for r in st["results"] if r["holat"] in ("hisob", "tekshir") and r.get("nc")]
+    today = [r for r in act if r["sana"] == iso]
+    ok = [r for r in today if r["nc"]["holat"] == "ok" and not r["nc"].get("qaror")]
+    auto = [r for r in today if r["nc"]["holat"] == "auto" and not r["nc"].get("qaror")]
+    open_q = [r for r in act if held(r)]
+    sav = [r for r in open_q if r["nc"]["holat"] == "savol"]
+    yoq = [r for r in open_q if r["nc"]["holat"] == "yoq"]
+    pre = "" if st.get("regmon") else "ℹ️ RegMon guruhi hali aniqlanmagan — şu sababli sizga yuborildi. Guruhda /regmon deb yozing.\n\n"
+    if not auto and not open_q:
+        tg("sendMessage", chat_id=chat, text=pre + f"📋 ISMLAR TEKŞIRUVI — {sana_txt(day)}\n\n✅ Barça ismlar röyxatga mos ({len(ok)} ta).")
+        return
+    tg("sendMessage", chat_id=chat, text=pre + f"📋 ISMLAR TEKŞIRUVI — {sana_txt(day)}\n\n"
+       f"✅ Töğri yozilganlar: {len(ok)} ta\n✏️ Avtomatik töğrilanganlar: {len(auto)} ta\n"
+       f"❓ Aniqlaştiriş kerak: {len(sav)} ta\n❗ Röyxatda yöq: {len(yoq)} ta" +
+       ("\n\nQuyidagi har bir savolga javob bering. Qaror qilinmaguncha taşakkurnoma kutib turadi, savol har kuni 17:45 da qayta çiqadi."
+        if open_q else ""))
+    if auto:
+        txt = "✏️ AVTOMATIK TÖĞRILANGANLAR (röyxat böyiça)\n\n" + "\n".join(auto_line(r) for r in auto) + \
+              "\n\nNotöğri bölsa — ↩️ tugmasini bosing, savolga aylanadi."
+        tg("sendMessage", chat_id=chat, text=txt[:4000], reply_markup=auto_keyboard(auto[:96]))
+        for r in auto:
+            r["nc"]["auto_xabar"] = True
+    for r in sorted(open_q, key=lambda r: (r["sana"], r["id"])):
+        post_question(st, r)
+        time.sleep(0.3)
+    audit(st, "ismlar", f"{iso}: ok {len(ok)}, auto {len(auto)}, savol {len(sav)}, yoq {len(yoq)}")
+
+
+def live_ism(st, r):
+    """17:45 dan keyin kelgan postlar — darhol."""
+    if st.get("ism_live") != now().date().isoformat() or r["holat"] not in ("hisob", "tekshir"):
+        return
+    chat = ism_target(st)
+    if not chat:
+        return
+    if held(r) and not r["nc"].get("xabar"):
+        post_question(st, r)
+    elif r["nc"]["holat"] == "auto" and not r["nc"].get("auto_xabar"):
+        tg("sendMessage", chat_id=chat, text="✏️ AVTOMATIK TÖĞRILANDI\n\n" + auto_line(r),
+           reply_markup=auto_keyboard([r]))
+        r["nc"]["auto_xabar"] = True
+
+
+def deliver_now(st, r):
+    """Qarordan keyin: paket allaqaçon ketgan bölsa — taşakkurnoma darhol egasiga."""
+    if r["holat"] != "hisob" or held(r) or not r.get("paket"):
+        return
+    if r["cert_sent"] and not r.get("tuzatildi"):
+        return
+    if r["cert"] is None:
+        used = {c["n"] for c in st["certs"]}
+        n = st["next"]
+        while n in used:
+            n += 1
+        r["cert"], st["next"] = n, n + 1
+        save_state(st, f"raqam #{r['id']}")
+    send_cert(st, r, r["cert"], r["paket"])
+
+
+def resolve(st, r, action, arg, user):
+    """Savolga qaror. -> (natija matni) yoki None (tuşunilmadi)."""
+    nc = r["nc"]
+    kim = who(user)
+    if action == "undo":
+        if nc["holat"] != "auto" or nc.get("qaror"):
+            return "Bu yozuv allaqaçon özgartirilgan."
+        nc.update(holat="savol", izoh=f"avtomatik tuzatiş bekor qilindi ({kim}); avval: «{nc['rasmiy']}»", rasmiy=None,
+                  xabar=False)
+        r["ism_r"] = None
+        audit(st, "ism-undo", f"#{r['id']} {kim}")
+        post_question(st, r)
+        return f"↩️ #{r['id']} savolga aylantirildi."
+    if nc.get("qaror"):
+        return f"Bu savolga allaqaçon javob berilgan: {nc['qaror']['matn']}"
+    if action.startswith("c"):
+        i = int(action[1:]) - 1
+        if not 0 <= i < len(nc["nomzodlar"]):
+            return None
+        c = nc["nomzodlar"][i]
+        r["ism_r"] = c["disp"]
+        st["aliases"][names.alias_key(r["ism"] or "", r["filial"])] = {"ism": c["ism"], "filial": c["filial"], "disp": c["disp"]}
+        if not r["filial"]:
+            fil = find_filial(c["filial"])
+            r["filial"], r["maktab"] = fil
+            st["aliases"][names.alias_key(r["ism"] or "", r["filial"])] = {"ism": c["ism"], "filial": c["filial"], "disp": c["disp"]}
+        matn = f"{i + 1}-nomzod: «{c['disp']}» ({c['filial']}, {c['fan']})"
+    elif action == "new":
+        if not r["ism"] or not r["filial"]:
+            return "Yangi ustoz qöşiş uçun ism va filial kerak — «Familiya Ism; Filial; fan» deb yozing."
+        fans = names.fan_set(r.get("fan", ""))
+        st["roster_add"].append({"ism": r["ism"], "filial": r["filial"], "fan": next(iter(fans), r.get("fan") or "—"),
+                                 "tur": "asosiy", "qoshildi": now().date().isoformat(), "kim": kim})
+        r["ism_r"] = names.display(r["ism"])
+        matn = f"yangi ustoz — «{r['ism_r']}» röyxatga qöşildi ({r['filial']})"
+    elif action == "post":
+        if not r["ism"]:
+            return None
+        r["ism_r"] = names.display(r["ism"])
+        matn = f"postdagi ism bilan — «{r['ism_r']}» (röyxatga qöşilmadi)"
+    elif action == "no":
+        r["holat"], r["sabab"] = "bekor", f"RegMon qarori: kiritilmasin ({kim})"
+        r["ism_r"] = None
+        matn = "kiritilmasin — natija hisobdan çiqarildi, taşakkurnoma berilmaydi"
+    elif action == "text":
+        parts = [x.strip() for x in arg.split(";")]
+        ism, _ = split_name(" ".join(w[:1].upper() + w[1:] for w in parts[0].split()))
+        if not ism:
+            return None
+        fil = find_filial(parts[1]) if len(parts) > 1 and parts[1] else None
+        if len(parts) > 1 and parts[1] and not fil:
+            return None
+        if fil:
+            r["filial"], r["maktab"] = fil
+        if len(parts) > 2 and parts[2]:
+            r["fan"] = parts[2]
+        chk = names.check(st, ism, r["filial"], r.get("fan", ""))
+        if chk["holat"] not in ("ok", "auto") and len(parts) < 2:
+            return None                       # erkin gap ism deb taxmin qilinmaydi
+        if chk["holat"] == "ok" or (chk["holat"] == "auto" and len(parts) < 2):
+            r["ism_r"] = chk["rasmiy"]
+            e = chk["nomzodlar"][0] if chk["nomzodlar"] else None
+            if e:
+                st["aliases"][names.alias_key(r["ism"] or "", r["filial"])] = {"ism": e["ism"], "filial": e["filial"], "disp": chk["rasmiy"]}
+            matn = f"«{chk['rasmiy']}» (röyxat böyiça) — {r['filial']}"
+        else:
+            r["ism_r"] = names.display(ism)
+            matn = f"yozilgan ism bilan — «{r['ism_r']}» ({r['filial'] or '—'}; röyxatda yöq)"
+    else:
+        return None
+    if r["holat"] == "tekshir" and r["ism"] and r["filial"] and r.get("sabab", "").startswith("filial topilmadi") \
+            and "natija" not in r["sabab"]:
+        r["holat"], r["sabab"] = "hisob", "filial RegMon qarori bilan aniqlandi"
+        recheck_cap(st, r)
+    nc["qaror"] = {"matn": matn, "kim": kim, "ts": now().isoformat(timespec="seconds"), "action": action}
+    audit(st, "ism-qaror", f"#{r['id']} {r['ism']}: {matn} — {kim}")
+    if r["cert_sent"] and r.get("ism_r") and r["ism_r"] != r.get("cert_ism"):
+        r["tuzatildi"] = True
+    deliver_now(st, r)
+    return f"✅ #{r['id']}: {matn}"
+
+
+ANS = [("kiritilmasin", "no"), ("kiritma", "no"), ("bekor", "no"), ("yangi", "new"), ("postdagi", "post"),
+       ("postdagidek", "post"), ("shundayligicha", "post")]
+
+
+def parse_answer(text):
+    t = (text or "").strip()
+    low = _norm(t).strip(" .!")
+    if re.fullmatch(r"\d", low):
+        return f"c{low}", ""
+    for k, a in ANS:
+        if low.startswith(_norm(k)):
+            return a, ""
+    return "text", t
+
+
+def finish_q(st, chat, mid, r, res):
+    """Savol xabarini yopiş: qaror yoziladi, tugmalar olinadi."""
+    tg("editMessageText", chat_id=chat, message_id=mid, text=(q_text(st, r) + f"\n\n{res}\n👤 {r['nc']['qaror']['kim']}")[:4000],
+       disable_web_page_preview=True)
+
+
+def handle_callback(st, cq):
+    data = cq.get("data") or ""
+    msg = cq.get("message") or {}
+    chat = msg.get("chat", {}).get("id")
+    if not data.startswith("n|") or chat not in (st.get("regmon"), st.get("owner")):
+        tg("answerCallbackQuery", callback_query_id=cq["id"], text="Bu tugma bu yerda ishlamaydi.")
+        return False
+    _, rid, action = data.split("|")
+    r = next((x for x in st["results"] if x["id"] == int(rid)), None)
+    if not r:
+        tg("answerCallbackQuery", callback_query_id=cq["id"], text="Yozuv topilmadi.")
+        return False
+    res = resolve(st, r, action, "", cq.get("from"))
+    tg("answerCallbackQuery", callback_query_id=cq["id"], text=(res or "Tuşunmadim")[:190])
+    if res and action != "undo" and r["nc"].get("qaror"):
+        finish_q(st, chat, msg["message_id"], r, res)
+    return True
+
+
+def handle_answer_msg(st, m):
+    """RegMon (yoki egasi) savol xabariga reply qilib yozdi."""
+    chat = m["chat"]["id"]
+    rep = m.get("reply_to_message") or {}
+    rid = st["qmsg"].get(f"{chat}:{rep.get('message_id')}")
+    if not rid:
+        return False
+    r = next((x for x in st["results"] if x["id"] == rid), None)
+    if not r:
+        return False
+    action, arg = parse_answer(m.get("text") or "")
+    res = resolve(st, r, action, arg, m.get("from"))
+    if res is None:
+        tg("sendMessage", chat_id=chat, reply_to_message_id=m["message_id"],
+           text="🤔 Tuşunmadim — savol oçiq qoldi. Yozing: raqam (1, 2…), «yangi», «postdagi», «kiritilmasin» "
+                "yoki «Familiya Ism; Filial; fan».")
+        return False
+    tg("sendMessage", chat_id=chat, reply_to_message_id=m["message_id"], text=res)
+    if r["nc"].get("qaror"):
+        finish_q(st, chat, rep["message_id"], r, res)
+    return True
+
+
+def note_chat(st, chat, frm=None, text=""):
+    """Guruhlarni qayd etiş; RegMon guruhini aniqlaş."""
+    cid, title = chat["id"], chat.get("title") or ""
+    st["chats"][str(cid)] = title
+    if cid == st.get("group"):
+        return
+    t = _norm(title).replace(" ", "")
+    if st.get("regmon") is None and ("regmon" in t or ("registon" in t and "monitoring" in t)):
+        st["regmon"] = cid
+        audit(st, "regmon", f"guruh aniqlandi: {title} ({cid})")
+        say(st, f"✅ RegMon guruhi aniqlandi: «{title}». Ismlar tekşiruvi har kuni 17:45 da şu guruhga yuboriladi.")
+    if (text or "").split("@")[0].strip().lower() == "/regmon" and frm and frm.get("id") == st.get("owner"):
+        st["regmon"] = cid
+        audit(st, "regmon", f"egasi belgiladi: {title} ({cid})")
+        tg("sendMessage", chat_id=cid, text="✅ Bu guruh ismlar tekşiruvi uçun belgilandi. Har kuni 17:45 da savollar şu yerga keladi.")
+        say(st, f"✅ RegMon guruhi belgilandi: «{title}».")
+
+
+def handle_roster_doc(st, m):
+    """Egasi yangi röyxat faylini (.txt) yubordi."""
+    d = m["document"]
+    f = tg("getFile", file_id=d["file_id"])
+    if not f or not TOKEN:
+        return False
+    raw = requests.get(f"https://api.telegram.org/file/bot{TOKEN}/{f['file_path']}", timeout=60).content
+    try:
+        new = names.parse_roster_text(raw.decode("utf-8"))
+    except Exception:
+        new = []
+    if len(new) < 50:
+        say(st, "Faylda röyxat topilmadi (kamida 50 ta ustoz bölişi kerak). Shakl: «=== FILIAL ===» va «- Fan: Ism; Ism».")
+        return False
+    old = {(names.display(e["ism"]), e["filial"]) for e in (st.get("roster") or names.base_roster())}
+    nw = {(names.display(e["ism"]), e["filial"]) for e in new}
+    add, rem = sorted(nw - old), sorted(old - nw)
+    st["roster"] = new
+    audit(st, "royxat", f"yangi röyxat: {len(new)} ta (+{len(add)}, -{len(rem)})")
+    say(st, f"✅ Yangi röyxat qabul qilindi: {len(new)} ta ustoz.\n\n➕ Qöşilgan ({len(add)}):\n" +
+        "\n".join(f"{a} — {b}" for a, b in add[:60]) + f"\n\n➖ Çiqarilgan ({len(rem)}):\n" +
+        "\n".join(f"{a} — {b}" for a, b in rem[:60]))
+    return True
 
 
 # ================================================================ egasi buyruqlari
@@ -735,7 +1114,14 @@ HELP = """Boşqaruv buyruqlari (faqat siz uçun):
 /xodim Filial son sabab — öqituvçilar sonini yangilaş
 /oldindan — paketni oldindan köriş
 /yubor — paketni hozir yuboriş
-/vaqt 18:00 · /raqam 160 · /holat"""
+/vaqt 18:00 · /raqam 160 · /holat
+
+Ismlar tekşiruvi (rasmiy röyxat):
+/ismlar — oçiq savollar (qayta yuboriladi)
+/royxat [Filial] — röyxat holati
+/ustoz_qosh Familiya Ism; Filial; fan — röyxatga qöşiş
+/regmon — RegMon guruhi holati (guruhda /regmon deb yozsangiz, şu guruh belgilanadi)
+Yangi röyxat: .txt faylini şu çatga yuboring."""
 
 
 def find_r(st, arg):
@@ -753,6 +1139,10 @@ def handle_private(st, m):
     if chat != st["owner"]:
         tg("sendMessage", chat_id=chat, text="Bu bot faqat Monitoring bölimi rahbari uçun.")
         return False
+    if m.get("document") and (m["document"].get("file_name", "").lower().endswith(".txt")):
+        return handle_roster_doc(st, m)
+    if m.get("reply_to_message") and handle_answer_msg(st, m):
+        return True
     if not text.startswith("/"):
         say(st, "Buyruqlar röyxati: /help")
         return False
@@ -806,6 +1196,13 @@ def handle_private(st, m):
                 r["filial"], r["maktab"] = fil
             if len(parts) > 2 and parts[2]:
                 r["fan"] = parts[2]
+            apply_check(st, r, force=True)
+            if held(r):
+                r["ism_r"] = names.display(ism)
+                r["nc"]["qaror"] = {"matn": f"egasi /tuzat bilan: «{r['ism_r']}»", "kim": "egasi",
+                                    "ts": t.isoformat(timespec="seconds"), "action": "tuzat"}
+            if r["cert_sent"] and r["ism_r"] != r.get("cert_ism"):
+                r["tuzatildi"] = True
             if r["cert_sent"]:
                 r["tuzatildi"] = True
             audit(st, "tuzatiş", f"#{r['id']}: {before} -> {(r['ism'], r['filial'])}")
@@ -826,6 +1223,11 @@ def handle_private(st, m):
              "cert": None, "cert_sent": False, "tuzatildi": False}
         recheck_cap(st, r)
         st["results"].append(r)
+        apply_check(st, r)
+        if held(r):
+            r["ism_r"] = names.display(ism)
+            r["nc"]["qaror"] = {"matn": "egasi qölda kiritdi", "kim": "egasi", "ts": t.isoformat(timespec="seconds"),
+                                "action": "qolda"}
         audit(st, "qölda", f"#{r['id']} {ism} {fil[0]}")
         say(st, f"✅ #{r['id']} {ism} — {fil[0]} ({r['holat']})")
         return True
@@ -884,6 +1286,50 @@ def handle_private(st, m):
                   "oylik ğoliblik va ketma-ket ğoliblik, ketma-ket natijali nazorat kunlari, 50% ga eng tez erişiş (nazorat taqvimi kerak), "
                   "tizimning tarixiy oylik soni va foizi."]
             say(st, "\n".join(L))
+    elif cmd == "/ismlar":
+        rs = [r for r in st["results"] if r["holat"] in ("hisob", "tekshir") and held(r)]
+        if not rs:
+            say(st, "✅ Oçiq ism savollari yöq.")
+        else:
+            say(st, f"Oçiq ism savollari: {len(rs)} ta — {'RegMon guruhiga' if st.get('regmon') else 'şu yerga'} qayta yuborildi.")
+            for r in rs:
+                post_question(st, r)
+        return True
+    elif cmd == "/royxat":
+        R = names.roster(st)
+        fil = find_filial(arg) if arg else None
+        if fil:
+            by = {}
+            for e in R:
+                if e["filial"] == fil[0]:
+                    by.setdefault(e["fan"], []).append(names.display(e["ism"]))
+            say(st, f"📚 {fil[0]} — {sum(len(v) for v in by.values())} ta ustoz\n\n" +
+                "\n\n".join(f"{k}: " + "; ".join(v) for k, v in sorted(by.items())))
+        else:
+            cnt = {}
+            for e in R:
+                cnt[e["filial"]] = cnt.get(e["filial"], 0) + 1
+            say(st, "📚 Rasmiy röyxat (" + ("yangilangan fayl" if st.get("roster") else "portal, 13.11.2026") + f"): {len(R)} ta ustoz\n" +
+                "\n".join(f"{f}: {cnt.get(f, 0)}" for f in FILIALLAR) +
+                f"\n\nQaror bilan qöşilganlar: {len(st['roster_add'])} ta · Eslab qolingan tuzatişlar: {len(st['aliases'])} ta"
+                "\n\nFilial böyiça: /royxat Çilonzor")
+    elif cmd == "/ustoz_qosh":
+        parts = [x.strip() for x in arg.split(";")]
+        ism, _ = split_name(" ".join(w[:1].upper() + w[1:] for w in parts[0].split()) if parts and parts[0] else "")
+        fil = find_filial(parts[1]) if len(parts) > 1 else None
+        if not ism or not fil:
+            say(st, "Yozilişi: /ustoz_qosh Karimova Dilnoza; Çilonzor; ingliz tili")
+            return False
+        fans = names.fan_set(parts[2] if len(parts) > 2 else "")
+        st["roster_add"].append({"ism": ism, "filial": fil[0], "fan": next(iter(fans), parts[2] if len(parts) > 2 else "—"),
+                                 "tur": "asosiy", "qoshildi": t.date().isoformat(), "kim": "egasi"})
+        audit(st, "royxat+", f"{ism} {fil[0]}")
+        say(st, f"✅ Röyxatga qöşildi: {names.display(ism)} — {fil[0]}")
+        return True
+    elif cmd == "/regmon":
+        rg = st.get("regmon")
+        say(st, (f"RegMon guruhi: «{st['chats'].get(str(rg), rg)}»" if rg else "RegMon guruhi hali aniqlanmagan.") +
+            "\nBelgilaş: RegMon guruhida /regmon deb yozing.")
     elif cmd == "/vaqt":
         if re.match(r"^\d{1,2}:\d{2}$", arg):
             st["vaqt"] = arg.zfill(5)
@@ -914,27 +1360,40 @@ def main():
         ("top10", "Tarixiy Top-10"), ("top5", "Kunlik Top-5"), ("kutilmoqda", "Tekşiriş kutilayotganlar"),
         ("tasdiq", "Natijani tasdiqlaş"), ("bekor", "Natijani bekor qiliş"), ("tuzat", "Natijani tuzatiş"),
         ("xodim", "Öqituvçilar soni"), ("oldindan", "Paketni oldindan köriş"), ("yubor", "Paketni yuboriş"),
-        ("holat", "Holat")]])
+        ("holat", "Holat"), ("ismlar", "Oçiq ism savollari"), ("royxat", "Rasmiy röyxat"),
+        ("ustoz_qosh", "Röyxatga ustoz qöşiş"), ("regmon", "RegMon guruhi")]])
     print("bot ishga tushdi", flush=True)
     resend_certs(st)
     start = time.time()
     while not RUN_SECONDS or time.time() - start < RUN_SECONDS:
         ups = tg("getUpdates", offset=st["offset"], timeout=50,
-                 allowed_updates=["message", "edited_message", "channel_post", "edited_channel_post", "my_chat_member"])
+                 allowed_updates=["message", "edited_message", "channel_post", "edited_channel_post", "my_chat_member",
+                                  "callback_query"])
         changed = False
         for u in ups or []:
             st["offset"] = u["update_id"] + 1
             try:
                 m = u.get("message") or u.get("channel_post")
                 em = u.get("edited_message") or u.get("edited_channel_post")
-                if m:
+                if u.get("callback_query"):
+                    changed |= bool(handle_callback(st, u["callback_query"]))
+                elif u.get("my_chat_member"):
+                    note_chat(st, u["my_chat_member"]["chat"])
+                    changed = True
+                elif m:
                     if m["chat"]["type"] == "private":
                         changed |= bool(handle_private(st, m))
                     else:
-                        if st.get("group") is None:
+                        if st.get("group") is None and "kun" in _norm(m["chat"].get("title", "")):
                             st["group"] = m["chat"]["id"]
-                        changed |= bool(ingest(st, m))
-                elif em and em["chat"]["type"] != "private":
+                        if m["chat"]["id"] == st.get("group"):
+                            changed |= bool(ingest(st, m))
+                        else:                         # RegMon va boşqa guruhlar — manba emas
+                            note_chat(st, m["chat"], m.get("from"), m.get("text") or "")
+                            if m["chat"]["id"] == st.get("regmon") and m.get("reply_to_message"):
+                                handle_answer_msg(st, m)
+                            changed = True
+                elif em and em["chat"]["type"] != "private" and em["chat"]["id"] == st.get("group"):
                     changed |= bool(ingest(st, em, edited=True))
             except Exception:
                 traceback.print_exc()
