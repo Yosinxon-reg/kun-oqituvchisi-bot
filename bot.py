@@ -221,12 +221,18 @@ def tg(method, **kw):
     return None
 
 
+def owners(st):
+    """Egasi va u ruxsat bergan qöşimça akkauntlari — hammasiga bir xil maʼlumot boradi."""
+    return ([st["owner"]] if st.get("owner") else []) + [x for x in st.get("extra_owners", []) if x != st.get("owner")]
+
+
 def say(st, text):
-    if not st.get("owner"):
-        return None
     out = None
-    for i in range(0, len(text), 4000):
-        out = tg("sendMessage", chat_id=st["owner"], text=text[i:i + 4000])
+    for ch in owners(st):
+        for i in range(0, len(text), 4000):
+            r = tg("sendMessage", chat_id=ch, text=text[i:i + 4000])
+            if ch == st.get("owner"):
+                out = r
     return out
 
 
@@ -691,7 +697,9 @@ def send_package(st, day, tur="yakuniy", sinov=False):
         import html as _h
         body = "\n\n".join(rec_parts)
         body = _h.escape(body).replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>")
-        tg("sendMessage", chat_id=st["owner"], text=body[:4000], parse_mode="HTML"); steps.append("records")
+        for ch in owners(st):
+            tg("sendMessage", chat_id=ch, text=body[:4000], parse_mode="HTML")
+        steps.append("records")
     if not sinov:
         st["rec_snap"] = rec_new
         st["packages"][key]["steps"] = steps
@@ -769,8 +777,13 @@ def send_cert(st, r, n, key, sinov=False):
             cap = "✏️ TUZATILGAN TAŞAKKURNOMA\n" + cap
         if sinov:
             cap = "🧪 SINOV\n" + cap
-        ok = tg("sendDocument", chat_id=st["owner"], caption=cap[:1024],
-                files={"document": (f"Kun öqituvçisi {n}.jpg", img, "image/jpeg")})
+        data = img.getvalue() if hasattr(img, "getvalue") else img
+        ok = None
+        for ch in owners(st):
+            res = tg("sendDocument", chat_id=ch, caption=cap[:1024],
+                     files={"document": (f"Kun öqituvçisi {n}.jpg", data, "image/jpeg")})
+            if ch == st.get("owner"):
+                ok = res
         if ok is not None and not sinov:
             r["cert_sent"], r["tuzatildi"], r["cert_ism"] = True, False, ism
             st["certs"].append({"n": n, "id": r["id"], "ism": ism, "filial": r["filial"], "sana": r["sana"],
@@ -1184,7 +1197,7 @@ def handle_callback(st, cq):
         return handle_tahrir_cb(st, cq)
     msg = cq.get("message") or {}
     chat = msg.get("chat", {}).get("id")
-    if not data.startswith("n|") or chat not in (st.get("regmon"), st.get("owner")):
+    if not data.startswith("n|") or (chat != st.get("regmon") and chat not in owners(st)):
         tg("answerCallbackQuery", callback_query_id=cq["id"], text="Bu tugma bu yerda ishlamaydi.")
         return False
     _, rid, action = data.split("|")
@@ -1233,7 +1246,7 @@ def note_chat(st, chat, frm=None, text=""):
         st["regmon"] = cid
         audit(st, "regmon", f"guruh aniqlandi: {title} ({cid})")
         say(st, f"✅ RegMon guruhi aniqlandi: «{title}». Ismlar tekşiruvi har kuni 17:45 da şu guruhga yuboriladi.")
-    if (text or "").split("@")[0].strip().lower() == "/regmon" and frm and frm.get("id") == st.get("owner"):
+    if (text or "").split("@")[0].strip().lower() == "/regmon" and frm and frm.get("id") in owners(st):
         st["regmon"] = cid
         audit(st, "regmon", f"egasi belgiladi: {title} ({cid})")
         tg("sendMessage", chat_id=cid, text="✅ Bu guruh ismlar tekşiruvi uçun belgilandi. Har kuni 17:45 da savollar şu yerga keladi.")
@@ -1385,6 +1398,7 @@ Ismlar tekşiruvi (rasmiy röyxat):
 /ismlar — oçiq savollar (qayta yuboriladi)
 /royxat [Filial] — röyxat holati
 /ustoz_qosh Familiya Ism; Filial; fan — röyxatga qöşiş
+/ruxsat ID — boşqa akkauntga ham hammasi borsin · /ruxsat_ol ID
 /ism ID Familiya Ism — ismni hamma joyda töğrilaş (taşakkurnoma qayta yuboriladi)
 /ismvaqt 17:45 — ismlar tekşiruvi vaqti · /ismhozir — hozir yuboriş
 /regmon — RegMon guruhi holati (guruhda /regmon deb yozsangiz, şu guruh belgilanadi)
@@ -1403,8 +1417,16 @@ def handle_private(st, m):
         st["owner"] = chat
         say(st, HELP)
         return True
-    if chat != st["owner"]:
-        tg("sendMessage", chat_id=chat, text="Bu bot faqat Monitoring bölimi rahbari uçun.")
+    if chat not in owners(st):
+        frm = m.get("from") or {}
+        kut = st.setdefault("kutish", {})
+        if str(chat) not in kut:
+            kut[str(chat)] = who(frm)
+            say(st, f"🔐 Botga yangi akkaunt yozdi: {who(frm)}\nID: {chat}\n\nŞu akkauntga ham sizga boradigan barça "
+                    f"maʼlumotlar borsin desangiz: /ruxsat {chat}")
+            tg("sendMessage", chat_id=chat, text="Bu bot faqat Monitoring bölimi rahbari uçun. Sörovingiz rahbarga yuborildi.")
+            return True
+        tg("sendMessage", chat_id=chat, text="Bu bot faqat Monitoring bölimi rahbari uçun. Sörovingiz rahbarda turibdi.")
         return False
     if m.get("document") and (m["document"].get("file_name", "").lower().endswith(".txt")):
         return handle_roster_doc(st, m)
@@ -1594,6 +1616,31 @@ def handle_private(st, m):
         audit(st, "royxat+", f"{ism} {fil[0]}")
         say(st, f"✅ Röyxatga qöşildi: {names.display(ism)} — {fil[0]}")
         return True
+    elif cmd == "/ruxsat":
+        if not arg.lstrip("-").isdigit():
+            kut = st.get("kutish", {})
+            say(st, "Ruxsat kutayotganlar:\n" + ("\n".join(f"{k} — {v}" for k, v in kut.items()) or "yöq") +
+                "\n\nQöşimça akkauntlar: " + (", ".join(map(str, st.get("extra_owners", []))) or "yöq") +
+                "\n\nBerish: /ruxsat ID · Olib taşlaş: /ruxsat_ol ID")
+            return False
+        cid = int(arg)
+        st.setdefault("extra_owners", [])
+        if cid not in st["extra_owners"] and cid != st["owner"]:
+            st["extra_owners"].append(cid)
+        st.get("kutish", {}).pop(str(cid), None)
+        audit(st, "ruxsat", f"{cid}")
+        say(st, f"✅ {cid} akkauntiga ruxsat berildi — endi barça hisobot va taşakkurnomalar unga ham boradi.")
+        tg("sendMessage", chat_id=cid, text=HELP)
+        return True
+    elif cmd == "/ruxsat_ol":
+        if arg.lstrip("-").isdigit() and int(arg) in st.get("extra_owners", []):
+            st["extra_owners"].remove(int(arg))
+            audit(st, "ruxsat-ol", arg)
+            say(st, f"❌ {arg} akkauntidan ruxsat olindi.")
+            tg("sendMessage", chat_id=int(arg), text="Bu akkauntga hisobotlar endi yuborilmaydi.")
+            return True
+        say(st, "Yozilişi: /ruxsat_ol ID")
+        return False
     elif cmd == "/ism":
         r = find_r(st, arg)
         body = arg.split(" ", 1)[1].strip() if " " in arg else ""
@@ -1721,7 +1768,7 @@ def main():
                         else:                         # RegMon va boşqa guruhlar — manba emas
                             note_chat(st, m["chat"], m.get("from"), m.get("text") or "")
                             if (m.get("text") or "").split("@")[0].strip().lower() == "/tahrir" and \
-                                    (m.get("from") or {}).get("id") == st.get("owner"):
+                                    (m.get("from") or {}).get("id") in owners(st):
                                 st["tahrir"] = m["chat"]["id"]
                             note_topic(st, m)
                             if m["chat"]["id"] == st.get("regmon") and m.get("reply_to_message"):
