@@ -688,6 +688,11 @@ def send_package(st, day, tur="yakuniy", sinov=False):
         n = r["cert"] if r["cert"] is not None else 0
         send_cert(st, r, n, key, sinov=sinov)
         time.sleep(0.5)
+    if "royxat" not in steps:
+        lm = day_list_msg(st, day)
+        if lm:
+            say(st, (pref if sinov else "") + lm)
+        steps.append("royxat")
     if pk["held"] and "held" not in steps:
         say(st, (pref if sinov else "") + f"⏳ {len(pk['held'])} ta taşakkurnoma ism tasdiğini kutmoqda "
             f"({'RegMon guruhida' if st.get('regmon') else 'sizga'} savol yuborilgan). Qaror bölişi bilan şu yerga keladi:\n" +
@@ -1052,12 +1057,23 @@ def fix_name(st, r, ism, kim="egasi"):
     return disp
 
 
+ONE_TIME_LISTS = ["2026-11-13"]   # egasi körsatmasi: bugungi röyxat darhol
+
+
 ONE_TIME_FIXES = [  # egasi körsatmasi, 13.11.2026
     {"id": 12, "ism": "Nuritdinova Barchinoy", "kut": "nuritdinova", "eski": ["Nuritdinova Barğinoy", "Nuritdinova Barginoy"]},
 ]
 
 
 def apply_fixes(st):
+    for d in ONE_TIME_LISTS:
+        key = f"royxat|{d}"
+        if key not in st["fixes_done"]:
+            st["fixes_done"].append(key)
+            lm = day_list_msg(st, D(d))
+            if lm:
+                say(st, lm)
+            save_state(st, key)
     for f in ONE_TIME_FIXES:
         key = f"{f['id']}|{f['ism']}"
         if key in st["fixes_done"]:
@@ -1070,6 +1086,20 @@ def apply_fixes(st):
                 st["aliases"][names.alias_key(e, r["filial"])] = {"ism": f["ism"], "filial": r["filial"], "disp": d}
             say(st, f"✏️ #{r['id']}: ism hamma joyda töğrilandi — «{d}». Tuzatilgan taşakkurnoma yuborildi.")
         save_state(st, f"tuzatiş {key}")
+
+
+def day_list_msg(st, day):
+    """Kunning «Kun öqituvçisi» röyxati — guruhdagi tartib (post vaqti) böyiça: ism-şarif, filial, fan."""
+    iso = day.isoformat()
+    rs = sorted(counted(st, day=iso), key=lambda r: (r["posted"], r["id"]))
+    if not rs:
+        return None
+    L = [f"📋 {sana_txt(day)} — «KUN ÖQITUVÇISI» RÖYXATI ({len(rs)} ta)", "(guruhdagi tartib böyiça)", ""]
+    for k, r in enumerate(rs, 1):
+        num = f" · №{r['cert']:04d}" if r.get("cert") else ""
+        wait = " · ⏳ ism tasdiğini kutmoqda" if held(r) else ""
+        L.append(f"{k}. {cname(r)} — {r['filial']}, {names.yangi(fan_of(r))}{num}{wait}")
+    return "\n".join(L)
 
 
 def copy_certs(st, chat, day_iso):
@@ -1420,6 +1450,7 @@ Ismlar tekşiruvi (rasmiy röyxat):
 /ismlar — oçiq savollar (qayta yuboriladi)
 /royxat [Filial] — röyxat holati
 /ustoz_qosh Familiya Ism; Filial; fan — röyxatga qöşiş
+/kunlik [YYYY-MM-DD] — kunlik röyxat (ism, filial, fan)
 /ruxsat ID — boşqa akkauntga ham hammasi borsin · /ruxsat_ol ID
 /ism ID Familiya Ism — ismni hamma joyda töğrilaş (taşakkurnoma qayta yuboriladi)
 /ismvaqt 17:45 — ismlar tekşiruvi vaqti · /ismhozir — hozir yuboriş
@@ -1658,6 +1689,10 @@ def handle_private(st, m):
             tg("sendMessage", chat_id=cid, text=f"📎 Bugun ({sana_txt(t.date())}) avval yuborilgan {n} ta taşakkurnoma nusxasi yuborildi.")
             say(st, f"📎 Bugungi {n} ta taşakkurnoma {cid} akkauntiga ham yuborildi.")
         return True
+    elif cmd == "/kunlik":
+        day = D(arg) if re.match(r"^\d{4}-\d{2}-\d{2}$", arg or "") else t.date()
+        say(st, day_list_msg(st, day) or "Bu kunda natija yöq.")
+        return False
     elif cmd == "/nusxa":
         day = arg or t.date().isoformat()
         tgt = [x for x in st.get("extra_owners", [])]
