@@ -233,7 +233,15 @@ def base_roster():
 
 def roster(st):
     rs = st.get("roster") or base_roster()
-    return [dict(e, k=i) for i, e in enumerate(rs + st.get("roster_add", []))]
+    fx = st.get("roster_fix", {})
+    out = []
+    for i, e in enumerate(rs + st.get("roster_add", [])):
+        e = dict(e, k=i)
+        nv = fx.get(f"{e['ism']}|{e['filial']}")
+        if nv:
+            e["ism"] = nv
+        out.append(e)
+    return out
 
 
 def alias_key(name, filial):

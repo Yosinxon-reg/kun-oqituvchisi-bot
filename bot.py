@@ -129,7 +129,7 @@ def default_state():
         # ismlar tekşiruvi
         "regmon": None, "chats": {}, "aliases": {}, "roster_add": [], "roster": None, "qmsg": {},
         "ism_live": None, "outbox_sent": [],
-        "tahrir": None, "topics": {}, "tahrir_q": {},
+        "tahrir": None, "topics": {}, "tahrir_q": {}, "roster_fix": {}, "fixes_done": [],
         "ism_vaqt": "17:45", "ism_kun": {"2026-11-13": "16:45"},   # bir martalik kunlik istisno
     }
 
@@ -723,6 +723,11 @@ def schedule_tick(st, t):
         did = True
     else:
         did = False
+    tv = tuple(map(int, st.get("ism_vaqt", "17:45").split(":")))
+    if hm >= tv and f"{today}|tahrir_hisobot" not in st["packages"] and st["tahrir_q"].get(today):
+        st["packages"][f"{today}|tahrir_hisobot"] = {"ts": t.isoformat(), "ids": [], "steps": []}
+        tahrir_owner_report(st, t.date())
+        did = True
     if st.get("setup_day") == today:
         if hm >= (17, 0) and f"{today}|dastlabki" not in st["packages"] and hm < (h, mi):
             if send_package(st, t.date(), "dastlabki"):
@@ -733,6 +738,14 @@ def schedule_tick(st, t):
         if not send_package(st, t.date(), "yakuniy"):
             st["packages"][f"{today}|yakuniy"] = {"ts": t.isoformat(), "ids": [], "steps": ["boş"]}
         return True
+    # «Ha» degan mavzular bölsa — paketdan keyin kelganlar uçun soatbay qöşimça paket
+    if has_ha(st, today) and f"{today}|yakuniy" in st["packages"] and t.minute < 30:
+        for hh in (19, 20, 21, 22):
+            k = f"{today}|qoshimcha-{hh}"
+            if t.hour == hh and k not in st["packages"]:
+                if not send_package(st, t.date(), f"qoshimcha-{hh}"):
+                    st["packages"][k] = {"ts": t.isoformat(), "ids": [], "steps": ["boş"]}
+                return True
     return did
 
 
@@ -960,12 +973,11 @@ def ism_report(st, day):
     yoq = [r for r in open_q if r["nc"]["holat"] == "yoq"]
     pre = "" if st.get("regmon") else "ℹ️ RegMon guruhi hali aniqlanmagan — şu sababli sizga yuborildi. Guruhda /regmon deb yozing.\n\n"
     if not auto and not open_q:
-        tg("sendMessage", chat_id=chat, text=pre + f"📋 ISMLAR TEKŞIRUVI — {sana_txt(day)}\n\n✅ Barça ismlar röyxatga mos ({len(ok)} ta)."
-           + tahrir_lines(st, day))
+        tg("sendMessage", chat_id=chat, text=pre + f"📋 ISMLAR TEKŞIRUVI — {sana_txt(day)}\n\n✅ Barça ismlar röyxatga mos ({len(ok)} ta).")
         return
     tg("sendMessage", chat_id=chat, text=pre + f"📋 ISMLAR TEKŞIRUVI — {sana_txt(day)}\n\n"
        f"✅ Töğri yozilganlar: {len(ok)} ta\n✏️ Avtomatik töğrilanganlar: {len(auto)} ta\n"
-       f"❓ Aniqlaştiriş kerak: {len(sav)} ta\n❗ Röyxatda yöq: {len(yoq)} ta" + tahrir_lines(st, day) +
+       f"❓ Aniqlaştiriş kerak: {len(sav)} ta\n❗ Röyxatda yöq: {len(yoq)} ta" +
        ("\n\nQuyidagi har bir savolga javob bering. Qaror qilinmaguncha taşakkurnoma kutib turadi, savol har kuni 17:45 da qayta çiqadi."
         if open_q else ""))
     if auto:
@@ -993,6 +1005,58 @@ def live_ism(st, r):
         tg("sendMessage", chat_id=chat, text="✏️ AVTOMATIK TÖĞRILANDI\n\n" + auto_line(r),
            reply_markup=auto_keyboard([r]))
         r["nc"]["auto_xabar"] = True
+
+
+def close_q(st, r, matn):
+    for k, rid in list(st["qmsg"].items()):
+        if rid == r["id"]:
+            c, mid = k.split(":")
+            tg("editMessageText", chat_id=int(c), message_id=int(mid), text=f"✅ #{r['id']}: {matn}. Savol yopildi.")
+            del st["qmsg"][k]
+
+
+def fix_name(st, r, ism, kim="egasi"):
+    """Ismni hamma joyda töğrilaş: rasmiy şakl, eslab qoliş, röyxatdagi bosh harfli yozuv, savol va taşakkurnoma."""
+    disp = names.display(ism)
+    old_post = r["ism"] or ""
+    # röyxatda faqat bosh harf bilan turgan bölsa — töliq ism bilan almaştiriladi
+    for e in names.roster(st):
+        if e["filial"] == r["filial"] and names.compare(names.tokens(ism), names.tokens(e["ism"])) and \
+                names.compare(names.tokens(ism), names.tokens(e["ism"]))[0] == "init":
+            src = next((x for x in (st.get("roster") or names.base_roster()) + st["roster_add"]
+                        if x["filial"] == e["filial"] and names.tokens(x["ism"]) == names.tokens(e["ism"])), None)
+            if src:
+                st["roster_fix"][f"{src['ism']}|{src['filial']}"] = ism
+    st["aliases"][names.alias_key(old_post, r["filial"])] = {"ism": ism, "filial": r["filial"], "disp": disp}
+    r["ism_r"] = disp
+    if r.get("nc"):
+        r["nc"]["qaror"] = {"matn": f"töğrilandi: «{disp}»", "kim": kim, "ts": now().isoformat(timespec="seconds"), "action": "ism"}
+    if r["cert_sent"] and r.get("cert_ism") != disp:
+        r["tuzatildi"] = True
+    close_q(st, r, f"ism töğrilandi — «{disp}»")
+    audit(st, "ism-fix", f"#{r['id']} «{old_post}» -> «{disp}» ({kim})")
+    deliver_now(st, r)
+    return disp
+
+
+ONE_TIME_FIXES = [  # egasi körsatmasi, 13.11.2026
+    {"id": 12, "ism": "Nuritdinova Barchinoy", "kut": "nuritdinova", "eski": ["Nuritdinova Barğinoy", "Nuritdinova Barginoy"]},
+]
+
+
+def apply_fixes(st):
+    for f in ONE_TIME_FIXES:
+        key = f"{f['id']}|{f['ism']}"
+        if key in st["fixes_done"]:
+            continue
+        r = next((x for x in st["results"] if x["id"] == f["id"] and f["kut"] in _norm(x["ism"] or "")), None)
+        st["fixes_done"].append(key)
+        if r:
+            d = fix_name(st, r, f["ism"])
+            for e in f.get("eski", []):
+                st["aliases"][names.alias_key(e, r["filial"])] = {"ism": f["ism"], "filial": r["filial"], "disp": d}
+            say(st, f"✏️ #{r['id']}: ism hamma joyda töğrilandi — «{d}». Tuzatilgan taşakkurnoma yuborildi.")
+        save_state(st, f"tuzatiş {key}")
 
 
 def deliver_now(st, r):
@@ -1241,6 +1305,23 @@ def handle_tahrir_cb(st, cq):
     return True
 
 
+def has_ha(st, iso):
+    return any(v["javob"] == "ha" for v in st["tahrir_q"].get(iso, {}).values())
+
+
+def tahrir_owner_report(st, day):
+    """17:45 — Ha/Yöq javoblari faqat egasining şaxsiy çatiga."""
+    q = st["tahrir_q"].get(day.isoformat(), {})
+    if not q:
+        return
+    txt = "🗂 TAHRIR GURUHI — " + sana_txt(day) + tahrir_lines(st, day)
+    if has_ha(st, day.isoformat()):
+        txt += ("\n\nℹ️ «Ha» javoblari bor — bugun 17:00 dan keyin yana «Kun öqituvçisi» çiqadi. "
+                f"{st['vaqt']} dagi paketdan keyin kelgan natijalar soat 19:00, 20:00, 21:00 va 22:00 da "
+                "qöşimça paket bilan yuboriladi (yangi natija bölsagina).")
+    say(st, txt)
+
+
 def tahrir_lines(st, day):
     q = st["tahrir_q"].get(day.isoformat(), {})
     if not q:
@@ -1304,6 +1385,7 @@ Ismlar tekşiruvi (rasmiy röyxat):
 /ismlar — oçiq savollar (qayta yuboriladi)
 /royxat [Filial] — röyxat holati
 /ustoz_qosh Familiya Ism; Filial; fan — röyxatga qöşiş
+/ism ID Familiya Ism — ismni hamma joyda töğrilaş (taşakkurnoma qayta yuboriladi)
 /ismvaqt 17:45 — ismlar tekşiruvi vaqti · /ismhozir — hozir yuboriş
 /regmon — RegMon guruhi holati (guruhda /regmon deb yozsangiz, şu guruh belgilanadi)
 Yangi röyxat: .txt faylini şu çatga yuboring."""
@@ -1512,6 +1594,16 @@ def handle_private(st, m):
         audit(st, "royxat+", f"{ism} {fil[0]}")
         say(st, f"✅ Röyxatga qöşildi: {names.display(ism)} — {fil[0]}")
         return True
+    elif cmd == "/ism":
+        r = find_r(st, arg)
+        body = arg.split(" ", 1)[1].strip() if " " in arg else ""
+        ism, _ = split_name(" ".join(w[:1].upper() + w[1:] for w in body.split()))
+        if not r or not ism:
+            say(st, "Yozilişi: /ism ID Familiya Ism — masalan /ism 12 Nuritdinova Barchinoy")
+            return False
+        d = fix_name(st, r, ism)
+        say(st, f"✅ #{r['id']}: hamma joyda «{d}». Keyingi safar ham şu şaklda yoziladi.")
+        return True
     elif cmd == "/ismvaqt":
         if re.match(r"^\d{1,2}:\d{2}$", arg):
             st["ism_vaqt"] = arg.zfill(5)
@@ -1601,6 +1693,7 @@ def main():
         ("ustoz_qosh", "Röyxatga ustoz qöşiş"), ("regmon", "RegMon guruhi")]])
     print("bot ishga tushdi", flush=True)
     resend_certs(st)
+    apply_fixes(st)
     start = time.time()
     while not RUN_SECONDS or time.time() - start < RUN_SECONDS:
         ups = tg("getUpdates", offset=st["offset"], timeout=50,
