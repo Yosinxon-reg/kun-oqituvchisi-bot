@@ -1072,6 +1072,28 @@ def apply_fixes(st):
         save_state(st, f"tuzatiş {key}")
 
 
+def copy_certs(st, chat, day_iso):
+    """Şu kuni yuborilgan taşakkurnomalarni (eng oxirgi, tuzatilgan holatida) boşqa akkauntga nusxalaş."""
+    last = {}
+    for c in st["certs"]:
+        if c["sana"] == day_iso:
+            last[c["n"]] = c
+    sent = 0
+    for n in sorted(last):
+        r = next((x for x in st["results"] if x["id"] == last[n]["id"]), None)
+        if not r or r["holat"] != "hisob":
+            continue
+        ism = cname(r)
+        img = render2.render(st.get("dizayn", "v3"), r["maktab"], ism, n, D(r["sana"]), r["filial"])
+        data = img.getvalue() if hasattr(img, "getvalue") else img
+        cap = st["izoh"].format(ism=ism, filial=r["filial"], fan=r["fan"], raqam=f"{n:04d}", sana=sana_txt(D(r["sana"])))
+        if tg("sendDocument", chat_id=chat, caption=cap[:1024],
+              files={"document": (f"Kun öqituvçisi {n}.jpg", data, "image/jpeg")}) is not None:
+            sent += 1
+        time.sleep(0.5)
+    return sent
+
+
 def deliver_now(st, r):
     """Qarordan keyin: paket allaqaçon ketgan bölsa — taşakkurnoma darhol egasiga."""
     if r["holat"] != "hisob" or held(r) or not r.get("paket"):
@@ -1631,6 +1653,16 @@ def handle_private(st, m):
         audit(st, "ruxsat", f"{cid}")
         say(st, f"✅ {cid} akkauntiga ruxsat berildi — endi barça hisobot va taşakkurnomalar unga ham boradi.")
         tg("sendMessage", chat_id=cid, text=HELP)
+        n = copy_certs(st, cid, t.date().isoformat())
+        if n:
+            tg("sendMessage", chat_id=cid, text=f"📎 Bugun ({sana_txt(t.date())}) avval yuborilgan {n} ta taşakkurnoma nusxasi yuborildi.")
+            say(st, f"📎 Bugungi {n} ta taşakkurnoma {cid} akkauntiga ham yuborildi.")
+        return True
+    elif cmd == "/nusxa":
+        day = arg or t.date().isoformat()
+        tgt = [x for x in st.get("extra_owners", [])]
+        tot = sum(copy_certs(st, c, day) for c in tgt)
+        say(st, f"📎 {day}: {tot} ta taşakkurnoma qöşimça akkauntlarga yuborildi." if tgt else "Qöşimça akkaunt yöq.")
         return True
     elif cmd == "/ruxsat_ol":
         if arg.lstrip("-").isdigit() and int(arg) in st.get("extra_owners", []):
