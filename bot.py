@@ -402,7 +402,7 @@ def ingest(st, m, notify=True, edited=False):
         return False
     st["rid"] += 1
     r = {"id": st["rid"], "chat": chat, "mid": mid, "link": link(chat, mid), "media": media,
-         "posted": posted.isoformat(timespec="seconds"), "sana": posted.date().isoformat(),
+         "posted": posted.isoformat(timespec="seconds"), "sana": kun_sanasi(st, posted).isoformat(),
          "ism": p["ism"], "ism_n": name_key(p["ism"] or ""), "filial": p["filial"], "maktab": p["maktab"],
          "fan": p["fan"], "dars": p["dars"], "natija": p["natija"], "matn": text[:600],
          "holat": "hisob" if p["tasdiq"] else "tekshir", "sabab": p["sabab"],
@@ -724,6 +724,12 @@ def resend_certs(st):
         save_state(st, "qolgan taşakkurnomalar")
 
 
+def kun_sanasi(st, t):
+    """Kun yakuni — st["vaqt"] (18:00). Undan keyin çiqqan natija ertangi kunga qöşiladi."""
+    h, mi = map(int, st.get("vaqt", "18:00").split(":"))
+    return (t + dt.timedelta(days=1)).date() if (t.hour, t.minute) >= (h, mi) else t.date()
+
+
 def schedule_tick(st, t):
     """17:00/18:00 jadvali. Har bir paket bir marta."""
     today = t.date().isoformat()
@@ -752,14 +758,6 @@ def schedule_tick(st, t):
         if not send_package(st, t.date(), "yakuniy"):
             st["packages"][f"{today}|yakuniy"] = {"ts": t.isoformat(), "ids": [], "steps": ["boş"]}
         return True
-    # «Ha» degan mavzular bölsa — paketdan keyin kelganlar uçun soatbay qöşimça paket
-    if has_ha(st, today) and f"{today}|yakuniy" in st["packages"] and t.minute < 30:
-        for hh in (19, 20, 21, 22):
-            k = f"{today}|qoshimcha-{hh}"
-            if t.hour == hh and k not in st["packages"]:
-                if not send_package(st, t.date(), f"qoshimcha-{hh}"):
-                    st["packages"][k] = {"ts": t.isoformat(), "ids": [], "steps": ["boş"]}
-                return True
     return did
 
 
@@ -1452,8 +1450,8 @@ def tahrir_owner_report(st, day):
     txt = "🗂 TAHRIR GURUHI — " + sana_txt(day) + tahrir_lines(st, day)
     if has_ha(st, day.isoformat()):
         txt += ("\n\nℹ️ «Ha» javoblari bor — bugun 17:00 dan keyin yana «Kun öqituvçisi» çiqadi. "
-                f"{st['vaqt']} dagi paketdan keyin kelgan natijalar soat 19:00, 20:00, 21:00 va 22:00 da "
-                "qöşimça paket bilan yuboriladi (yangi natija bölsagina).")
+                f"Ularning hammasi {st['vaqt']} dagi yakuniy paketda yuboriladi. "
+                f"{st['vaqt']} dan keyin çiqqanlari ertangi kun hisobiga qöşiladi.")
     say(st, txt)
 
 
@@ -1630,7 +1628,7 @@ def handle_private(st, m):
             return False
         st["rid"] += 1
         r = {"id": st["rid"], "chat": chat, "mid": -st["rid"], "link": "", "media": None,
-             "posted": t.isoformat(timespec="seconds"), "sana": t.date().isoformat(), "ism": ism, "ism_n": name_key(ism),
+             "posted": t.isoformat(timespec="seconds"), "sana": kun_sanasi(st, t).isoformat(), "ism": ism, "ism_n": name_key(ism),
              "filial": fil[0], "maktab": fil[1], "fan": parts[2] if len(parts) > 2 else "", "dars": "", "natija": "qölda",
              "matn": "qölda", "holat": "hisob", "sabab": "egasi qölda qöşdi", "forward": False, "paket": None,
              "cert": None, "cert_sent": False, "tuzatildi": False}
