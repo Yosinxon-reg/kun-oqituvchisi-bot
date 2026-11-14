@@ -727,7 +727,28 @@ def resend_certs(st):
 def kun_sanasi(st, t):
     """Kun yakuni — st["vaqt"] (18:00). Undan keyin çiqqan natija ertangi kunga qöşiladi."""
     h, mi = map(int, st.get("vaqt", "18:00").split(":"))
-    return (t + dt.timedelta(days=1)).date() if (t.hour, t.minute) >= (h, mi) else t.date()
+    d = (t + dt.timedelta(days=1)).date() if (t.hour, t.minute) >= (h, mi) else t.date()
+    while d.weekday() == 6:                      # yakşanba — dam olişi, keyingi iş kuniga
+        d += dt.timedelta(days=1)
+    return d
+
+
+def ish_kuni(t):
+    """Yakşanbadan boşqa hamma kun."""
+    return t.weekday() != 6
+
+
+def run_deadline(start_ts, run_seconds):
+    """Navbat 16:50–18:20 oralig'ida tugamasin: unda 16:45 da tugaydi (keyingisi 17:00 gaça tayyor böladi)."""
+    if not run_seconds:
+        return None
+    end = start_ts + run_seconds
+    e = dt.datetime.fromtimestamp(end, TZ)
+    if (16, 50) <= (e.hour, e.minute) < (18, 20):
+        cut = e.replace(hour=16, minute=45, second=0, microsecond=0).timestamp()
+        if cut - start_ts > 1800:
+            return cut
+    return end
 
 
 def schedule_tick(st, t):
@@ -1889,7 +1910,10 @@ def main():
     resend_certs(st)
     apply_fixes(st)
     start = time.time()
-    while not RUN_SECONDS or time.time() - start < RUN_SECONDS:
+    deadline = run_deadline(start, RUN_SECONDS)
+    if deadline:
+        print("navbat tugaşi:", dt.datetime.fromtimestamp(deadline, TZ).isoformat(timespec="minutes"), flush=True)
+    while not deadline or time.time() < deadline:
         ups = tg("getUpdates", offset=st["offset"], timeout=50,
                  allowed_updates=["message", "edited_message", "channel_post", "edited_channel_post", "my_chat_member",
                                   "callback_query"])
@@ -1926,15 +1950,18 @@ def main():
             except Exception:
                 traceback.print_exc()
         try:
-            changed |= schedule_tick(st, now())
+            if ish_kuni(now()):
+                changed |= schedule_tick(st, now())
         except Exception:
             traceback.print_exc()
         try:
-            changed |= tahrir_tick(st, now())
+            if ish_kuni(now()):
+                changed |= tahrir_tick(st, now())
         except Exception:
             traceback.print_exc()
         try:
-            changed |= fan_tick(st, now())
+            if ish_kuni(now()):
+                changed |= fan_tick(st, now())
         except Exception:
             traceback.print_exc()
         try:
