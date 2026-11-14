@@ -1110,7 +1110,7 @@ def site_tick(st, force=False):
 ONE_TIME_LISTS = ["2026-11-13"]   # egasi körsatmasi: bugungi röyxat darhol
 
 
-ONE_TIME_DESIGN = "v6"   # 14.11.2026: asoschi imzosi + QR (veb-sahifa)
+ONE_TIME_DESIGN = "v7"   # 14.11.2026: asoschi imzosi + QR + kattaroq matn
 
 
 ONE_TIME_FIXES = [  # egasi körsatmasi, 13.11.2026

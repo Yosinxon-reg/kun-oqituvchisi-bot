@@ -1,0 +1,75 @@
+{
+ "name": {
+  "font": "SemiBold",
+  "max": 52,
+  "min": 24,
+  "color": "#1B2340",
+  "align": "left",
+  "upper": true,
+  "split": true,
+  "track": 0.01,
+  "lh": 1.08,
+  "box": [
+   1343.75,
+   537.5,
+   2000.0,
+   362.5
+  ]
+ },
+ "filial": {
+  "font": "Medium",
+  "max": 13,
+  "min": 9,
+  "color": "#3955A1",
+  "align": "left",
+  "upper": true,
+  "track": 0.12,
+  "box": [
+   1343.75,
+   968.75,
+   2000.0,
+   62.5
+  ]
+ },
+ "date": {
+  "font": "SemiBold",
+  "max": 15,
+  "min": 10,
+  "color": "#FFFFFF",
+  "align": "left",
+  "track": 0.05,
+  "box": [
+   162.5,
+   2143.75,
+   546.875,
+   62.5
+  ]
+ },
+ "number": {
+  "font": "Regular",
+  "max": 14,
+  "min": 10,
+  "color": "#DCE3F5",
+  "align": "left",
+  "track": 0.05,
+  "box": [
+   162.5,
+   2231.25,
+   546.875,
+   62.5
+  ]
+ },
+ "qr": {
+  "font": "Regular",
+  "max": 10,
+  "min": 10,
+  "color": "#1B2340",
+  "align": "left",
+  "box": [
+   756.25,
+   1975.0,
+   287.5,
+   287.5
+  ]
+ }
+}
