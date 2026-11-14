@@ -1122,6 +1122,11 @@ ONE_TIME_RESEND = ["2026-11-13"]   # 14.11.2026: yangi körinişdagi (imzo + QR)
 
 
 def apply_fixes(st):
+    if f"dizayn|{ONE_TIME_DESIGN}" not in st["fixes_done"]:
+        st["fixes_done"].append(f"dizayn|{ONE_TIME_DESIGN}")
+        st["dizayn"] = ONE_TIME_DESIGN
+        audit(st, "dizayn", ONE_TIME_DESIGN)
+        save_state(st, "dizayn v6")
     for d in ONE_TIME_RESEND:
         key = f"qayta|{d}"
         if key not in st["fixes_done"] and st.get("dizayn") == ONE_TIME_DESIGN:
@@ -1131,11 +1136,6 @@ def apply_fixes(st):
                 tg("sendMessage", chat_id=ch, text=f"🆕 {sana_txt(D(d))} taşakkurnomalari — yangi körinişda (asoschi imzosi va QR-kod bilan):")
                 n = copy_certs(st, ch, d, pref="🆕 YANGI KÖRINIŞ\n")
                 tg("sendMessage", chat_id=ch, text=f"✅ {n} ta taşakkurnoma yuborildi. Raqamlari özgarmadi.")
-    if f"dizayn|{ONE_TIME_DESIGN}" not in st["fixes_done"]:
-        st["fixes_done"].append(f"dizayn|{ONE_TIME_DESIGN}")
-        st["dizayn"] = ONE_TIME_DESIGN
-        audit(st, "dizayn", ONE_TIME_DESIGN)
-        save_state(st, "dizayn v6")
     for d in ONE_TIME_LISTS:
         key = f"royxat|{d}"
         if key not in st["fixes_done"]:
