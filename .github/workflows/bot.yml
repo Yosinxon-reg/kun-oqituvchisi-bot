@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: write     # keyingi navbatni özi band qiladi
 
 concurrency:
   group: bot
@@ -17,6 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 355
     steps:
+      # Keyingi navbat şu zahoti band qilinadi: u kutib turadi va bu navbat tugaşi bilan darhol boşlanadi.
+      # (GitHub "schedule" kafolatlanmagan — keçikadi yoki tuşib qoladi; bu esa zaxira.)
+      - name: Keyingi navbatni band qiliş
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run bot.yml --ref main -R "${{ github.repository }}" || echo "band qilib bölmadi — zaxira cron işlaydi"
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
