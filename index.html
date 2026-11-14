@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kun öqituvçilari — Registan School</title>
+<meta name="description" content="«Kun öqituvçisi» taşakkurnomalari — Registon va Turkiston taʼlim loyihalari">
+<meta name="theme-color" content="#3955A1">
+<link rel="icon" href="assets/registon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#3955A1;--dark:#1B2340;--yel:#F6B306;--grn:#0D6D59;--bg:#F4F6FB;--card:#fff;--mut:#5B6488;--line:#E3E8F4}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--dark);font-family:Montserrat,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header{background:var(--blue);color:#fff;position:relative;overflow:hidden}
+header .leafbg{position:absolute;right:-60px;bottom:-70px;width:340px;opacity:.10}
+.top{display:flex;align-items:center;gap:12px;padding:18px 0}
+.top img{width:40px}
+.top .t1{font:800 13px/1 Montserrat;letter-spacing:.06em}
+.top .t2{font:500 11px/1.4 Montserrat;opacity:.8}
+.hero{padding:26px 0 34px;position:relative}
+.bar{width:56px;height:5px;background:var(--yel);margin-bottom:18px}
+.hero h1{font:300 34px/1.08 Montserrat}
+.hero h1 b{font-weight:800;display:block;letter-spacing:.01em}
+.hero p{font:500 14px/1.5 Montserrat;opacity:.85;margin-top:12px;max-width:520px}
+.stats{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.stat{background:rgba(255,255,255,.12);border-radius:16px;padding:12px 16px;min-width:96px}
+.stat b{display:block;font:800 26px/1 Montserrat}
+.stat span{font:500 11px/1.3 Montserrat;opacity:.85}
+.tools{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 8px}
+.search{display:flex;align-items:center;gap:10px;background:#fff;border-radius:16px;padding:0 16px;height:52px;box-shadow:0 6px 20px rgba(27,35,64,.06);border:1px solid var(--line)}
+.search input{flex:1;border:0;outline:0;font:500 16px Montserrat;color:var(--dark);background:transparent;min-width:0}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 14px;font:600 13px Montserrat;color:var(--mut);cursor:pointer}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.day{font:700 12px/1 Montserrat;letter-spacing:.12em;color:var(--blue);text-transform:uppercase;margin:22px 0 12px;display:flex;align-items:center;gap:10px}
+.day:after{content:"";flex:1;height:1px;background:var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.item{display:flex;gap:14px;background:#fff;border-radius:18px;padding:12px;box-shadow:0 6px 20px rgba(27,35,64,.05);border:1px solid var(--line);transition:transform .15s}
+.item:active{transform:scale(.98)}
+.item img{width:112px;height:79px;object-fit:cover;border-radius:10px;flex:none;background:var(--line)}
+.item .nm{font:700 15px/1.25 Montserrat}
+.item .mt{font:500 12px/1.45 Montserrat;color:var(--mut);margin-top:4px}
+.item .no{font:600 11px/1 Montserrat;color:var(--blue);margin-top:8px;letter-spacing:.05em}
+.empty{text-align:center;color:var(--mut);font:500 15px/1.5 Montserrat;padding:50px 0}
+footer{text-align:center;color:var(--mut);font:500 12px/1.6 Montserrat;padding:40px 16px 50px}
+/* ---- taşakkurnoma sahifasi ---- */
+.cert{padding:18px 0 10px}
+.badge{display:inline-flex;align-items:center;gap:8px;background:#E7F3EF;color:var(--grn);border-radius:999px;padding:9px 14px;font:700 13px/1.2 Montserrat}
+.cname{font:800 32px/1.1 Montserrat;margin:16px 0 6px;letter-spacing:.005em}
+.cmeta{font:500 15px/1.5 Montserrat;color:var(--mut)}
+.cmeta b{color:var(--blue)}
+.shot{margin-top:18px;border-radius:18px;overflow:hidden;box-shadow:0 18px 50px rgba(27,35,64,.16);background:#fff}
+.shot img{width:100%;display:block}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border-radius:14px;font:700 14px Montserrat;border:0;cursor:pointer;background:#fff;color:var(--blue);box-shadow:0 4px 14px rgba(27,35,64,.06);border:1px solid var(--line)}
+.btn.pri{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn.wide{grid-column:1/-1}
+.back{display:inline-flex;align-items:center;gap:6px;font:600 13px Montserrat;color:#fff;opacity:.9}
+/* ---- tabrik ---- */
+#gift{position:fixed;inset:0;z-index:50;background:radial-gradient(120% 90% at 50% 30%,#4A67B5 0%,#3955A1 45%,#1B2340 100%);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;transition:opacity .7s ease}
+#gift.hide{opacity:0;pointer-events:none}
+.orb{position:relative;width:190px;height:190px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 14px rgba(255,255,255,.12),0 0 0 30px rgba(255,255,255,.06),0 30px 80px rgba(0,0,0,.35);animation:pulse 1.6s ease-in-out infinite}
+.orb img{width:118px}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+#gift .k{font:700 12px/1 Montserrat;letter-spacing:.24em;color:var(--yel);margin-top:44px}
+#gift h2{font:300 30px/1.15 Montserrat;margin-top:12px}
+#gift h2 b{font-weight:800;display:block}
+#gift .open{margin-top:30px;height:60px;padding:0 34px;border-radius:999px;border:0;background:var(--yel);color:var(--dark);font:800 17px Montserrat;cursor:pointer;box-shadow:0 14px 30px rgba(246,179,6,.35);animation:nudge 2.2s ease-in-out infinite}
+@keyframes nudge{0%,80%,100%{transform:translateY(0)}88%{transform:translateY(-6px)}94%{transform:translateY(2px)}}
+#gift .hint{font:500 12px/1.4 Montserrat;opacity:.7;margin-top:14px}
+.boom .orb{animation:boom .55s cubic-bezier(.2,.9,.3,1.4) forwards}
+@keyframes boom{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(0);opacity:0}}
+.leafp{position:fixed;z-index:60;width:46px;height:34px;left:50%;top:42%;pointer-events:none;will-change:transform,opacity}
+#fx{position:fixed;inset:0;z-index:55;pointer-events:none}
+.ring{position:fixed;left:50%;top:42%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:6px solid var(--yel);z-index:58;pointer-events:none;animation:ring .9s ease-out forwards}
+@keyframes ring{to{transform:scale(40);opacity:0;border-width:1px}}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--dark);color:#fff;border-radius:12px;padding:12px 16px;font:600 13px Montserrat;z-index:70;opacity:0;transition:opacity .3s}
+.toast.on{opacity:1}
+@media (min-width:720px){.hero h1{font-size:44px}.cname{font-size:40px}}
+</style>
+</head>
+<body>
+<header>
+  <img class="leafbg" src="assets/registon-white.svg" alt="">
+  <div class="wrap">
+    <div class="top">
+      <img src="assets/registon-white.svg" alt="Registan School">
+      <div><div class="t1">REGISTAN SCHOOL</div><div class="t2">Monitoring bölimi</div></div>
+    </div>
+    <div class="hero" id="hero"></div>
+  </div>
+</header>
+<main class="wrap" id="main"><div class="empty">Yuklanmoqda…</div></main>
+<footer>«Registon» va «Turkiston» taʼlim loyihalari · Monitoring bölimi<br>Har bir taşakkurnoma QR-kod orqali tekşiriladi</footer>
+<div class="toast" id="toast"></div>
+<canvas id="fx"></canvas>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const OY = ["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentyabr","oktyabr","noyabr","dekabr"];
+const sana = iso => { const [y,m,d] = iso.split("-").map(Number); return `${d}-${OY[m-1]}, ${y}`; };
+const pad = n => String(n).padStart(4, "0");
+const school = m => m === "turkiston" ? "Turkiston maktabi" : "Registon maktabi";
+const store = { get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+                set(k,v){ try { localStorage.setItem(k,v); } catch(e){} } };
+function toast(t){ const e=$("#toast"); e.textContent=t; e.classList.add("on"); setTimeout(()=>e.classList.remove("on"),2200); }
+const norm = s => String(s||"").toLowerCase()
+  .replace(/ş/g,"sh").replace(/ç/g,"ch").replace(/ğ/g,"g").replace(/ö/g,"o").replace(/[ʼ'`‘’]/g,"").replace(/h/g,"x");
+
+/* ---------------- konfetti va emblem portlaşi ---------------- */
+const cv = $("#fx"), cx = cv.getContext("2d");
+let parts = [], raf = 0;
+function fit(){ cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; }
+addEventListener("resize", fit); fit();
+function confetti(n, power){
+  const C = ["#3955A1","#F6B306","#FFFFFF","#0D6D59","#8FA6E0"];
+  const W = cv.width, H = cv.height, d = devicePixelRatio;
+  for (let i = 0; i < n; i++){
+    const a = Math.random() * Math.PI * 2, v = (power * (0.4 + Math.random())) * d;
+    parts.push({x: W/2, y: H*0.42, vx: Math.cos(a)*v, vy: Math.sin(a)*v - 6*d, w: (6+Math.random()*7)*d, h: (9+Math.random()*9)*d,
+                r: Math.random()*6, vr: (Math.random()-.5)*.4, c: C[i % C.length], life: 1});
+  }
+  if (!raf) loop();
+}
+function rain(n){
+  const C = ["#3955A1","#F6B306","#0D6D59","#8FA6E0"], d = devicePixelRatio;
+  for (let i = 0; i < n; i++) parts.push({x: Math.random()*cv.width, y: -20*d - Math.random()*cv.height*.4, vx: (Math.random()-.5)*2*d,
+    vy: (2+Math.random()*3)*d, w: (5+Math.random()*6)*d, h: (8+Math.random()*8)*d, r: Math.random()*6, vr: (Math.random()-.5)*.3, c: C[i%C.length], life: 1});
+  if (!raf) loop();
+}
+function loop(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  const d = devicePixelRatio;
+  parts = parts.filter(p => p.y < cv.height + 40*d && p.life > 0);
+  for (const p of parts){
+    p.vy += 0.18*d; p.vx *= 0.99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+    if (p.vy > 0) p.life -= 0.004;
+    cx.save(); cx.translate(p.x,p.y); cx.rotate(p.r); cx.globalAlpha = Math.max(0, Math.min(1, p.life*1.5));
+    cx.fillStyle = p.c; cx.fillRect(-p.w/2, -p.h/2, p.w, p.h * Math.abs(Math.cos(p.r*1.7))); cx.restore();
+  }
+  raf = parts.length ? requestAnimationFrame(loop) : 0;
+  if (!raf) cx.clearRect(0,0,cv.width,cv.height);
+}
+function leaves(n){
+  const src = ["assets/registon-white.svg","assets/registon-yellow.svg","assets/registon.svg"];
+  for (let i = 0; i < n; i++){
+    const e = document.createElement("img"); e.src = src[i % 3]; e.className = "leafp";
+    const a = (i / n) * Math.PI * 2 + Math.random()*.4, dist = 180 + Math.random()*Math.min(innerWidth, innerHeight)*.55;
+    const s = .5 + Math.random()*1.3, rot = (Math.random()-.5)*720;
+    document.body.appendChild(e);
+    e.animate([
+      {transform: "translate(-50%,-50%) scale(.2) rotate(0deg)", opacity: 1},
+      {transform: `translate(calc(-50% + ${Math.cos(a)*dist}px), calc(-50% + ${Math.sin(a)*dist}px)) scale(${s}) rotate(${rot}deg)`, opacity: 1, offset: .7},
+      {transform: `translate(calc(-50% + ${Math.cos(a)*dist*1.15}px), calc(-50% + ${Math.sin(a)*dist*1.15 + 120}px)) scale(${s*.9}) rotate(${rot*1.3}deg)`, opacity: 0}
+    ], {duration: 1900 + Math.random()*700, easing: "cubic-bezier(.15,.8,.3,1)"}).onfinish = () => e.remove();
+  }
+  const r = document.createElement("div"); r.className = "ring"; document.body.appendChild(r); setTimeout(() => r.remove(), 1000);
+}
+let audio;
+function cheer(){
+  try { audio = audio || new Audio("assets/olqish.mp3"); audio.currentTime = 0; audio.volume = 1; audio.play().catch(()=>{}); } catch(e){}
+  if (navigator.vibrate) navigator.vibrate([60,40,120]);
+}
+function celebrate(full){
+  if (full){ cheer(); leaves(28); confetti(220, 13); setTimeout(() => rain(160), 600); setTimeout(() => confetti(120, 10), 1100); }
+  else { rain(70); }
+}
+
+/* ---------------- maʼlumot ---------------- */
+let DATA = [];
+async function load(){
+  const r = await fetch("data/certs.json?t=" + Date.now(), {cache: "no-store"});
+  DATA = (await r.json()).certs || [];
+}
+
+/* ---------------- galereya ---------------- */
+function gallery(){
+  const ustoz = new Set(DATA.map(c => c.ism)).size, fil = new Set(DATA.map(c => c.filial)).size;
+  $("#hero").innerHTML = `<div class="bar"></div><h1>Kun<b>ÖQITUVÇILARI</b></h1>
+    <p>«Kun öqituvçisi» deb eʼtirof etilgan ustozlarimizning taşakkurnomalari. Har biri haqiqiy va QR-kod orqali tekşiriladi.</p>
+    <div class="stats"><div class="stat"><b>${DATA.length}</b><span>taşakkurnoma</span></div>
+    <div class="stat"><b>${ustoz}</b><span>ustoz</span></div><div class="stat"><b>${fil}</b><span>filial</span></div></div>`;
+  const fils = [...new Set(DATA.map(c => c.filial))];
+  $("#main").innerHTML = `<div class="tools"><label class="search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5B6488" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Ism, fan, filial yoki raqam" autocomplete="off"></label>
+      <div class="chips" id="chips"><button class="chip on" data-f="">Hammasi</button>${fils.map(f => `<button class="chip" data-f="${esc(f)}">${esc(f)}</button>`).join("")}</div></div>
+    <div id="list"></div>`;
+  let fsel = "";
+  const draw = () => {
+    const q = norm($("#q").value.trim());
+    const rows = DATA.filter(c => (!fsel || c.filial === fsel) &&
+      (!q || norm(`${c.ism} ${c.filial} ${c.fan} ${pad(c.n)} ${sana(c.sana)}`).includes(q)))
+      .sort((a, b) => b.sana.localeCompare(a.sana) || b.n - a.n);
+    if (!rows.length){ $("#list").innerHTML = `<div class="empty">Hech narsa topilmadi</div>`; return; }
+    let html = "", cur = "";
+    for (const c of rows){
+      if (c.sana !== cur){ if (cur) html += "</div>"; cur = c.sana; html += `<div class="day">${sana(c.sana)}</div><div class="grid">`; }
+      html += `<a class="item" href="?n=${c.n}"><img loading="lazy" src="${esc(c.thumb)}" alt="">
+        <div><div class="nm">${esc(c.ism)}</div><div class="mt">${esc(c.filial)} · ${esc(c.fan)}</div><div class="no">№ ${pad(c.n)}</div></div></a>`;
+    }
+    $("#list").innerHTML = html + "</div>";
+  };
+  $("#q").addEventListener("input", draw);
+  $("#chips").addEventListener("click", e => { const b = e.target.closest(".chip"); if (!b) return;
+    document.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", x === b)); fsel = b.dataset.f; draw(); });
+  draw();
+}
+
+/* ---------------- bitta taşakkurnoma ---------------- */
+function single(n){
+  const c = DATA.find(x => x.n === n);
+  if (!c){
+    $("#hero").innerHTML = `<a class="back" href="./">← Barça taşakkurnomalar</a>`;
+    $("#main").innerHTML = `<div class="empty">№ ${pad(n)} taşakkurnoma hozirça topilmadi.<br>Agar u bugun berilgan bölsa, bir necha daqiqadan keyin qayta oçing.</div>`;
+    return;
+  }
+  document.title = `${c.ism} — Kun öqituvçisi`;
+  $("#hero").innerHTML = `<a class="back" href="./">← Barça taşakkurnomalar</a>`;
+  $("#main").innerHTML = `<div class="cert">
+    <div class="badge">✅ Haqiqiy taşakkurnoma · ${school(c.maktab)}</div>
+    <div class="cname">${esc(c.ism)}</div>
+    <div class="cmeta"><b>${esc(c.filial)} filiali</b> · ${esc(c.fan)}<br>${sana(c.sana)} · № ${pad(c.n)}</div>
+    <div class="shot"><img src="${esc(c.img)}" alt="Taşakkurnoma № ${pad(c.n)}"></div>
+    <div class="btns">
+      <a class="btn pri" href="${esc(c.img)}" download="Kun-oqituvchisi-${pad(c.n)}.jpg">⬇️ Yuklab oliş</a>
+      <button class="btn" id="share">🔗 Ulaşiş</button>
+      <button class="btn wide" id="again">🎉 Yana tabriklaş</button>
+    </div></div>`;
+  $("#again").onclick = () => celebrate(true);
+  $("#share").onclick = async () => {
+    const url = location.href;
+    try { if (navigator.share) { await navigator.share({title: document.title, text: `«Kun öqituvçisi» — ${c.ism}`, url}); return; } } catch(e){ return; }
+    try { await navigator.clipboard.writeText(url); toast("Havola nusxalandi"); } catch(e){ toast(url); }
+  };
+  const key = "kun_seen_" + n;
+  if (!store.get(key)){
+    const g = document.createElement("div"); g.id = "gift";
+    g.innerHTML = `<div class="orb"><img src="assets/registon.svg" alt=""></div>
+      <div class="k">TABRIKLAYMIZ</div><h2>Hurmatli<b>${esc(c.ism)}</b></h2>
+      <button class="open">🎁 Tabrikni oçing</button><div class="hint">Ovozni yoqing 🔊</div>`;
+    document.body.appendChild(g);
+    g.querySelector(".open").onclick = () => {
+      store.set(key, "1");
+      g.classList.add("boom"); celebrate(true);
+      setTimeout(() => { g.classList.add("hide"); setTimeout(() => g.remove(), 800); }, 650);
+    };
+  } else {
+    setTimeout(() => celebrate(false), 300);
+  }
+}
+
+(async () => {
+  try { await load(); } catch(e){ $("#main").innerHTML = `<div class="empty">Maʼlumotni yuklab bölmadi. Internetni tekşirib, qayta oçing.</div>`; return; }
+  const n = parseInt(new URLSearchParams(location.search).get("n"), 10);
+  if (n) single(n); else gallery();
+})();
+</script>
+</body>
+</html>
