@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-14T13:04:18",
+"yangilandi": "2026-11-14T13:08:00",
 "certs": [
 {
 "n": 154,
@@ -190,6 +190,16 @@
 "maktab": "turkiston",
 "img": "c/0172.jpg?v=47d5e4",
 "thumb": "c/0172_t.jpg?v=47d5e4"
+},
+{
+"n": 173,
+"ism": "Ziyoda Ismailxodjayeva Erkinovna",
+"filial": "Tinçlik",
+"fan": "Tarix",
+"sana": "2026-11-14",
+"maktab": "registon",
+"img": "c/0173.jpg?v=795b72",
+"thumb": "c/0173_t.jpg?v=795b72"
 }
 ]
 }
