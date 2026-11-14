@@ -1118,7 +1118,19 @@ ONE_TIME_FIXES = [  # egasi körsatmasi, 13.11.2026
 ]
 
 
+ONE_TIME_RESEND = ["2026-11-13"]   # 14.11.2026: yangi körinişdagi (imzo + QR) taşakkurnomalar egasiga
+
+
 def apply_fixes(st):
+    for d in ONE_TIME_RESEND:
+        key = f"qayta|{d}"
+        if key not in st["fixes_done"] and st.get("dizayn") == ONE_TIME_DESIGN:
+            st["fixes_done"].append(key)
+            save_state(st, key)
+            for ch in owners(st):
+                tg("sendMessage", chat_id=ch, text=f"🆕 {sana_txt(D(d))} taşakkurnomalari — yangi körinişda (asoschi imzosi va QR-kod bilan):")
+                n = copy_certs(st, ch, d, pref="🆕 YANGI KÖRINIŞ\n")
+                tg("sendMessage", chat_id=ch, text=f"✅ {n} ta taşakkurnoma yuborildi. Raqamlari özgarmadi.")
     if f"dizayn|{ONE_TIME_DESIGN}" not in st["fixes_done"]:
         st["fixes_done"].append(f"dizayn|{ONE_TIME_DESIGN}")
         st["dizayn"] = ONE_TIME_DESIGN
@@ -1160,7 +1172,7 @@ def day_list_msg(st, day):
     return "\n".join(L)
 
 
-def copy_certs(st, chat, day_iso):
+def copy_certs(st, chat, day_iso, pref=""):
     """Şu kuni yuborilgan taşakkurnomalarni (eng oxirgi, tuzatilgan holatida) boşqa akkauntga nusxalaş."""
     last = {}
     for c in st["certs"]:
@@ -1174,7 +1186,7 @@ def copy_certs(st, chat, day_iso):
         ism = cname(r)
         img = render2.render(st.get("dizayn", "v3"), r["maktab"], ism, n, D(r["sana"]), r["filial"])
         data = img.getvalue() if hasattr(img, "getvalue") else img
-        cap = st["izoh"].format(ism=ism, filial=r["filial"], fan=r["fan"], raqam=f"{n:04d}", sana=sana_txt(D(r["sana"])))
+        cap = pref + st["izoh"].format(ism=ism, filial=r["filial"], fan=r["fan"], raqam=f"{n:04d}", sana=sana_txt(D(r["sana"])))
         if tg("sendDocument", chat_id=chat, caption=cap[:1024],
               files={"document": (f"Kun öqituvçisi {n}.jpg", data, "image/jpeg")}) is not None:
             sent += 1
