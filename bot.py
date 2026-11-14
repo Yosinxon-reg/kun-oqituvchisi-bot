@@ -1835,31 +1835,43 @@ def outbox_tick(st):
     if GIT_SYNC and time.time() - _last_pull[0] > 300:
         _last_pull[0] = time.time()
         subprocess.run(["git", "pull", "-q", "--rebase", "-X", "ours"], capture_output=True)
-    if not st.get("regmon") or not os.path.isdir(OUTBOX):
+    if not os.path.isdir(OUTBOX):
         return False
     changed = False
-    for fn in sorted(os.listdir(OUTBOX)):
+    items = [(fn, os.path.join(OUTBOX, fn), "regmon") for fn in sorted(os.listdir(OUTBOX))]
+    sh = os.path.join(OUTBOX, "shaxsiy")
+    if os.path.isdir(sh):
+        items += [(fn, os.path.join(sh, fn), "shaxsiy") for fn in sorted(os.listdir(sh))]
+    for fn, path, where in items:
+        if where == "regmon" and not st.get("regmon"):
+            continue
+        targets = [st["regmon"]] if where == "regmon" else owners(st)
         ext = fn.rsplit(".", 1)[-1].lower()
         if ext not in ("mp4", "jpg", "jpeg", "png", "pdf"):
             continue
-        path = os.path.join(OUTBOX, fn)
-        key = f"{fn}|{os.path.getsize(path)}"
+        if os.path.isdir(path):
+            continue
+        key = f"{where}|{fn}|{os.path.getsize(path)}" if where != "regmon" else f"{fn}|{os.path.getsize(path)}"
         if key in st["outbox_sent"]:
             continue
-        txt = os.path.join(OUTBOX, fn.rsplit(".", 1)[0] + ".txt")
+        txt = os.path.join(os.path.dirname(path), fn.rsplit(".", 1)[0] + ".txt")
         cap = open(txt, encoding="utf-8").read().strip() if os.path.exists(txt) else ""
         st["outbox_sent"].append(key)               # avval belgilanadi — takror yuborilmasin
         save_state(st, f"outbox {fn}")
-        with open(path, "rb") as fh:
-            if ext == "mp4":
-                ok = tg("sendVideo", chat_id=st["regmon"], caption=cap[:1024], supports_streaming="true",
-                        files={"video": (fn, fh, "video/mp4")})
-            elif ext == "pdf":
-                ok = tg("sendDocument", chat_id=st["regmon"], caption=cap[:1024], files={"document": (fn, fh, "application/pdf")})
-            else:
-                ok = tg("sendPhoto", chat_id=st["regmon"], caption=cap[:1024], files={"photo": (fn, fh, "image/jpeg")})
+        ok = None
+        for chat in targets:
+            with open(path, "rb") as fh:
+                if ext == "mp4":
+                    r_ = tg("sendVideo", chat_id=chat, caption=cap[:1024], supports_streaming="true",
+                            files={"video": (fn, fh, "video/mp4")})
+                elif ext == "pdf":
+                    r_ = tg("sendDocument", chat_id=chat, caption=cap[:1024], files={"document": (fn, fh, "application/pdf")})
+                else:
+                    r_ = tg("sendPhoto", chat_id=chat, caption=cap[:1024], files={"photo": (fn, fh, "image/jpeg")})
+            ok = ok or r_
         audit(st, "outbox", f"{fn}: {'yuborildi' if ok else 'XATO'}")
-        say(st, f"{'✅' if ok else '⚠️'} RegMon guruhiga yuborildi: {fn}" if ok else f"⚠️ {fn} RegMon guruhiga yuborilmadi — tekşiraman.")
+        if where == "regmon":
+            say(st, f"✅ RegMon guruhiga yuborildi: {fn}" if ok else f"⚠️ {fn} RegMon guruhiga yuborilmadi — tekşiraman.")
         changed = True
     return changed
 
