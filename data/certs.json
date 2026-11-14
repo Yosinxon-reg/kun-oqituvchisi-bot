@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-14T05:56:14",
+"yangilandi": "2026-11-14T13:04:18",
 "certs": [
 {
 "n": 154,
@@ -120,6 +120,76 @@
 "maktab": "turkiston",
 "img": "c/0165.jpg?v=f0a1e0",
 "thumb": "c/0165_t.jpg?v=f0a1e0"
+},
+{
+"n": 166,
+"ism": "Abdaliyeva Şirin",
+"filial": "Çilonzor",
+"fan": "Tasviriy sanʼat",
+"sana": "2026-11-14",
+"maktab": "registon",
+"img": "c/0166.jpg?v=a2cbee",
+"thumb": "c/0166_t.jpg?v=a2cbee"
+},
+{
+"n": 167,
+"ism": "Saidxöjayev Sirojiddin",
+"filial": "Çilonzor",
+"fan": "Futbol va jismoniy tarbiya",
+"sana": "2026-11-14",
+"maktab": "registon",
+"img": "c/0167.jpg?v=d7e322",
+"thumb": "c/0167_t.jpg?v=d7e322"
+},
+{
+"n": 168,
+"ism": "Plotnikova Larisa",
+"filial": "Çilonzor",
+"fan": "Gimnastika",
+"sana": "2026-11-14",
+"maktab": "registon",
+"img": "c/0168.jpg?v=de3337",
+"thumb": "c/0168_t.jpg?v=de3337"
+},
+{
+"n": 169,
+"ism": "Abduraxmonova Nargiza",
+"filial": "Samarqand",
+"fan": "Informatika",
+"sana": "2026-11-14",
+"maktab": "registon",
+"img": "c/0169.jpg?v=322205",
+"thumb": "c/0169_t.jpg?v=322205"
+},
+{
+"n": 170,
+"ism": "Boymurodova Dilbar",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"sana": "2026-11-14",
+"maktab": "registon",
+"img": "c/0170.jpg?v=5575e2",
+"thumb": "c/0170_t.jpg?v=5575e2"
+},
+{
+"n": 171,
+"ism": "Sattorova Feruza Abdugafurovna",
+"filial": "Tinçlik",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-14",
+"maktab": "registon",
+"img": "c/0171.jpg?v=a5f4dc",
+"thumb": "c/0171_t.jpg?v=a5f4dc"
+},
+{
+"n": 172,
+"ism": "Rustamova Diyora",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"sana": "2026-11-14",
+"maktab": "turkiston",
+"img": "c/0172.jpg?v=47d5e4",
+"thumb": "c/0172_t.jpg?v=47d5e4"
 }
 ]
 }
