@@ -1,3 +1,4 @@
 requests
 cryptography
 Pillow
+qrcode==7.4.2

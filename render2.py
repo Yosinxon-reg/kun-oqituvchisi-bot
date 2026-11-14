@@ -78,6 +78,23 @@ def sana_matni(d):
     return f"{d.day}-{OYLAR[d.month - 1]}, {d.year}"
 
 
+SITE = "https://yosinxon-reg.github.io/kun-oqituvchisi-bot/"
+
+
+def qr_url(raqam):
+    return f"{SITE}?n={int(raqam)}"
+
+
+def draw_qr(im, box, url):
+    import qrcode
+    q = qrcode.QRCode(border=0, error_correction=qrcode.constants.ERROR_CORRECT_M, box_size=10)
+    q.add_data(url)
+    q.make(fit=True)
+    img = q.make_image(fill_color="#1B2340", back_color="white").convert("RGB")
+    x, y, w, h = [int(round(v)) for v in box]
+    im.paste(img.resize((w, h), Image.NEAREST), (x, y))
+
+
 def render(variant, maktab, ism, raqam, sana, filial="", fmt="JPEG"):
     im = Image.open(os.path.join(TPL, f"{variant}_{maktab}.png")).convert("RGB")
     spec = json.load(open(os.path.join(TPL, f"{variant}_{maktab}.json")))
@@ -89,6 +106,8 @@ def render(variant, maktab, ism, raqam, sana, filial="", fmt="JPEG"):
         draw_field(d, f, spec["filial"])
     draw_field(d, sana_matni(sana), spec["date"])
     draw_field(d, f"№ {int(raqam):04d}", spec["number"])
+    if "qr" in spec:
+        draw_qr(im, spec["qr"]["box"], qr_url(raqam))
     buf = io.BytesIO()
     if fmt == "JPEG":
         im.save(buf, "JPEG", quality=93, optimize=True, dpi=(300, 300))

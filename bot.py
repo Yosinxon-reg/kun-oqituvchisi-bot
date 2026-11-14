@@ -24,6 +24,7 @@ from zoneinfo import ZoneInfo
 import requests
 
 import names
+import websayt
 import render2
 
 TOKEN = os.environ.get("BOT_TOKEN", "")
@@ -790,6 +791,12 @@ def send_cert(st, r, n, key, sinov=False):
             if ch == st.get("owner"):
                 ok = res
         if ok is not None and not sinov:
+            try:
+                if websayt.ready(GIT_SYNC):
+                    websayt.put_image(n, data)
+                    st.setdefault("site_imgs", {})[str(n)] = f"{st.get('dizayn')}|{ism}|{r['filial']}"
+            except Exception:
+                traceback.print_exc()
             r["cert_sent"], r["tuzatildi"], r["cert_ism"] = True, False, ism
             st["certs"].append({"n": n, "id": r["id"], "ism": ism, "filial": r["filial"], "sana": r["sana"],
                                 "paket": key, "ts": now().isoformat(timespec="seconds")})
@@ -1057,7 +1064,53 @@ def fix_name(st, r, ism, kim="egasi"):
     return disp
 
 
+def site_entries(st):
+    last = {}
+    for c in st["certs"]:
+        last[c["n"]] = c
+    out = []
+    for n in sorted(last):
+        r = next((x for x in st["results"] if x["id"] == last[n]["id"]), None)
+        if not r or r["holat"] != "hisob":
+            continue
+        v = hashlib.md5((st.get("site_imgs", {}).get(str(n)) or "").encode()).hexdigest()[:6]
+        out.append({"n": n, "ism": cname(r), "filial": r["filial"], "fan": names.yangi(fan_of(r)), "sana": r["sana"],
+                    "maktab": r["maktab"], "img": f"c/{n:04d}.jpg?v={v}", "thumb": f"c/{n:04d}_t.jpg?v={v}"})
+    return out, last
+
+
+_site_t = [0.0]
+
+
+def site_tick(st, force=False):
+    """Veb-sahifani holat bilan moslaş: yetişmagan yoki eskirgan rasmlarni çizadi, röyxatni yangilaydi."""
+    if not force and time.time() - _site_t[0] < 60:
+        return False
+    _site_t[0] = time.time()
+    if not websayt.ready(GIT_SYNC):
+        return False
+    entries, last = site_entries(st)
+    imgs = st.setdefault("site_imgs", {})
+    changed = False
+    for e in entries:
+        r = next(x for x in st["results"] if x["id"] == last[e["n"]]["id"])
+        want = f"{st.get('dizayn')}|{e['ism']}|{r['filial']}"
+        if imgs.get(str(e["n"])) != want or not websayt.has_image(e["n"]):
+            img = render2.render(st.get("dizayn", "v3"), r["maktab"], e["ism"], e["n"], D(r["sana"]), r["filial"])
+            websayt.put_image(e["n"], img.getvalue())
+            imgs[str(e["n"])] = want
+            changed = True
+    if changed:
+        entries, _ = site_entries(st)
+    websayt.write_index(entries)
+    websayt.push(GIT_SYNC, force=force)
+    return changed
+
+
 ONE_TIME_LISTS = ["2026-11-13"]   # egasi körsatmasi: bugungi röyxat darhol
+
+
+ONE_TIME_DESIGN = "v6"   # 14.11.2026: asoschi imzosi + QR (veb-sahifa)
 
 
 ONE_TIME_FIXES = [  # egasi körsatmasi, 13.11.2026
@@ -1066,6 +1119,11 @@ ONE_TIME_FIXES = [  # egasi körsatmasi, 13.11.2026
 
 
 def apply_fixes(st):
+    if f"dizayn|{ONE_TIME_DESIGN}" not in st["fixes_done"]:
+        st["fixes_done"].append(f"dizayn|{ONE_TIME_DESIGN}")
+        st["dizayn"] = ONE_TIME_DESIGN
+        audit(st, "dizayn", ONE_TIME_DESIGN)
+        save_state(st, "dizayn v6")
     for d in ONE_TIME_LISTS:
         key = f"royxat|{d}"
         if key not in st["fixes_done"]:
@@ -1855,6 +1913,10 @@ def main():
             traceback.print_exc()
         try:
             changed |= fan_tick(st, now())
+        except Exception:
+            traceback.print_exc()
+        try:
+            changed |= site_tick(st)
         except Exception:
             traceback.print_exc()
         try:
