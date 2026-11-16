@@ -1140,7 +1140,7 @@ ONE_TIME_FIXES = [  # egasi körsatmasi, 13.11.2026
 ONE_TIME_RESEND = ["2026-11-13"]   # 14.11.2026: yangi körinişdagi (imzo + QR) taşakkurnomalar egasiga
 
 
-ONE_TIME_RECOVER = [("2026-11-16", 5116, 5260)]   # 16.11: guruhdagi ötkazib yuborilgan xabarlarni qayta öqiş
+ONE_TIME_RECOVER = [("2026-11-16", 5116, 5260)]  # bajarildi (fixes_done)   # 16.11: guruhdagi ötkazib yuborilgan xabarlarni qayta öqiş
 
 
 def recover_range(st, day, a, b):
@@ -1943,6 +1943,9 @@ def outbox_tick(st):
 
 # ================================================================ asosiy sikl
 def main():
+    if GIT_SYNC:   # navbat kutib turgan bölsa ham — eng oxirgi holatdan boşlaymiz
+        subprocess.run(["git", "fetch", "-q", "origin", "main"], check=False)
+        subprocess.run(["git", "reset", "-q", "--hard", "origin/main"], check=False)
     st = load_state()
     tg("deleteWebhook")
     tg("setMyCommands", commands=[{"command": c, "description": d} for c, d in [
