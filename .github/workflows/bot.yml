@@ -25,6 +25,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run bot.yml --ref main -R "${{ github.repository }}" || echo "band qilib bölmadi — zaxira cron işlaydi"
       - uses: actions/checkout@v4
+        with:
+          ref: main      # kutib turgan navbat ham eng oxirgi kod va holat bilan boşlanadi
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
