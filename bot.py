@@ -1140,7 +1140,53 @@ ONE_TIME_FIXES = [  # egasi körsatmasi, 13.11.2026
 ONE_TIME_RESEND = ["2026-11-13"]   # 14.11.2026: yangi körinişdagi (imzo + QR) taşakkurnomalar egasiga
 
 
+ONE_TIME_RECOVER = [("2026-11-16", 5116, 5260)]   # 16.11: guruhdagi ötkazib yuborilgan xabarlarni qayta öqiş
+
+
+def recover_range(st, day, a, b):
+    """Guruh xabarlarini raqami bo'yiça qayta öqiydi: egasiga ovozsiz forward -> darhol öçiriladi -> ingest.
+    Faqat şu kun hisobiga tuşadiganlar qöşiladi. Natija va öqilmagan matnlar st["tikla_log"] ga yoziladi."""
+    g, owner = st.get("group"), st.get("owner")
+    if not g or not owner:
+        return 0
+    log, added = [], 0
+    for mid in range(a, b + 1):
+        if any(r["chat"] == g and r["mid"] == mid for r in st["results"]):
+            continue
+        f = tg("forwardMessage", chat_id=owner, from_chat_id=g, message_id=mid, disable_notification=True)
+        if not f:
+            continue
+        tg("deleteMessage", chat_id=owner, message_id=f["message_id"])
+        fo = f.get("forward_origin") or {}
+        m = dict(f)
+        m["chat"] = {"id": g, "type": "supergroup"}
+        m["message_id"] = mid
+        m["date"] = fo.get("date") or f.get("forward_date") or f["date"]
+        m.pop("forward_origin", None); m.pop("forward_date", None); m.pop("forward_from", None)
+        m.pop("forward_from_chat", None); m.pop("forward_sender_name", None)
+        text = m.get("text") or m.get("caption") or ""
+        posted = dt.datetime.fromtimestamp(m["date"], TZ)
+        p = parse_post(text)
+        kun = kun_sanasi(st, posted).isoformat()
+        log.append([mid, posted.isoformat(timespec="minutes"), kun, bool(p), text[:160]])
+        if p and kun == day:
+            n0 = len(st["results"])
+            ingest(st, m)
+            added += len(st["results"]) - n0
+        time.sleep(0.15)
+    st["tikla_log"] = log
+    audit(st, "tiklash", f"{day}: {a}-{b} oraliği qayta öqildi, {added} ta yangi natija qöşildi")
+    return added
+
+
 def apply_fixes(st):
+    for day, a, b in ONE_TIME_RECOVER:
+        key = f"tiklash|{day}|{a}-{b}"
+        if key not in st["fixes_done"] and st.get("group"):
+            st["fixes_done"].append(key)
+            added = recover_range(st, day, a, b)
+            save_state(st, key)
+            say(st, f"🔁 Guruhdagi ötkazib yuborilgan xabarlar qayta öqildi: bugungi hisobga +{added} ta natija qöşildi.")
     if f"dizayn|{ONE_TIME_DESIGN}" not in st["fixes_done"]:
         st["fixes_done"].append(f"dizayn|{ONE_TIME_DESIGN}")
         st["dizayn"] = ONE_TIME_DESIGN
