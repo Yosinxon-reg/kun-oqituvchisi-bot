@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-14T13:08:00",
+"yangilandi": "2026-11-16T13:03:26",
 "certs": [
 {
 "n": 154,
@@ -200,6 +200,256 @@
 "maktab": "registon",
 "img": "c/0173.jpg?v=795b72",
 "thumb": "c/0173_t.jpg?v=795b72"
+},
+{
+"n": 174,
+"ism": "Rizaqulova Maftuna",
+"filial": "Yunusobod",
+"fan": "Tasviriy sanʼat",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0174.jpg?v=f3232f",
+"thumb": "c/0174_t.jpg?v=f3232f"
+},
+{
+"n": 175,
+"ism": "Kazaçuk Amaliya Nikolayevna",
+"filial": "Yunusobod",
+"fan": "Rus tili",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0175.jpg?v=8e3867",
+"thumb": "c/0175_t.jpg?v=8e3867"
+},
+{
+"n": 176,
+"ism": "Rabbiyev Alişer",
+"filial": "Yunusobod",
+"fan": "Matematika",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0176.jpg?v=c8f300",
+"thumb": "c/0176_t.jpg?v=c8f300"
+},
+{
+"n": 177,
+"ism": "Axmedov Otabek",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0177.jpg?v=46a9ca",
+"thumb": "c/0177_t.jpg?v=46a9ca"
+},
+{
+"n": 178,
+"ism": "Örinboyev Jamşid",
+"filial": "Yunusobod",
+"fan": "Futbol va jismoniy tarbiya",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0178.jpg?v=2cfae2",
+"thumb": "c/0178_t.jpg?v=2cfae2"
+},
+{
+"n": 179,
+"ism": "Rahmatullayev Abdulloh",
+"filial": "Yunusobod",
+"fan": "Kamondan öq otiş",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0179.jpg?v=fe681a",
+"thumb": "c/0179_t.jpg?v=fe681a"
+},
+{
+"n": 180,
+"ism": "Djumaniyazova Zulfizar",
+"filial": "Yunusobod",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0180.jpg?v=78d7de",
+"thumb": "c/0180_t.jpg?v=78d7de"
+},
+{
+"n": 181,
+"ism": "Xolmuratov Ğayratilla",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0181.jpg?v=53f8e8",
+"thumb": "c/0181_t.jpg?v=53f8e8"
+},
+{
+"n": 182,
+"ism": "Bayzakova Maqpal",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0182.jpg?v=97e99c",
+"thumb": "c/0182_t.jpg?v=97e99c"
+},
+{
+"n": 183,
+"ism": "Xabibullaxonova Muazzamxon",
+"filial": "Çilonzor",
+"fan": "Ingliz tili",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0183.jpg?v=f72135",
+"thumb": "c/0183_t.jpg?v=f72135"
+},
+{
+"n": 184,
+"ism": "Abduraxmonova Nigora",
+"filial": "Çilonzor",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0184.jpg?v=beab75",
+"thumb": "c/0184_t.jpg?v=beab75"
+},
+{
+"n": 185,
+"ism": "Sayidmurodova Madina Fayzullo qizi",
+"filial": "Çilonzor",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0185.jpg?v=3280d0",
+"thumb": "c/0185_t.jpg?v=3280d0"
+},
+{
+"n": 186,
+"ism": "Boboyorov Azizjon",
+"filial": "Çilonzor",
+"fan": "Muhandislik",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0186.jpg?v=8abfa7",
+"thumb": "c/0186_t.jpg?v=8abfa7"
+},
+{
+"n": 187,
+"ism": "Mirhalilov Muhammad",
+"filial": "Çilonzor",
+"fan": "Robototexnika",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0187.jpg?v=c42bd5",
+"thumb": "c/0187_t.jpg?v=c42bd5"
+},
+{
+"n": 188,
+"ism": "Nematov Bekzod",
+"filial": "Farğona",
+"fan": "Robototexnika",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0188.jpg?v=57c0e7",
+"thumb": "c/0188_t.jpg?v=57c0e7"
+},
+{
+"n": 189,
+"ism": "Mirzayeva Dilnoza Mutalibovna",
+"filial": "Farğona",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0189.jpg?v=167d81",
+"thumb": "c/0189_t.jpg?v=167d81"
+},
+{
+"n": 190,
+"ism": "Oxunjonova Xosiyatbi Voxidjon qizi",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0190.jpg?v=00d7dc",
+"thumb": "c/0190_t.jpg?v=00d7dc"
+},
+{
+"n": 191,
+"ism": "Sonkina Lyubov",
+"filial": "Farğona",
+"fan": "Matematika",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0191.jpg?v=1c0958",
+"thumb": "c/0191_t.jpg?v=1c0958"
+},
+{
+"n": 192,
+"ism": "Komilova Zilola",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0192.jpg?v=162e7a",
+"thumb": "c/0192_t.jpg?v=162e7a"
+},
+{
+"n": 193,
+"ism": "Narzilloyeva Niginabonu",
+"filial": "Tinçlik",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0193.jpg?v=dbbcbb",
+"thumb": "c/0193_t.jpg?v=dbbcbb"
+},
+{
+"n": 194,
+"ism": "Najmiddinov Sirojiddin",
+"filial": "Tinçlik",
+"fan": "Şaxmat",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0194.jpg?v=608bf3",
+"thumb": "c/0194_t.jpg?v=608bf3"
+},
+{
+"n": 195,
+"ism": "Xodjayeva Malika",
+"filial": "Buxoro",
+"fan": "Tasviriy sanʼat",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0195.jpg?v=c1f0a6",
+"thumb": "c/0195_t.jpg?v=c1f0a6"
+},
+{
+"n": 196,
+"ism": "Salimova Mohinur Jamol qizi",
+"filial": "Buxoro",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0196.jpg?v=936687",
+"thumb": "c/0196_t.jpg?v=936687"
+},
+{
+"n": 197,
+"ism": "Fayzullayeva Sarvinoz",
+"filial": "Samarqand",
+"fan": "Matematika",
+"sana": "2026-11-16",
+"maktab": "registon",
+"img": "c/0197.jpg?v=138e10",
+"thumb": "c/0197_t.jpg?v=138e10"
+},
+{
+"n": 198,
+"ism": "Isroilov Jöraboy",
+"filial": "Turkiston",
+"fan": "Şaxmat",
+"sana": "2026-11-16",
+"maktab": "turkiston",
+"img": "c/0198.jpg?v=126471",
+"thumb": "c/0198_t.jpg?v=126471"
 }
 ]
 }
