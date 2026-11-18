@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-18T12:51:57",
+"yangilandi": "2026-11-18T12:55:50",
 "certs": [
 {
 "n": 154,
@@ -700,6 +700,16 @@
 "maktab": "registon",
 "img": "c/0223.jpg?v=bf0fb8",
 "thumb": "c/0223_t.jpg?v=bf0fb8"
+},
+{
+"n": 224,
+"ism": "Xodjayeva Şoira",
+"filial": "Çilonzor",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-18",
+"maktab": "registon",
+"img": "c/0224.jpg?v=d84c68",
+"thumb": "c/0224_t.jpg?v=d84c68"
 }
 ]
 }
