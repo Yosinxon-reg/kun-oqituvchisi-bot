@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-19T12:53:28",
+"yangilandi": "2026-11-19T12:55:34",
 "certs": [
 {
 "n": 154,
@@ -800,6 +800,16 @@
 "maktab": "turkiston",
 "img": "c/0233.jpg?v=fb3db1",
 "thumb": "c/0233_t.jpg?v=fb3db1"
+},
+{
+"n": 234,
+"ism": "Tursunqulov Bunyod-Ingliz",
+"filial": "Samarqand",
+"fan": "Fan aniqlanmagan",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0234.jpg?v=c35156",
+"thumb": "c/0234_t.jpg?v=c35156"
 }
 ]
 }
