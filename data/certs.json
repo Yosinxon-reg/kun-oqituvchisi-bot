@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-18T12:55:50",
+"yangilandi": "2026-11-19T12:53:28",
 "certs": [
 {
 "n": 154,
@@ -710,6 +710,96 @@
 "maktab": "registon",
 "img": "c/0224.jpg?v=d84c68",
 "thumb": "c/0224_t.jpg?v=d84c68"
+},
+{
+"n": 225,
+"ism": "Yusupov Nizomiddin",
+"filial": "Samarqand",
+"fan": "Matematika",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0225.jpg?v=d323ee",
+"thumb": "c/0225_t.jpg?v=d323ee"
+},
+{
+"n": 226,
+"ism": "Mirsaidova Gavhar",
+"filial": "Samarqand",
+"fan": "Matematika",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0226.jpg?v=d3a5ea",
+"thumb": "c/0226_t.jpg?v=d3a5ea"
+},
+{
+"n": 227,
+"ism": "Şaripova Dildora",
+"filial": "Samarqand",
+"fan": "Muhandislik",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0227.jpg?v=5f7a69",
+"thumb": "c/0227_t.jpg?v=5f7a69"
+},
+{
+"n": 228,
+"ism": "Tursunboyeva Aziza",
+"filial": "Tinçlik",
+"fan": "Rus tili",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0228.jpg?v=d5df99",
+"thumb": "c/0228_t.jpg?v=d5df99"
+},
+{
+"n": 229,
+"ism": "Ğafforova Durdona",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0229.jpg?v=265721",
+"thumb": "c/0229_t.jpg?v=265721"
+},
+{
+"n": 230,
+"ism": "Gulyamova Zulfiya",
+"filial": "Tinçlik",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0230.jpg?v=f07148",
+"thumb": "c/0230_t.jpg?v=f07148"
+},
+{
+"n": 231,
+"ism": "Norova Nasiba",
+"filial": "Buxoro",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0231.jpg?v=8e873d",
+"thumb": "c/0231_t.jpg?v=8e873d"
+},
+{
+"n": 232,
+"ism": "Karimova Barnoxon",
+"filial": "Yunusobod",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0232.jpg?v=95049b",
+"thumb": "c/0232_t.jpg?v=95049b"
+},
+{
+"n": 233,
+"ism": "Serajiddinova Nazokat",
+"filial": "Turkiston",
+"fan": "Gimnastika",
+"sana": "2026-11-19",
+"maktab": "turkiston",
+"img": "c/0233.jpg?v=fb3db1",
+"thumb": "c/0233_t.jpg?v=fb3db1"
 }
 ]
 }
