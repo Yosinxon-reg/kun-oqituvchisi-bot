@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-19T12:55:34",
+"yangilandi": "2026-11-19T12:56:49",
 "certs": [
 {
 "n": 154,
@@ -810,6 +810,46 @@
 "maktab": "registon",
 "img": "c/0234.jpg?v=c35156",
 "thumb": "c/0234_t.jpg?v=c35156"
+},
+{
+"n": 235,
+"ism": "Komilova Şahribonu",
+"filial": "Tinçlik",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0235.jpg?v=44963b",
+"thumb": "c/0235_t.jpg?v=44963b"
+},
+{
+"n": 236,
+"ism": "Azimova Maftuna-Ingliz",
+"filial": "Buxoro",
+"fan": "Fan aniqlanmagan",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0236.jpg?v=5f2f42",
+"thumb": "c/0236_t.jpg?v=5f2f42"
+},
+{
+"n": 237,
+"ism": "Ikramova Şaxodat-Ingliz",
+"filial": "Çilonzor",
+"fan": "Fan aniqlanmagan",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0237.jpg?v=a7ff5e",
+"thumb": "c/0237_t.jpg?v=a7ff5e"
+},
+{
+"n": 238,
+"ism": "Habibova Şaxnoza-Ingliz",
+"filial": "Buxoro",
+"fan": "Fan aniqlanmagan",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0238.jpg?v=61241a",
+"thumb": "c/0238_t.jpg?v=61241a"
 }
 ]
 }
