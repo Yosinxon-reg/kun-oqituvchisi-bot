@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-19T12:56:49",
+"yangilandi": "2026-11-20T04:32:39",
 "certs": [
 {
 "n": 154,
@@ -803,13 +803,13 @@
 },
 {
 "n": 234,
-"ism": "Tursunqulov Bunyod-Ingliz",
+"ism": "Tursunqulov Bunyod",
 "filial": "Samarqand",
-"fan": "Fan aniqlanmagan",
+"fan": "Ingliz tili",
 "sana": "2026-11-19",
 "maktab": "registon",
-"img": "c/0234.jpg?v=c35156",
-"thumb": "c/0234_t.jpg?v=c35156"
+"img": "c/0234.jpg?v=52028a",
+"thumb": "c/0234_t.jpg?v=52028a"
 },
 {
 "n": 235,
@@ -823,33 +823,43 @@
 },
 {
 "n": 236,
-"ism": "Azimova Maftuna-Ingliz",
+"ism": "Azimova Maftuna",
 "filial": "Buxoro",
-"fan": "Fan aniqlanmagan",
+"fan": "Ingliz tili",
 "sana": "2026-11-19",
 "maktab": "registon",
-"img": "c/0236.jpg?v=5f2f42",
-"thumb": "c/0236_t.jpg?v=5f2f42"
+"img": "c/0236.jpg?v=5928a9",
+"thumb": "c/0236_t.jpg?v=5928a9"
 },
 {
 "n": 237,
-"ism": "Ikramova Şaxodat-Ingliz",
+"ism": "Ikramova Şaxodat",
 "filial": "Çilonzor",
-"fan": "Fan aniqlanmagan",
+"fan": "Ingliz tili",
 "sana": "2026-11-19",
 "maktab": "registon",
-"img": "c/0237.jpg?v=a7ff5e",
-"thumb": "c/0237_t.jpg?v=a7ff5e"
+"img": "c/0237.jpg?v=829bb5",
+"thumb": "c/0237_t.jpg?v=829bb5"
 },
 {
 "n": 238,
-"ism": "Habibova Şaxnoza-Ingliz",
+"ism": "Habibova Şaxnoza",
 "filial": "Buxoro",
-"fan": "Fan aniqlanmagan",
+"fan": "Ingliz tili",
 "sana": "2026-11-19",
 "maktab": "registon",
-"img": "c/0238.jpg?v=61241a",
-"thumb": "c/0238_t.jpg?v=61241a"
+"img": "c/0238.jpg?v=7294d1",
+"thumb": "c/0238_t.jpg?v=7294d1"
+},
+{
+"n": 239,
+"ism": "Isakova Kamola",
+"filial": "Yunusobod",
+"fan": "Gimnastika",
+"sana": "2026-11-19",
+"maktab": "registon",
+"img": "c/0239.jpg?v=79690d",
+"thumb": "c/0239_t.jpg?v=79690d"
 }
 ]
 }
