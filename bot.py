@@ -449,11 +449,13 @@ def xodimlar(st, month):
     return cur
 
 
-def month_counts(st, month, packaged=False):
+def month_counts(st, month, packaged=False, upto=None):
     base = st["baseline"].get(month)
     by = {f: (base["by"].get(f, 0) if base else 0) for f in FILIALLAR}
     for r in counted(st, month, packaged=packaged):
         if base and r["sana"] <= base["as_of"]:
+            continue
+        if upto and r["sana"] > upto:          # «X-sana holatiga» — undan keyingilar kirmaydi
             continue
         by[r["filial"]] = by.get(r["filial"], 0) + 1
     return by
@@ -473,8 +475,8 @@ def known_days(st):
     return sorted(days)
 
 
-def ranking(st, month, packaged=False):
-    cnt = month_counts(st, month, packaged)
+def ranking(st, month, packaged=False, upto=None):
+    cnt = month_counts(st, month, packaged, upto)
     xod = xodimlar(st, month)
     frac = {f: Fraction(cnt[f], xod[f]) for f in FILIALLAR}
     prev = {f: i for i, f in enumerate(st.get("order") or FILIALLAR)}
@@ -500,7 +502,7 @@ MEDAL = {1: "🥇", 2: "🥈", 3: "🥉", 4: "4️⃣", 5: "5️⃣", 6: "6️�
 
 def rating_msg(st, day, today_by, late_note=""):
     month = day.isoformat()[:7]
-    order, ranks, frac, cnt, xod = ranking(st, month)
+    order, ranks, frac, cnt, xod = ranking(st, month, upto=day.isoformat())
     L = [f"🏆 FILIALLAR KESIMIDAGI {OY[day.month - 1].upper()} OYI JORIY NATIJALARI", "",
          f"📅 {sana_txt(day)} holatiga — foizlar böyiça umumiy reyting", ""]
     for a, b in zip(order, order[1:]):
@@ -1222,7 +1224,20 @@ def reparse_fix(st, day, mids):
     return done
 
 
+ONE_TIME_SUMMARY = [("2026-11-19", "2", "Yunusobod: 2 ta — Karimova Barnoxon va Isakova Kamola")]
+
+
 def apply_fixes(st):
+    for day, v, izoh in ONE_TIME_SUMMARY:
+        key = f"natija|{day}|{v}"
+        if key not in st["fixes_done"]:
+            st["fixes_done"].append(key)
+            save_state(st, key)
+            by = day_counts(st, day)
+            r1, _, _ = rating_msg(st, D(day), by)
+            say(st, f"✏️ TUZATILGAN REYTING — {sana_txt(D(day))} ({izoh})")
+            say(st, r1)
+            say(st, counts_msg(by))
     for day, mids in ONE_TIME_REPARSE:
         key = f"qayta-oqish|{day}|{len(mids)}"
         if key not in st["fixes_done"] and st.get("group"):
