@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-20T04:32:39",
+"yangilandi": "2026-11-20T12:53:31",
 "certs": [
 {
 "n": 154,
@@ -860,6 +860,96 @@
 "maktab": "registon",
 "img": "c/0239.jpg?v=79690d",
 "thumb": "c/0239_t.jpg?v=79690d"
+},
+{
+"n": 240,
+"ism": "Ruziyeva Malika",
+"filial": "Yunusobod",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-20",
+"maktab": "registon",
+"img": "c/0240.jpg?v=7e87e2",
+"thumb": "c/0240_t.jpg?v=7e87e2"
+},
+{
+"n": 241,
+"ism": "Xamrayeva Matluba Nimatullayevna",
+"filial": "Yunusobod",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-20",
+"maktab": "registon",
+"img": "c/0241.jpg?v=583990",
+"thumb": "c/0241_t.jpg?v=583990"
+},
+{
+"n": 242,
+"ism": "Yunusova Madina",
+"filial": "Yunusobod",
+"fan": "Ingliz tili",
+"sana": "2026-11-20",
+"maktab": "registon",
+"img": "c/0242.jpg?v=b94d54",
+"thumb": "c/0242_t.jpg?v=b94d54"
+},
+{
+"n": 243,
+"ism": "Xasanova Feruza",
+"filial": "Çilonzor",
+"fan": "Tarbiya",
+"sana": "2026-11-20",
+"maktab": "registon",
+"img": "c/0243.jpg?v=826a85",
+"thumb": "c/0243_t.jpg?v=826a85"
+},
+{
+"n": 244,
+"ism": "Batirova Nigina",
+"filial": "Çilonzor",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-20",
+"maktab": "registon",
+"img": "c/0244.jpg?v=91be3e",
+"thumb": "c/0244_t.jpg?v=91be3e"
+},
+{
+"n": 245,
+"ism": "Nazariyon Şamsiya",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"sana": "2026-11-20",
+"maktab": "registon",
+"img": "c/0245.jpg?v=01c3f5",
+"thumb": "c/0245_t.jpg?v=01c3f5"
+},
+{
+"n": 246,
+"ism": "Ortiqova Lutfixonim",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"sana": "2026-11-20",
+"maktab": "registon",
+"img": "c/0246.jpg?v=5984fe",
+"thumb": "c/0246_t.jpg?v=5984fe"
+},
+{
+"n": 247,
+"ism": "Abduraxmonova Nargiza",
+"filial": "Samarqand",
+"fan": "Informatika",
+"sana": "2026-11-20",
+"maktab": "registon",
+"img": "c/0247.jpg?v=322205",
+"thumb": "c/0247_t.jpg?v=322205"
+},
+{
+"n": 248,
+"ism": "Nabiyeva Gulçexra Ganiyevna",
+"filial": "Tinçlik",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-20",
+"maktab": "registon",
+"img": "c/0248.jpg?v=9db4e0",
+"thumb": "c/0248_t.jpg?v=9db4e0"
 }
 ]
 }
