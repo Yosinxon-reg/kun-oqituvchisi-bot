@@ -245,15 +245,23 @@ STOP = {"robototexnika", "texnologiya", "taekvondo", "kamon", "kamondan", "shaxm
         "futbol", "gimnastika", "suziş", "suzish", "rus", "ingliz", "arab", "ona", "matematika",
         "musiqa", "rasm", "tasviriy", "boşlanğiç", "boshlang'ich", "fan", "fani", "tili", "sinf",
         "öqituvçisi", "o'qituvchisi", "maşğuloti", "mashg'uloti", "ustoz", "ustozi"}
+STOP_N = {_norm(x) for x in STOP}
 
 
 def split_name(s):
-    s = re.sub(r"\s+", " ", (s or "").strip(" ,.-–—:«»\"'"))
-    words = s.split(" ")
+    s = (s or "").replace("İ", "I").replace("i̇", "i")          # turkça nuqtali İ (avtotuzatiş) -> I
+    s = re.sub(r"\s+", " ", s.strip(" ,.-–—:«»\"'"))
+    words = []
+    for w in s.split(" "):                                       # «Bunyod-Ingliz tili» -> «Bunyod-» «Ingliz»
+        head, sep, tail = w.partition("-")
+        if sep and head and tail and (tail.lower().strip(",.") in STOP or _norm(tail).strip(",.") in STOP_N):
+            words += [head + "-", tail]
+        else:
+            words.append(w)
     name = []
     for w in words:
         wc = w.strip(",.;:-–—")
-        if not re.match(WORD + "$", wc) or wc.lower() in STOP or (wc.isupper() and len(wc) > 3):
+        if not re.match(WORD + "$", wc) or wc.lower() in STOP or _norm(wc) in STOP_N or (wc.isupper() and len(wc) > 3):
             break
         if len(name) >= 2 and not OTA.search(wc):
             break
@@ -1179,7 +1187,60 @@ def recover_range(st, day, a, b):
     return added
 
 
+ONE_TIME_REPARSE = [("2026-11-19", [5413, 5435, 5438, 5454, 5456])]   # 19.11: «Ism-Ingliz tili» va «İsakova» xatolari
+
+
+def reparse_fix(st, day, mids):
+    """Tuzatilgan ajratgiç bilan postni qayta öqib, ism/fanni hamma joyda töğrilaydi va taşakkurnomani yuboradi."""
+    g, owner = st.get("group"), st.get("owner")
+    done = []
+    for r in [x for x in st["results"] if x["chat"] == g and x["mid"] in mids and x["sana"] == day]:
+        p = parse_post(r.get("matn") or "")
+        if not p or not p["ism"]:
+            continue
+        old = r["ism"]
+        r["fan"] = p["fan"] or r.get("fan")
+        if old != p["ism"]:
+            for e in st["roster_add"]:                            # notoğri qöşilgan «...-Ingliz» yozuvi
+                if e["ism"] == old and e["filial"] == r["filial"]:
+                    e["ism"] = p["ism"]
+                    e["fan"] = next(iter(names.fan_set(r["fan"])), e.get("fan"))
+            r["ism"] = p["ism"]
+            if r.get("ism_r") and names.tokens(r["ism_r"]) != names.tokens(p["ism"]):
+                r["ism_r"] = None
+        if r["holat"] == "tekshir" and p["tasdiq"]:
+            r["holat"], r["sabab"] = "hisob", ""
+            r["paket"] = r.get("paket") or f"{day}|yakuniy"
+            apply_check(st, r, force=True)
+            if held(r):
+                resolve(st, r, "post", None, {"first_name": "Ahmadxonov Yosinxon (egasi körsatmasi)"})
+            deliver_now(st, r)
+        elif r["cert_sent"]:
+            fix_name(st, r, r["ism_r"] or p["ism"])
+        done.append(f"#{r['id']} «{old}» -> «{cname(r)}»")
+    audit(st, "qayta-öqiş", "; ".join(done))
+    return done
+
+
 def apply_fixes(st):
+    for day, mids in ONE_TIME_REPARSE:
+        key = f"qayta-oqish|{day}|{len(mids)}"
+        if key not in st["fixes_done"] and st.get("group"):
+            st["fixes_done"].append(key)
+            save_state(st, key)
+            done = reparse_fix(st, day, mids)
+            save_state(st, key + " tayyor")
+            if done:
+                say(st, "✏️ Ism ajratiş xatosi tuzatildi, taşakkurnomalar yuborildi:\n" + "\n".join(done))
+                by = day_counts(st, day)
+                r1, _, _ = rating_msg(st, D(day), by)
+                say(st, f"✏️ TUZATILGAN UMUMIY NATIJA — {sana_txt(D(day))} (Isakova Kamola qöşildi, ismlar töğrilandi)")
+                say(st, r1)
+                say(st, counts_msg(by))
+                lm = day_list_msg(st, D(day))
+                if lm:
+                    say(st, lm)
+                save_state(st, key + " natija")
     for day, a, b in ONE_TIME_RECOVER:
         key = f"tiklash|{day}|{a}-{b}"
         if key not in st["fixes_done"] and st.get("group"):
