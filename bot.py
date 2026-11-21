@@ -736,11 +736,16 @@ def resend_certs(st):
 
 def kun_sanasi(st, t):
     """Kun yakuni — st["vaqt"] (18:00). Undan keyin çiqqan natija ertangi kunga qöşiladi."""
-    h, mi = map(int, st.get("vaqt", "18:00").split(":"))
+    h, mi = map(int, kun_vaqti(st, t.date().isoformat()).split(":"))
     d = (t + dt.timedelta(days=1)).date() if (t.hour, t.minute) >= (h, mi) else t.date()
     while d.weekday() == 6:                      # yakşanba — dam olişi, keyingi iş kuniga
         d += dt.timedelta(days=1)
     return d
+
+
+def kun_vaqti(st, iso):
+    """Kun yakuni (paket) vaqti: odatda st["vaqt"]; egasi kunni erta yopsa — vaqt_kun[iso]."""
+    return (st.get("vaqt_kun") or {}).get(iso) or st.get("vaqt", "18:00")
 
 
 def ish_kuni(t):
@@ -765,7 +770,7 @@ def schedule_tick(st, t):
     """17:00/18:00 jadvali. Har bir paket bir marta."""
     today = t.date().isoformat()
     hm = (t.hour, t.minute)
-    h, mi = map(int, st["vaqt"].split(":"))
+    h, mi = map(int, kun_vaqti(st, today).split(":"))
     iv = st.get("ism_kun", {}).get(today) or st.get("ism_vaqt", "17:45")
     if hm >= tuple(map(int, iv.split(":"))) and f"{today}|ismlar" not in st["packages"]:
         st["packages"][f"{today}|ismlar"] = {"ts": t.isoformat(), "ids": [], "steps": []}
@@ -992,8 +997,8 @@ def fan_tick(st, t):
     today = t.date().isoformat()
     hm = (t.hour, t.minute)
     k1, k2 = f"{today}|fanlar", f"{today}|fanlar2"
-    h, mi = map(int, st["vaqt"].split(":"))
-    if hm >= (17, 0) and k1 not in st["packages"]:
+    h, mi = map(int, kun_vaqti(st, today).split(":"))
+    if hm >= min((17, 0), (h, mi)) and k1 not in st["packages"]:
         txt, rows = fan_summary(st, t.date())
         st["packages"][k1] = {"ts": t.isoformat(), "ids": [], "steps": [], "rows": rows}
         tg("sendMessage", chat_id=st["regmon"], text=txt)
@@ -1227,7 +1232,18 @@ def reparse_fix(st, day, mids):
 ONE_TIME_SUMMARY = [("2026-11-19", "2", "Yunusobod: 2 ta — Karimova Barnoxon va Isakova Kamola")]
 
 
+ONE_TIME_EARLY = [("2026-11-21", "14:40")]   # egasi: iş kuni erta tugadi, natijalar hozir
+
+
 def apply_fixes(st):
+    for day, hm in ONE_TIME_EARLY:
+        key = f"erta|{day}|{hm}"
+        if key not in st["fixes_done"]:
+            st["fixes_done"].append(key)
+            st.setdefault("vaqt_kun", {})[day] = hm
+            st.setdefault("ism_kun", {})[day] = hm
+            audit(st, "erta-yopiş", f"{day}: kun {hm} da yopildi")
+            save_state(st, key)
     for day, v, izoh in ONE_TIME_SUMMARY:
         key = f"natija|{day}|{v}"
         if key not in st["fixes_done"]:
@@ -1547,6 +1563,9 @@ def tahrir_tick(st, t):
     key = f"{today}|tahrir"
     if not cid or (t.hour, t.minute) < (17, 0) or key in st["packages"]:
         return False
+    if today in (st.get("vaqt_kun") or {}):      # kun erta yopilgan — bugun boşqa çiqmaydi
+        st["packages"][key] = {"ts": t.isoformat(), "ids": [], "steps": ["erta yopildi"]}
+        return True
     st["packages"][key] = {"ts": t.isoformat(), "ids": [], "steps": []}
     tps = st["topics"].get(str(cid), {})
     if not tps:
