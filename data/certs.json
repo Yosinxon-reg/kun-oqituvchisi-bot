@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-21T08:45:33",
+"yangilandi": "2026-11-21T09:43:13",
 "certs": [
 {
 "n": 154,
@@ -950,6 +950,26 @@
 "maktab": "registon",
 "img": "c/0248.jpg?v=4b4d30",
 "thumb": "c/0248_t.jpg?v=4b4d30"
+},
+{
+"n": 249,
+"ism": "Yöldoşaliyeva Maftunaxon",
+"filial": "Farğona",
+"fan": "Ingliz tili",
+"sana": "2026-11-21",
+"maktab": "registon",
+"img": "c/0249.jpg?v=e134fe",
+"thumb": "c/0249_t.jpg?v=e134fe"
+},
+{
+"n": 250,
+"ism": "Yusupxodjayeva Munisa",
+"filial": "Tinçlik",
+"fan": "Ingliz tili",
+"sana": "2026-11-21",
+"maktab": "registon",
+"img": "c/0250.jpg?v=392643",
+"thumb": "c/0250_t.jpg?v=392643"
 }
 ]
 }
