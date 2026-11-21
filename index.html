@@ -123,7 +123,7 @@ footer{text-align:center;color:var(--mut);font:500 12px/1.6 Montserrat;padding:4
 .qrsec h3{position:relative;font:800 18px/1.3 Montserrat;margin-top:22px}
 .qrsec p{position:relative;font:500 12.5px/1.5 Montserrat;opacity:.8;margin-top:6px}
 #mute{position:fixed;right:14px;top:14px;z-index:72;width:44px;height:44px;border-radius:50%;border:0;background:rgba(27,35,64,.75);color:#fff;font-size:18px;display:none;cursor:pointer;backdrop-filter:blur(6px)}
-#vid{position:fixed;inset:0;z-index:80;background:rgba(14,20,40,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;padding:20px;text-align:center}
+#vid{position:fixed;inset:0;z-index:80;background:#0E1428;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;padding:20px;text-align:center}
 #vid canvas{height:min(62vh,560px);width:auto;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.5);background:#1B2340}
 #vid .pt{font:700 15px Montserrat;margin-top:16px}
 #vid .pbar{width:min(320px,80vw);height:8px;border-radius:8px;background:rgba(255,255,255,.15);margin-top:12px;overflow:hidden}
@@ -430,12 +430,27 @@ async function makeVideo(c){
       if (stopAll && !chunks.length) return;
       const type = (rec.mimeType || mime || "video/webm").split(";")[0], ext = type.includes("mp4") ? "mp4" : "webm";
       const blob = new Blob(chunks, {type}), name = `Kun-oqituvchisi-${pad(c.n)}.${ext}`, href = URL.createObjectURL(blob);
+      const pv = document.createElement("video"); pv.src = href; pv.muted = true; pv.loop = true; pv.autoplay = true; pv.playsInline = true;
+      pv.setAttribute("playsinline", ""); pv.style.cssText = "height:min(56vh,520px);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.5);background:#1B2340";
+      cvv.replaceWith(pv); pv.play().catch(()=>{});
       ov.querySelector(".pt").textContent = "✅ Video tayyor!"; ov.querySelector(".pbar i").style.width = "100%";
       ov.querySelector(".ps").textContent = `${(blob.size/1048576).toFixed(1)} MB · ${ext.toUpperCase()}`;
       const file = new File([blob], name, {type});
-      const canShare = navigator.canShare && navigator.canShare({files: [file]});
-      ov.querySelector(".vb").innerHTML = `<a class="btn pri" href="${href}" download="${name}">⬇️ Saqlaş</a>${canShare ? `<button class="btn" id="vs">📤 Ulaşiş</button>` : ""}<button class="btn" id="vx">Yopiş</button>`;
-      if (canShare) ov.querySelector("#vs").onclick = () => navigator.share({files: [file], title: "Kun öqituvçisi"}).catch(()=>{});
+      const canShare = !!(navigator.canShare && navigator.canShare({files: [file]}));
+      const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      const viaShare = canShare && (isIOS || !/Android/i.test(navigator.userAgent));
+      ov.querySelector(".ps").innerHTML = viaShare
+        ? "Pastdagi tugmani bosing va oçilgan oynada <b>«Videoni saqlaş»</b> (Save Video) ni tanlang — video galereyaga tuşadi."
+        : "Pastdagi tugmani bosing — video telefon galereyasiga (Yuklanmalar) saqlanadi.";
+      ov.querySelector(".vb").innerHTML = `<button class="btn pri" id="vg" style="height:60px;font-size:16px;padding:0 26px">📲 Galereyaga saqlaş</button>
+        ${canShare && !viaShare ? `<button class="btn" id="vs">📤 Ulaşiş</button>` : ""}<button class="btn" id="vx">Yopiş</button>`;
+      const dl = () => { const a = document.createElement("a"); a.href = href; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => toast("✅ Video saqlandi — galereyani oçing"), 800); };
+      ov.querySelector("#vg").onclick = async () => {
+        if (viaShare){ try { await navigator.share({files: [file]}); return; } catch(e){ if (e && e.name === "AbortError") return; } }
+        dl();
+      };
+      if (canShare && !viaShare) ov.querySelector("#vs").onclick = () => navigator.share({files: [file], title: "Kun öqituvçisi"}).catch(()=>{});
       ov.querySelector("#vx").onclick = () => { URL.revokeObjectURL(href); ov.remove(); };
     };
     // ---- sahna ----
