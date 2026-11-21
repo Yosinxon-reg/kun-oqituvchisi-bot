@@ -82,6 +82,55 @@ footer{text-align:center;color:var(--mut);font:500 12px/1.6 Montserrat;padding:4
 @keyframes ring{to{transform:scale(40);opacity:0;border-width:1px}}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--dark);color:#fff;border-radius:12px;padding:12px 16px;font:600 13px Montserrat;z-index:70;opacity:0;transition:opacity .3s}
 .toast.on{opacity:1}
+
+/* ---- v2: hayratlanarli oçiliş, izoh, QR, video ---- */
+#gift{background:radial-gradient(120% 90% at 50% 34%,#2C4590 0%,#1B2340 58%,#0E1428 100%);overflow:hidden}
+#gift .rays{position:absolute;left:50%;top:34%;width:220vmax;height:220vmax;margin:-110vmax 0 0 -110vmax;
+  background:repeating-conic-gradient(from 0deg,rgba(246,179,6,.16) 0deg 5deg,transparent 5deg 15deg);
+  -webkit-mask:radial-gradient(circle,#000 0,transparent 55%);mask:radial-gradient(circle,#000 0,transparent 55%);animation:spin 40s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#gift .spark{position:absolute;width:4px;height:4px;border-radius:50%;background:#FFE7A3;box-shadow:0 0 10px 2px rgba(246,179,6,.8);animation:tw 2.4s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.1;transform:scale(.6)}50%{opacity:1;transform:scale(1.4)}}
+#gift .orb{box-shadow:0 0 0 14px rgba(246,179,6,.14),0 0 0 32px rgba(246,179,6,.06),0 0 90px 20px rgba(246,179,6,.35);z-index:1}
+#gift .k,#gift h2,#gift .open,#gift .hint{position:relative;z-index:1}
+#gift h2 b{background:linear-gradient(90deg,#fff,#FFE7A3,#fff);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:shine 3s linear infinite}
+@keyframes shine{to{background-position:-200% 0}}
+.flash{position:fixed;inset:0;background:#fff;z-index:65;pointer-events:none;animation:flash .9s ease-out forwards}
+@keyframes flash{0%{opacity:.95}100%{opacity:0}}
+.reveal .shot{animation:rise 1.4s cubic-bezier(.18,.9,.25,1) both .25s}
+@keyframes rise{0%{transform:translateY(70px) scale(.86) rotate(-3deg);opacity:0;box-shadow:0 0 0 rgba(246,179,6,0)}
+  60%{box-shadow:0 0 70px 10px rgba(246,179,6,.55)}100%{transform:none;opacity:1}}
+.cname span{display:inline-block;opacity:0;transform:translateY(14px);animation:ch .5s ease forwards}
+@keyframes ch{to{opacity:1;transform:none}}
+.unvon{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;font:700 13px/1.3 Montserrat;color:var(--dark)}
+.unvon .st{color:var(--yel);letter-spacing:2px;font-size:16px}
+.note{margin-top:18px;background:#fff;border-radius:18px;padding:18px 18px 16px;border:1px solid var(--line);box-shadow:0 10px 30px rgba(27,35,64,.07);position:relative}
+.note:before{content:"";position:absolute;left:28px;top:-9px;width:18px;height:18px;background:#fff;border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+.note .who{display:flex;align-items:center;gap:10px;font:700 13px/1.2 Montserrat;color:var(--blue)}
+.note .who img{width:34px;height:34px;border-radius:50%;background:var(--blue);padding:7px}
+.note .who small{display:block;font:500 11px Montserrat;color:var(--mut);margin-top:2px}
+.note p{font:500 16px/1.6 Montserrat;margin-top:12px;min-height:3.2em;white-space:pre-wrap}
+.note .sig{font:600 12px Montserrat;color:var(--mut);margin-top:8px;text-align:right}
+.caret:after{content:"▍";color:var(--blue);animation:blink .8s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.qrsec{margin-top:26px;background:radial-gradient(110% 90% at 50% 40%,#2C4590,#1B2340 70%);border-radius:22px;padding:34px 18px 26px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.qrsec .burst{position:absolute;left:50%;top:46%;width:760px;height:760px;margin:-380px 0 0 -380px;
+  background:repeating-conic-gradient(from 0deg,rgba(246,179,6,.22) 0deg 6deg,transparent 6deg 18deg);
+  -webkit-mask:radial-gradient(circle,#000 8%,transparent 62%);mask:radial-gradient(circle,#000 8%,transparent 62%);animation:spin 30s linear infinite}
+.qrsec .star{position:absolute;left:50%;top:46%;width:420px;height:420px;margin:-210px 0 0 -210px;animation:pulse 3s ease-in-out infinite;opacity:.9}
+.qrsec .qr{position:relative;display:inline-block;background:#fff;border-radius:20px;padding:16px;box-shadow:0 0 0 6px rgba(246,179,6,.9),0 0 60px 14px rgba(246,179,6,.45)}
+.qrsec .qr canvas,.qrsec .qr img{display:block;width:min(240px,62vw);height:auto;image-rendering:pixelated}
+.qrsec h3{position:relative;font:800 18px/1.3 Montserrat;margin-top:22px}
+.qrsec p{position:relative;font:500 12.5px/1.5 Montserrat;opacity:.8;margin-top:6px}
+#mute{position:fixed;right:14px;top:14px;z-index:72;width:44px;height:44px;border-radius:50%;border:0;background:rgba(27,35,64,.75);color:#fff;font-size:18px;display:none;cursor:pointer;backdrop-filter:blur(6px)}
+#vid{position:fixed;inset:0;z-index:80;background:rgba(14,20,40,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;padding:20px;text-align:center}
+#vid canvas{height:min(62vh,560px);width:auto;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.5);background:#1B2340}
+#vid .pt{font:700 15px Montserrat;margin-top:16px}
+#vid .pbar{width:min(320px,80vw);height:8px;border-radius:8px;background:rgba(255,255,255,.15);margin-top:12px;overflow:hidden}
+#vid .pbar i{display:block;height:100%;width:0;background:var(--yel);transition:width .25s}
+#vid .ps{font:500 12px/1.5 Montserrat;opacity:.7;margin-top:8px}
+#vid .vb{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+#vid .vb .btn{padding:0 20px}
 @media (min-width:720px){.hero h1{font-size:44px}.cname{font-size:40px}}
 </style>
 </head>
@@ -100,6 +149,8 @@ footer{text-align:center;color:var(--mut);font:500 12px/1.6 Montserrat;padding:4
 <footer>«Registon» va «Turkiston» taʼlim loyihalari · Monitoring bölimi<br>Har bir taşakkurnoma QR-kod orqali tekşiriladi</footer>
 <div class="toast" id="toast"></div>
 <canvas id="fx"></canvas>
+<button id="mute" aria-label="Ovoz">🔊</button>
+<script src="assets/qrcode.min.js"></script>
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -162,14 +213,23 @@ function leaves(n){
   }
   const r = document.createElement("div"); r.className = "ring"; document.body.appendChild(r); setTimeout(() => r.remove(), 1000);
 }
-let audio;
-function cheer(){
-  try { audio = audio || new Audio("assets/olqish.mp3"); audio.currentTime = 0; audio.volume = 1; audio.play().catch(()=>{}); } catch(e){}
+let audio, fadeT;
+function music(){
+  try {
+    audio = audio || new Audio("assets/taqdirlov.mp3");
+    clearInterval(fadeT); audio.currentTime = 0; audio.volume = 1; audio.muted = false;
+    audio.play().then(() => { const m = $("#mute"); m.style.display = "block"; m.textContent = "🔊"; }).catch(()=>{});
+    audio.onended = () => { $("#mute").style.display = "none"; };
+    fadeT = setInterval(() => { if (audio.duration && audio.currentTime > audio.duration - 2.5) audio.volume = Math.max(0, audio.volume - .08); }, 200);
+  } catch(e){}
   if (navigator.vibrate) navigator.vibrate([60,40,120]);
 }
 function celebrate(full){
-  if (full){ cheer(); leaves(28); confetti(220, 13); setTimeout(() => rain(160), 600); setTimeout(() => confetti(120, 10), 1100); }
-  else { rain(70); }
+  if (full){
+    music();
+    const f = document.createElement("div"); f.className = "flash"; document.body.appendChild(f); setTimeout(() => f.remove(), 950);
+    leaves(30); confetti(240, 14); setTimeout(() => rain(170), 600); setTimeout(() => confetti(130, 10), 1200); setTimeout(() => rain(90), 2600);
+  } else { rain(70); }
 }
 
 /* ---------------- maʼlumot ---------------- */
@@ -177,6 +237,42 @@ let DATA = [];
 async function load(){
   const r = await fetch("data/certs.json?t=" + Date.now(), {cache: "no-store"});
   DATA = (await r.json()).certs || [];
+  izohlar();
+}
+
+
+/* ---------------- monitoring bölimi izohlari (4 bosqiç x 5) ---------------- */
+const IZOH = [
+ ["{ustoz}, bugungi darsingiz zör böldi! Öquvçilarning közidagi qiziqişni körib, biz ham quvondik. Rahmat sizga!",
+  "Darsingizni kuzatib, vaqt qanday ötganini sezmay qoldik. Mana şunday darslar maktabni maktab qiladi. Tabriklaymiz, {ustoz}!",
+  "Har bir daqiqasi öylangan, iliq va jonli dars böldi. Birinçi «Kun öqituvçisi» unvoningiz muborak bölsin!",
+  "{ustoz}, darsingizda öquvçilar faqat tinglamadi — ular fikrladi, kuldi, izlandi. Bu katta mahorat. Rahmat!",
+  "Bugun biz ajoyib darsning guvohi böldik. Bu faqat boşlaniş — yana köp şunday kunlarni kutib qolamiz!"],
+ ["Yana siz, {ustoz}! Endi bu tasodif emasligini aniq bilamiz. Har safar darsingizdan yangi narsa olib ketamiz.",
+  "Yana yuqori natija — bu mehnat, tayyorgarlik va yurakdan berilgan dars mahsuli. Ajoyib natija, bardavom böling!",
+  "Darsingizni yana kuzatdik va yana xursand böldik. Öquvçilaringiz baxtli — ularga şunday ustoz nasib qilgan.",
+  "{ustoz}, darslaringiz bizga ham ilhom beradi. Boşqa ustozlarga körsatadigan namunamiz köpayib boryapti — rahmat!",
+  "Barqarorlik — eng qiyin narsa, siz esa uni qöldan bermayapsiz. Tabriklaymiz va yangi darslaringizni intiqlik bilan kutamiz!"],
+ ["{ustoz}, rostini aytsak — biz ham sizdan ilm olamiz. Bugungi darsdan keyin öz daftarimizga ham bir nechta fikr yozib oldik.",
+  "Bu sizning {n}-unvoningiz. Siz uçun «yaxşi dars» odatiy holga aylangan — biz esa har safar yangidan hayratlanamiz.",
+  "Darsingiz boşqa ustozlar uçun ham tayyor namuna böla oladi. Şunday ustozlar bor ekan, maktabimiz kuçli!",
+  "Mahorat, sabr va mehr — uçalasi ham darsingizda bor. Öquvçilar sizni nega bunçalik yaxşi körişini endi tuşunamiz.",
+  "Har bir darsingiz kiçik bayramga aylanib bormoqda. Rahmat, {ustoz} — siz bilan birga işlaş biz uçun şaraf."],
+ ["{ustoz}, siz maktabimizning faxrisiz. {n} marta «Kun öqituvçisi» — bu oddiy raqam emas, bu uzoq eslanadigan mehnat.",
+  "Sizni kuzata turib, biz ham öz işimizga boşqaça qaray boşladik. Siz ustozlarning ustozi bölib qoldingiz. Çeksiz rahmat!",
+  "Bunday natijani faqat çin yurakdan işlaydigan inson körsata oladi. Siz bilan faxrlanamiz va sizdan örganişda davom etamiz.",
+  "{n}-marta! Har safar «bu safar ham zör bölarmikan?» deb darsga kiramiz — va har safar siz hayratda qoldirasiz. Ofarin, {ustoz}!",
+  "Öquvçilaringiz sizni umr böyi eslaydi — buni bugungi darsning har bir lahzasida his qildik. Siz haqiqiy ustozsiz. Rahmat!"]
+];
+const tkey = ism => norm(ism).split(/\s+/).filter(Boolean).slice(0, 2).sort().join(" ");
+function izohlar(){
+  const cnt = {}, ctr = [0, 0, 0, 0];
+  for (const c of [...DATA].sort((a, b) => a.n - b.n)){
+    const k = tkey(c.ism); c.nth = cnt[k] = (cnt[k] || 0) + 1;
+    const tier = c.nth === 1 ? 0 : c.nth <= 3 ? 1 : c.nth <= 6 ? 2 : 3;
+    const w = c.ism.trim().split(/\s+/), ism1 = w[1] || w[0];
+    c.izoh = IZOH[tier][ctr[tier]++ % 5].replace(/\{ustoz\}/g, ism1 + " ustoz").replace(/\{n\}/g, c.nth);
+  }
 }
 
 /* ---------------- galereya ---------------- */
@@ -214,6 +310,26 @@ function gallery(){
 }
 
 /* ---------------- bitta taşakkurnoma ---------------- */
+const SITE = location.origin + location.pathname;
+function typeText(el, text, speed){
+  el.textContent = ""; el.classList.add("caret"); let i = 0;
+  const t = setInterval(() => { el.textContent = text.slice(0, ++i); if (i >= text.length){ clearInterval(t); el.classList.remove("caret"); } }, speed);
+}
+function nameSpans(name){ return [...name].map((ch, i) => ch === " " ? " " : `<span style="animation-delay:${.35 + i*.045}s">${esc(ch)}</span>`).join(""); }
+function drawQR(el, url){
+  try {
+    const q = qrcode(0, "M"); q.addData(url); q.make();
+    const m = q.getModuleCount(), sc = 8, pad = 0, c = document.createElement("canvas");
+    c.width = c.height = m*sc + pad*2; const x = c.getContext("2d");
+    x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.fillStyle = "#1B2340";
+    for (let r = 0; r < m; r++) for (let k = 0; k < m; k++) if (q.isDark(r, k)) x.fillRect(pad + k*sc, pad + r*sc, sc, sc);
+    el.appendChild(c);
+  } catch(e){ el.parentElement.parentElement.style.display = "none"; }
+}
+const STAR = `<svg class="star" viewBox="0 0 100 100"><defs><radialGradient id="sg"><stop offset="0" stop-color="#FFF3C4"/><stop offset=".6" stop-color="#F6B306"/><stop offset="1" stop-color="#F6B306" stop-opacity="0"/></radialGradient></defs>
+  <path fill="url(#sg)" opacity=".55" d="M50 2 L61 39 L98 50 L61 61 L50 98 L39 61 L2 50 L39 39Z"/>
+  <path fill="url(#sg)" opacity=".35" transform="rotate(45 50 50)" d="M50 12 L58 42 L88 50 L58 58 L50 88 L42 58 L12 50 L42 42Z"/></svg>`;
+
 function single(n){
   const c = DATA.find(x => x.n === n);
   if (!c){
@@ -222,40 +338,193 @@ function single(n){
     return;
   }
   document.title = `${c.ism} — Kun öqituvçisi`;
+  const url = `${SITE}?n=${c.n}`;
+  const stars = "★".repeat(Math.min(c.nth, 10)) + (c.nth > 10 ? " +" : "");
   $("#hero").innerHTML = `<a class="back" href="./">← Barça taşakkurnomalar</a>`;
-  $("#main").innerHTML = `<div class="cert">
+  $("#main").innerHTML = `<div class="cert" id="cert">
     <div class="badge">✅ Haqiqiy taşakkurnoma · ${school(c.maktab)}</div>
-    <div class="cname">${esc(c.ism)}</div>
+    <div class="cname" id="cn">${esc(c.ism)}</div>
     <div class="cmeta"><b>${esc(c.filial)} filiali</b> · ${esc(c.fan)}<br>${sana(c.sana)} · № ${pad(c.n)}</div>
+    <div class="unvon"><span class="st">${stars}</span><span>Bu ustozning ${c.nth}-«Kun öqituvçisi» unvoni</span></div>
     <div class="shot"><img src="${esc(c.img)}" alt="Taşakkurnoma № ${pad(c.n)}"></div>
+    <div class="note"><div class="who"><img src="assets/registon-white.svg" alt=""><div>Registon monitoring bölimi<small>${sana(c.sana)}</small></div></div>
+      <p id="izoh"></p><div class="sig">— Registon monitoring bölimi</div></div>
     <div class="btns">
-      <a class="btn pri" href="${esc(c.img)}" download="Kun-oqituvchisi-${pad(c.n)}.jpg">⬇️ Yuklab oliş</a>
+      <button class="btn pri wide" id="video">🎬 Tabrik videosini yuklab oliş</button>
+      <a class="btn" href="${esc(c.img)}" download="Kun-oqituvchisi-${pad(c.n)}.jpg">⬇️ Taşakkurnoma</a>
       <button class="btn" id="share">🔗 Ulaşiş</button>
       <button class="btn wide" id="again">🎉 Yana tabriklaş</button>
-    </div></div>`;
-  $("#again").onclick = () => celebrate(true);
+    </div>
+    <div class="qrsec"><div class="burst"></div>${STAR}<div class="qr" id="qr"></div>
+      <h3>Ushbu taşakkurnomaning QR kodi</h3><p>Skanerlang — taşakkurnoma va tabrik şu sahifada oçiladi</p></div>
+  </div>`;
+  drawQR($("#qr"), url);
+  $("#again").onclick = () => { celebrate(true); typeText($("#izoh"), c.izoh, 28); };
+  $("#video").onclick = () => makeVideo(c);
   $("#share").onclick = async () => {
-    const url = location.href;
     try { if (navigator.share) { await navigator.share({title: document.title, text: `«Kun öqituvçisi» — ${c.ism}`, url}); return; } } catch(e){ return; }
     try { await navigator.clipboard.writeText(url); toast("Havola nusxalandi"); } catch(e){ toast(url); }
+  };
+  const showFull = () => {
+    $("#cert").classList.add("reveal");
+    $("#cn").innerHTML = nameSpans(c.ism);
+    setTimeout(() => typeText($("#izoh"), c.izoh, 30), 1700);
   };
   const key = "kun_seen_" + n;
   if (!store.get(key)){
     const g = document.createElement("div"); g.id = "gift";
-    g.innerHTML = `<div class="orb"><img src="assets/registon.svg" alt=""></div>
-      <div class="k">TABRIKLAYMIZ</div><h2>Hurmatli<b>${esc(c.ism)}</b></h2>
+    let sp = ""; for (let i = 0; i < 26; i++) sp += `<i class="spark" style="left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${(Math.random()*2.4).toFixed(2)}s"></i>`;
+    g.innerHTML = `<div class="rays"></div>${sp}<div class="orb"><img src="assets/registon.svg" alt=""></div>
+      <div class="k">SIZGA TABRIK BOR</div><h2>Hurmatli<b>${esc(c.ism)}</b></h2>
       <button class="open">🎁 Tabrikni oçing</button><div class="hint">Ovozni yoqing 🔊</div>`;
     document.body.appendChild(g);
+    $("#izoh").textContent = "";
     g.querySelector(".open").onclick = () => {
       store.set(key, "1");
       g.classList.add("boom"); celebrate(true);
-      setTimeout(() => { g.classList.add("hide"); setTimeout(() => g.remove(), 800); }, 650);
+      setTimeout(() => { g.classList.add("hide"); showFull(); setTimeout(() => g.remove(), 800); }, 650);
     };
   } else {
+    $("#izoh").textContent = c.izoh;
     setTimeout(() => celebrate(false), 300);
   }
 }
 
+/* ---------------- tabrik videosi (telefonning özida yasaladi) ---------------- */
+function loadImg(src){ return new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; }); }
+function rng(seed){ return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+function wrap(x, text, maxW){
+  const words = text.split(" "), lines = []; let cur = "";
+  for (const w of words){ const t = cur ? cur + " " + w : w; if (x.measureText(t).width > maxW && cur){ lines.push(cur); cur = w; } else cur = t; }
+  if (cur) lines.push(cur); return lines;
+}
+const ease = t => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
+const clamp01 = t => Math.min(1, Math.max(0, t));
+
+async function makeVideo(c){
+  if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream){ toast("Bu brauzer video yasay olmaydi. Chrome yoki Safari'da oçing."); return; }
+  const W = 1080, H = 1920, DUR = 20;
+  const ov = document.createElement("div"); ov.id = "vid";
+  ov.innerHTML = `<canvas width="${W}" height="${H}"></canvas><div class="pt">🎬 Video tayyorlanmoqda…</div><div class="pbar"><i></i></div>
+    <div class="ps">20 soniya kuting, ekranni yopmang</div><div class="vb"></div>`;
+  document.body.appendChild(ov);
+  const cvv = ov.querySelector("canvas"), g = cvv.getContext("2d");
+  let ac, stream, rec, stopAll = false;
+  const fail = (m) => { stopAll = true; try { rec && rec.state !== "inactive" && rec.stop(); } catch(e){} ov.querySelector(".pt").textContent = m;
+    ov.querySelector(".vb").innerHTML = `<button class="btn">Yopiş</button>`; ov.querySelector(".vb .btn").onclick = () => ov.remove(); };
+  try {
+    await document.fonts.load("800 80px Montserrat"); await document.fonts.load("500 40px Montserrat"); await document.fonts.load("300 60px Montserrat");
+    const [cert, emb, embY] = await Promise.all([loadImg(c.img), loadImg("assets/registon-white.svg"), loadImg("assets/registon-yellow.svg")]);
+    ac = new (window.AudioContext || window.webkitAudioContext)(); await ac.resume();
+    const buf = await ac.decodeAudioData(await (await fetch("assets/taqdirlov.mp3")).arrayBuffer());
+    const dest = ac.createMediaStreamDestination(), gain = ac.createGain(), srcN = ac.createBufferSource();
+    srcN.buffer = buf; srcN.connect(gain); gain.connect(dest); gain.connect(ac.destination);
+    gain.gain.setValueAtTime(1, ac.currentTime + DUR - 2.2); gain.gain.linearRampToValueAtTime(0, ac.currentTime + DUR);
+    stream = new MediaStream([...cvv.captureStream(30).getVideoTracks(), ...dest.stream.getAudioTracks()]);
+    const types = ['video/mp4;codecs="avc1.42E01E,mp4a.40.2"', 'video/mp4;codecs="avc1,mp4a"', "video/mp4;codecs=avc1", "video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm", "video/mp4"];
+    const mime = types.find(t => MediaRecorder.isTypeSupported(t)) || "";
+    rec = new MediaRecorder(stream, mime ? {mimeType: mime, videoBitsPerSecond: 6000000} : {videoBitsPerSecond: 6000000});
+    const chunks = []; rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+    rec.onstop = () => {
+      try { srcN.stop(); ac.close(); } catch(e){}
+      if (stopAll && !chunks.length) return;
+      const type = (rec.mimeType || mime || "video/webm").split(";")[0], ext = type.includes("mp4") ? "mp4" : "webm";
+      const blob = new Blob(chunks, {type}), name = `Kun-oqituvchisi-${pad(c.n)}.${ext}`, href = URL.createObjectURL(blob);
+      ov.querySelector(".pt").textContent = "✅ Video tayyor!"; ov.querySelector(".pbar i").style.width = "100%";
+      ov.querySelector(".ps").textContent = `${(blob.size/1048576).toFixed(1)} MB · ${ext.toUpperCase()}`;
+      const file = new File([blob], name, {type});
+      const canShare = navigator.canShare && navigator.canShare({files: [file]});
+      ov.querySelector(".vb").innerHTML = `<a class="btn pri" href="${href}" download="${name}">⬇️ Saqlaş</a>${canShare ? `<button class="btn" id="vs">📤 Ulaşiş</button>` : ""}<button class="btn" id="vx">Yopiş</button>`;
+      if (canShare) ov.querySelector("#vs").onclick = () => navigator.share({files: [file], title: "Kun öqituvçisi"}).catch(()=>{});
+      ov.querySelector("#vx").onclick = () => { URL.revokeObjectURL(href); ov.remove(); };
+    };
+    // ---- sahna ----
+    const R = rng(c.n * 977 + 13), P = [];
+    const COLS = ["#F6B306", "#FFFFFF", "#8FA6E0", "#0D6D59", "#FFE7A3"];
+    for (let i = 0; i < 260; i++){ const a = R()*Math.PI*2, v = 9 + R()*26;
+      P.push({x: W/2, y: 760, vx: Math.cos(a)*v, vy: Math.sin(a)*v - 14, w: 12 + R()*16, h: 18 + R()*18, r: R()*6, vr: (R()-.5)*.35, c: COLS[i % 5]}); }
+    const RAIN = []; for (let i = 0; i < 120; i++) RAIN.push({x: R()*W, y: -R()*H, v: 4 + R()*6, w: 10 + R()*12, h: 16 + R()*14, r: R()*6, vr: (R()-.5)*.2, c: COLS[i % 5]});
+    const lines = (() => { g.font = "500 44px Montserrat"; return wrap(g, c.izoh, 860); })();
+    const nameL = (() => { let fs = 92; g.font = `800 ${fs}px Montserrat`; let L = wrap(g, c.ism.toUpperCase(), 980);
+      while ((L.length > 2 || L.some(l => g.measureText(l).width > 980)) && fs > 56){ fs -= 4; g.font = `800 ${fs}px Montserrat`; L = wrap(g, c.ism.toUpperCase(), 980); } return {L, fs}; })();
+    const cw = 940, ch = cw * cert.naturalHeight / cert.naturalWidth;
+    let lastT = 0;
+    function frame(t){
+      const dt = Math.min(.1, t - lastT); lastT = t;
+      // fon
+      const bg = g.createRadialGradient(W/2, 700, 50, W/2, 900, 1300); bg.addColorStop(0, "#2C4590"); bg.addColorStop(.55, "#1B2340"); bg.addColorStop(1, "#0E1428");
+      g.fillStyle = bg; g.fillRect(0, 0, W, H);
+      g.save(); g.translate(W/2, 760); g.rotate(t * .12);
+      for (let i = 0; i < 24; i++){ g.rotate(Math.PI*2/24); g.fillStyle = "rgba(246,179,6,0.07)"; g.beginPath(); g.moveTo(0,0); g.lineTo(-70, -1400); g.lineTo(70, -1400); g.closePath(); g.fill(); }
+      g.restore();
+      // 0–2.4 s: emblem
+      const e1 = ease(t / 1.4), e2 = ease((t - 2.4) / 1.0);
+      const es = (0.6 + 0.4*e1) * (1 - 0.55*e2), ey = 760 - 560*e2;
+      g.save(); g.globalAlpha = e1; g.shadowColor = "rgba(246,179,6,.9)"; g.shadowBlur = 80;
+      const ew = 360*es, eh = ew * 172/241; g.drawImage(t < 2.4 ? emb : embY, W/2 - ew/2, ey - eh/2, ew, eh); g.restore();
+      if (t < 2.6){ g.save(); g.globalAlpha = clamp01(t - .6) * (1 - clamp01((t - 2.2)/.4)); g.fillStyle = "#F6B306"; g.font = "700 46px Montserrat"; g.textAlign = "center";
+        g.fillText("T A B R I K L A Y M I Z", W/2, 1060); g.fillStyle = "#fff"; g.font = "300 54px Montserrat"; g.fillText("Hurmatli ustoz", W/2, 1150); g.restore(); }
+      // 2.4 s: çaqnaş
+      if (t > 2.4 && t < 3.3){ g.fillStyle = `rgba(255,255,255,${(1 - (t-2.4)/.9)*.85})`; g.fillRect(0, 0, W, H); }
+      // taşakkurnoma
+      const k = ease((t - 2.6) / 1.4);
+      if (t > 2.6){
+        g.save(); g.translate(W/2, 640 + (1-k)*500); g.rotate((1-k) * -.12); g.scale(.75 + .25*k, .75 + .25*k); g.globalAlpha = k;
+        g.shadowColor = "rgba(246,179,6,.75)"; g.shadowBlur = 70 + 30*Math.sin(t*3);
+        g.fillStyle = "#fff"; g.fillRect(-cw/2 - 8, -ch/2 - 8, cw + 16, ch + 16); g.shadowBlur = 0;
+        g.drawImage(cert, -cw/2, -ch/2, cw, ch); g.restore();
+      }
+      // ism
+      const kn = ease((t - 3.6) / 1.0);
+      if (t > 3.6){
+        g.save(); g.globalAlpha = kn; g.textAlign = "center";
+        let y = 1080 + (1-kn)*40; g.fillStyle = "#F6B306"; g.font = "700 36px Montserrat"; g.fillText("«KUN ÖQITUVÇISI»", W/2, y); y += 30;
+        g.fillStyle = "#fff"; g.font = `800 ${nameL.fs}px Montserrat`;
+        for (const l of nameL.L){ y += nameL.fs * 1.05; g.fillText(l, W/2, y); }
+        y += 58; g.font = "500 34px Montserrat"; g.fillStyle = "rgba(255,255,255,.8)";
+        g.fillText(`${c.filial} filiali · ${c.fan}`, W/2, y); y += 46; g.fillText(`${sana(c.sana)} · № ${pad(c.n)}`, W/2, y);
+        g.fillStyle = "#F6B306"; g.font = "700 34px Montserrat"; y += 56; g.fillText(`${"★".repeat(Math.min(c.nth, 10))}  ${c.nth}-unvon`, W/2, y);
+        g.restore();
+      }
+      // izoh
+      if (t > 7.5){
+        const ki = ease((t - 7.5) / .8), cy = 1460 + (1-ki)*60, bh = 130 + lines.length*60;
+        g.save(); g.globalAlpha = ki; g.fillStyle = "rgba(255,255,255,.96)";
+        g.beginPath(); g.roundRect ? g.roundRect(70, cy, W - 140, bh, 34) : g.rect(70, cy, W - 140, bh); g.fill();
+        g.fillStyle = "#3955A1"; g.font = "700 32px Montserrat"; g.textAlign = "left"; g.fillText("💬 Registon monitoring bölimi", 110, cy + 62);
+        const total = c.izoh.length, shown = Math.floor(clamp01((t - 8.3) / 6.5) * total);
+        g.fillStyle = "#1B2340"; g.font = "500 44px Montserrat"; let left = shown;
+        lines.forEach((l, i) => { if (left <= 0) return; g.fillText(l.slice(0, left), 110, cy + 128 + i*60); left -= l.length + 1; });
+        g.restore();
+      }
+      // konfetti
+      if (t > 2.4){ const st = (t - 2.4);
+        for (const p of P){ if (st > 6) break; p.vy += 0.6; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+          g.save(); g.translate(p.x, p.y); g.rotate(p.r); g.fillStyle = p.c; g.fillRect(-p.w/2, -p.h/2, p.w, p.h*Math.abs(Math.cos(p.r*1.7))); g.restore(); } }
+      if (t > 4){ for (const p of RAIN){ p.y += p.v * (dt*60); p.r += p.vr; if (p.y > H + 40) p.y = -40;
+          g.save(); g.globalAlpha = .85; g.translate(p.x, p.y); g.rotate(p.r); g.fillStyle = p.c; g.fillRect(-p.w/2, -p.h/2, p.w, p.h*Math.abs(Math.cos(p.r*1.7))); g.restore(); } }
+      // pastki yozuv
+      g.save(); g.globalAlpha = .75; g.fillStyle = "#fff"; g.font = "600 28px Montserrat"; g.textAlign = "center";
+      g.fillText("REGISTAN SCHOOL · MONITORING BÖLIMI", W/2, H - 70); g.restore();
+      // oxiri
+      if (t > DUR - 1.2){ g.fillStyle = `rgba(14,20,40,${clamp01((t - DUR + 1.2)/1.2)})`; g.fillRect(0, 0, W, H); }
+    }
+    frame(0);
+    rec.start(500); srcN.start();
+    const t0 = performance.now();
+    const tick = () => {
+      if (stopAll) return;
+      const t = (performance.now() - t0) / 1000;
+      frame(Math.min(t, DUR));
+      ov.querySelector(".pbar i").style.width = `${Math.min(100, t / DUR * 100)}%`;
+      if (t >= DUR){ rec.stop(); return; }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  } catch(e){ console.error(e); fail("Video yasab bölmadi 😔 Boşqa brauzerda urinib köring."); }
+}
+
+$("#mute").onclick = () => { if (!audio) return; audio.muted = !audio.muted; $("#mute").textContent = audio.muted ? "🔇" : "🔊"; };
 (async () => {
   try { await load(); } catch(e){ $("#main").innerHTML = `<div class="empty">Maʼlumotni yuklab bölmadi. Internetni tekşirib, qayta oçing.</div>`; return; }
   const n = parseInt(new URLSearchParams(location.search).get("n"), 10);
