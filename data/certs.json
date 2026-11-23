@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-23T06:26:38",
+"yangilandi": "2026-11-23T06:55:05",
 "certs": [
 {
 "n": 154,
@@ -1020,6 +1020,16 @@
 "maktab": "registon",
 "img": "c/0255.jpg?v=6a750e",
 "thumb": "c/0255_t.jpg?v=6a750e"
+},
+{
+"n": 256,
+"ism": "Mirzayeva Dilnoza Mutalibovna",
+"filial": "Farğona",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-23",
+"maktab": "registon",
+"img": "c/0256.jpg?v=91defd",
+"thumb": "c/0256_t.jpg?v=91defd"
 }
 ]
 }
