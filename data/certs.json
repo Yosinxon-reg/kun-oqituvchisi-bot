@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-23T05:49:07",
+"yangilandi": "2026-11-23T06:03:41",
 "certs": [
 {
 "n": 154,
@@ -990,6 +990,16 @@
 "maktab": "registon",
 "img": "c/0252.jpg?v=d08c26",
 "thumb": "c/0252_t.jpg?v=d08c26"
+},
+{
+"n": 253,
+"ism": "Jumaboyeva Zulayho Usmon qizi",
+"filial": "Turkiston",
+"fan": "Ingliz tili",
+"sana": "2026-11-23",
+"maktab": "turkiston",
+"img": "c/0253.jpg?v=aa444b",
+"thumb": "c/0253_t.jpg?v=aa444b"
 }
 ]
 }
