@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-21T09:43:13",
+"yangilandi": "2026-11-23T05:05:16",
 "certs": [
 {
 "n": 154,
@@ -970,6 +970,16 @@
 "maktab": "registon",
 "img": "c/0250.jpg?v=392643",
 "thumb": "c/0250_t.jpg?v=392643"
+},
+{
+"n": 251,
+"ism": "Azzamova Lola",
+"filial": "Samarqand",
+"fan": "Matematika",
+"sana": "2026-11-23",
+"maktab": "registon",
+"img": "c/0251.jpg?v=ded212",
+"thumb": "c/0251_t.jpg?v=ded212"
 }
 ]
 }
