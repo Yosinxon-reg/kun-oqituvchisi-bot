@@ -863,12 +863,12 @@ def make_video(st, r, n, ism, data):
 
 
 def send_album(ch, cap, n, data, vid):
-    media = [{"type": "photo", "media": "attach://cert", "caption": cap[:1024]},
-             {"type": "video", "media": "attach://vid", "width": 1080, "height": 1920, "duration": 20,
-              "supports_streaming": True}]
+    """Taşakkurnoma (JPG fayl, asl sifat) va video (MP4 fayl) — bitta albomda, bitta izoh bilan."""
+    media = [{"type": "document", "media": "attach://cert"},
+             {"type": "document", "media": "attach://vid", "caption": cap[:1024]}]
     return tg("sendMediaGroup", chat_id=ch, media=json.dumps(media, ensure_ascii=False),
-              files={"cert": (f"Kun-oqituvchisi-{n:04d}.jpg", data, "image/jpeg"),
-                     "vid": (f"Tabrik-{n:04d}.mp4", vid, "video/mp4")})
+              files={"cert": (f"Kun öqituvçisi {n}.jpg", data, "image/jpeg"),
+                     "vid": (f"Tabrik videosi {n}.mp4", vid, "video/mp4")})
 
 
 def send_cert(st, r, n, key, sinov=False):
@@ -1302,7 +1302,17 @@ ONE_TIME_EARLY = [("2026-11-21", "14:40")]
 ONE_TIME_RECOVER += [("2026-11-23", 5528, 5620)]   # 23.11: bugungi öqilmay qolgan post   # egasi: iş kuni erta tugadi, natijalar hozir
 
 
+ONE_TIME_ALBUM = [99]   # 23.11: Azzamova Lola — fayl körinişida qayta
+
+
 def apply_fixes(st):
+    for rid in ONE_TIME_ALBUM:
+        key = f"albom|{rid}"
+        r = next((x for x in st["results"] if x["id"] == rid), None)
+        if key not in st["fixes_done"] and r and r["cert_sent"] and r["cert"]:
+            st["fixes_done"].append(key)
+            save_state(st, key)
+            send_cert(st, r, r["cert"], r.get("paket") or "qayta")
     for day, hm in ONE_TIME_EARLY:
         key = f"erta|{day}|{hm}"
         if key not in st["fixes_done"]:
