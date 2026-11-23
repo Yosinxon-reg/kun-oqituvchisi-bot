@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-23T06:03:41",
+"yangilandi": "2026-11-23T06:05:57",
 "certs": [
 {
 "n": 154,
@@ -1000,6 +1000,16 @@
 "maktab": "turkiston",
 "img": "c/0253.jpg?v=aa444b",
 "thumb": "c/0253_t.jpg?v=aa444b"
+},
+{
+"n": 254,
+"ism": "Ikromjonova Gulhayoxon",
+"filial": "Turkiston",
+"fan": "Boşlanğiç taʼlim",
+"sana": "2026-11-23",
+"maktab": "turkiston",
+"img": "c/0254.jpg?v=710019",
+"thumb": "c/0254_t.jpg?v=710019"
 }
 ]
 }
