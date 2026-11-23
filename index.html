@@ -271,7 +271,8 @@ function izohlar(){
     const k = tkey(c.ism); c.nth = cnt[k] = (cnt[k] || 0) + 1;
     const tier = c.nth === 1 ? 0 : c.nth <= 3 ? 1 : c.nth <= 6 ? 2 : 3;
     const w = c.ism.trim().split(/\s+/), ism1 = w[1] || w[0];
-    c.izoh = IZOH[tier][ctr[tier]++ % 5].replace(/\{ustoz\}/g, ism1 + " ustoz").replace(/\{n\}/g, c.nth);
+    const eski = IZOH[tier][ctr[tier]++ % 5].replace(/\{ustoz\}/g, ism1 + " ustoz").replace(/\{n\}/g, c.nth);
+    if (!c.izoh) c.izoh = eski;          // yangi taşakkurnomalarda izohni bot yozadi (dars mazmuniga qarab)
   }
 }
 
