@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-23T06:05:57",
+"yangilandi": "2026-11-23T06:26:38",
 "certs": [
 {
 "n": 154,
@@ -1010,6 +1010,16 @@
 "maktab": "turkiston",
 "img": "c/0254.jpg?v=710019",
 "thumb": "c/0254_t.jpg?v=710019"
+},
+{
+"n": 255,
+"ism": "Plotnikova Larisa",
+"filial": "Çilonzor",
+"fan": "Gimnastika",
+"sana": "2026-11-23",
+"maktab": "registon",
+"img": "c/0255.jpg?v=6a750e",
+"thumb": "c/0255_t.jpg?v=6a750e"
 }
 ]
 }
