@@ -25,6 +25,7 @@ import requests
 
 import names
 import websayt
+import izoh as izoh_mod
 import render2
 
 TOKEN = os.environ.get("BOT_TOKEN", "")
@@ -843,6 +844,26 @@ def cname(r):
 VIDEO_ON = bool(os.environ.get("BOT_TOKEN")) and os.environ.get("VIDEO", "1") == "1"
 
 
+def _tkey(ism):
+    return " ".join(sorted(izoh_mod._n(ism).split()[:2]))
+
+
+def set_izoh(st, r, n, ism):
+    """Monitoring bölimining samimiy izohi — bir marta yoziladi va saqlanadi (sayt, video va albomda bir xil)."""
+    if r.get("izoh_m"):
+        return
+    try:
+        k = _tkey(ism)
+        avval = {c["n"] for c in st["certs"] if c["n"] != n and c.get("ism") and _tkey(c["ism"]) == k}
+        nth = len(avval) + 1
+        used = st.setdefault("izoh_used", {}).setdefault(k, [])
+        t, imzo, keys = izoh_mod.yoz(ism, r.get("matn") or "", fan_of(r), n, nth, used)
+        r["izoh_m"] = {"t": t, "imzo": imzo, "nth": nth}
+        used.extend(x for x in keys if x not in used)
+    except Exception:
+        traceback.print_exc()
+
+
 def make_video(st, r, n, ism, data):
     """Taşakkurnoma tabrik videosi (saytdagi bilan bir xil). Bölmasa — None."""
     if not VIDEO_ON:
@@ -855,6 +876,8 @@ def make_video(st, r, n, ism, data):
         ents, _ = site_entries(st)
         e = {"n": n, "ism": ism, "filial": r["filial"], "fan": names.yangi(fan_of(r)), "sana": r["sana"],
              "maktab": r["maktab"], "img": f"c/{n:04d}.jpg", "thumb": f"c/{n:04d}_t.jpg"}
+        if r.get("izoh_m"):
+            e["izoh"], e["imzo"] = r["izoh_m"]["t"], r["izoh_m"]["imzo"]
         ents = [x for x in ents if x["n"] != n] + [e]
         return video.render(websayt.DIR, n, ents)
     except Exception:
@@ -881,6 +904,8 @@ def send_cert(st, r, n, key, sinov=False):
         if sinov:
             cap = "🧪 SINOV\n" + cap
         data = img.getvalue() if hasattr(img, "getvalue") else img
+        if not sinov:
+            set_izoh(st, r, n, ism)
         vid = None if sinov else make_video(st, r, n, ism, data)
         ok = None
         for ch in owners(st):
@@ -1174,8 +1199,11 @@ def site_entries(st):
         if not r or r["holat"] != "hisob":
             continue
         v = hashlib.md5((st.get("site_imgs", {}).get(str(n)) or "").encode()).hexdigest()[:6]
-        out.append({"n": n, "ism": cname(r), "filial": r["filial"], "fan": names.yangi(fan_of(r)), "sana": r["sana"],
-                    "maktab": r["maktab"], "img": f"c/{n:04d}.jpg?v={v}", "thumb": f"c/{n:04d}_t.jpg?v={v}"})
+        e = {"n": n, "ism": cname(r), "filial": r["filial"], "fan": names.yangi(fan_of(r)), "sana": r["sana"],
+             "maktab": r["maktab"], "img": f"c/{n:04d}.jpg?v={v}", "thumb": f"c/{n:04d}_t.jpg?v={v}"}
+        if r.get("izoh_m"):
+            e["izoh"], e["imzo"] = r["izoh_m"]["t"], r["izoh_m"]["imzo"]
+        out.append(e)
     return out, last
 
 
