@@ -1,5 +1,5 @@
 {
-"yangilandi": "2026-11-23T05:05:16",
+"yangilandi": "2026-11-23T05:49:07",
 "certs": [
 {
 "n": 154,
@@ -980,6 +980,16 @@
 "maktab": "registon",
 "img": "c/0251.jpg?v=ded212",
 "thumb": "c/0251_t.jpg?v=ded212"
+},
+{
+"n": 252,
+"ism": "Israilov Umedjon",
+"filial": "Samarqand",
+"fan": "Ingliz tili",
+"sana": "2026-11-23",
+"maktab": "registon",
+"img": "c/0252.jpg?v=d08c26",
+"thumb": "c/0252_t.jpg?v=d08c26"
 }
 ]
 }
