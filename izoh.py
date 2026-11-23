@@ -21,9 +21,9 @@ def _n(s):
 MAVZU = [
     ("namuna", r"namuna sifatida|ozi (korsat|namuna|bajar)|avval ozi|shaxsiy namuna", [
         "Har bir harakatni avval özingiz körsatib berdingiz — bolalar sizga qarab örganayotganini körib quvondik.",
-        "Avval özingiz körsatib, keyin bolalardan sörganingiz bizga juda yoqdi."]),
+        "Avval özingiz körsatib, keyin bolalarga bajartirganingiz bizga juda yoqdi."]),
     ("xavfsizlik", r"xavfsizlik", [
-        "Bolalarning xavfsizligiga şunçalik e'tiborli bölganingiz uçun sizdan minnatdormiz.",
+        "Bolalarning xavfsizligiga şunçalik eʼtiborli bölganingiz uçun sizdan minnatdormiz.",
         "Hamma maşqlar qiziqarli ham, xavfsiz ham böldi — bunga alohida rahmat."]),
     ("ikki_til", r"ingliz tilida ham|ikki tilda", [
         "Atamalarni ingliz tilida ham örgatganingiz bolalarga ikki baravar foyda böldi — zör ğoya!",
@@ -32,10 +32,10 @@ MAVZU = [
         "Mavzuni hayotiy misollar bilan tuşuntirdingiz — bolalar darrov tuşunib oldi, buni körib xursand böldik.",
         "Hayotdan misollar keltirganingiz uçun mavzu bolalarga juda yaqin böldi."]),
     ("amaliy", r"amaliy mashq|amaliy ish|tajriba|qol bilan|yasash|yasalgan|maket", [
-        "Bolalar özi qöli bilan bajarib örgandi — bunday bilim ularda uzoq qoladi. Rahmat!",
+        "Bolalar öz qöllari bilan bajarib örgandi — bunday bilim ularda uzoq qoladi. Rahmat!",
         "Amaliy işlar paytida bolalarning qiziqib işlayotganini körib quvondik."]),
     ("ijodiy", r"ijodiy|creative|loyiha|project|rasm chiz", [
-        "Bolalarga özini ijodda körsatiş imkonini berganingiz bizga juda yoqdi.",
+        "Bolalarga özlarini ijodda körsatiş imkonini berganingiz bizga juda yoqdi.",
         "Ijodiy topşiriqlarni bolalar katta zavq bilan bajardi."]),
     ("harakat", r"egiluvchan|muvozanat|koordinatsiya|akrobatik|chaqqonlik", [
         "Egiluvçanlik va muvozanat maşqlarini şunday puxta ötkazganingizni körib quvondik.",
@@ -60,7 +60,7 @@ MAVZU = [
         "Körsatmali materiallar mavzuni bolalarga ancha oson qildi."]),
     ("texno", r"video|slayd|taqdimot|proyektor|ipc|interaktiv|smart|planshet|kompyuter|robot", [
         "Video va qiziqarli topşiriqlar bilan bolalarning diqqatini oxirigaça uşlab turdingiz.",
-        "Texnologiyani şunday öz öğrida işlatganingiz bizga juda yoqdi."]),
+        "Texnologiyani şunday öz örnida işlatganingiz bizga juda yoqdi."]),
     ("savol", r"savol-javob|savol javob|aqliy hujum|brainstorm", [
         "Savol-javob paytida bolalar qöl kötarişga şoşilayotganini körib quvondik 🙂",
         "Savollaringiz bolalarni öylaşga undadi — bu eng muhimi."]),
@@ -69,17 +69,17 @@ MAVZU = [
         "Darsning boşidagi qizdiriş qismi hammaning kayfiyatini kötardi."]),
     ("fikrlash", r"mantiq|fikrla|tanqidiy|critical|tahlil", [
         "Bolalarni öz fikrini aytişga, öylaşga undaganingiz bizga juda yoqdi.",
-        "Bolalar tayyor javobni emas, özi öylab topişni örgandi — rahmat sizga."]),
+        "Bolalar tayyor javobni emas, özlari öylab topişni örgandi — rahmat sizga."]),
     ("ragbat", r"ragbat|maqtov|smayl|yulduzcha|sticker|reward", [
         "Bolalarni öz vaqtida maqtaganingiz ularni juda xursand qildi.",
-        "Kiçik yutuqlarini ham e'tibordan çetda qoldirmadingiz — bolalar buni his qiladi."]),
+        "Kiçik yutuqlarini ham eʼtibordan çetda qoldirmadingiz — bolalar buni his qiladi."]),
     ("bosqich", r"oddiydan murakkab|bosqichma-bosqich|ketma-ketlik", [
         "Mavzuni oddiydan murakkabga qarab şunday tuşuntirdingizki, hech kim adaşmadi."]),
     ("refleksiya", r"refleksiya|reflection|sarhisob|xulosa chiqar", [
-        "Dars oxirida bolalar nimani örganganini özi aytib berdi — bu juda yoqdi."]),
+        "Dars oxirida bolalar nimani örganganini özlari aytib berdi — bu juda yoqdi."]),
     ("individual", r"individual|har bir (oquvchi|bola|qiz|ogil)|alohida (etibor|yondash)|yakka tartib", [
-        "Har bir bolaga alohida e'tibor berganingizni körib juda quvondik.",
-        "Hech bir bola e'tibordan çetda qolmadi — har biriga vaqt topdingiz. Rahmat sizga!"]),
+        "Har bir bolaga alohida eʼtibor berganingizni körib juda quvondik.",
+        "Hech bir bola eʼtibordan çetda qolmadi — har biriga vaqt topdingiz. Rahmat sizga!"]),
     ("doska", r"doskada|birgalikda", [
         "Doskada bolalar bilan birga işlaganingiz ularni ancha dadil qildi."]),
     ("shior", r"shior", [
@@ -89,7 +89,7 @@ MAVZU = [
         "Bolalar intizomli, lekin erkin edi — buni körib xursand böldik."]),
     ("kayfiyat", r"ijobiy kayfiyat|samimiy|iliq|xushkayfiyat|quvnoq", [
         "Sinfdagi iliq va samimiy muhitni hatto kamera orqali ham his qildik 🙂",
-        "Bolalar sizning darsingizda özini juda erkin his qilayotgani körinib turdi."]),
+        "Bolalar sizning darsingizda özlarini juda erkin his qilayotgani körinib turdi."]),
     ("mustahkam", r"mustahkam|takrorla", [
         "Ötilgan mavzuni şunday yaxşi mustahkamladingizki, bolalar hammasini eslab qoldi.",
         "Takrorlaş qismi juda yaxşi ötdi — bilim mustahkam böldi."]),
@@ -101,10 +101,10 @@ FAN = [  # (aniqlash, gap)
     (r"boshlang|tabiiy fan|oqish|alifbo", "Kiçkintoylar bilan qançalik sabr va mehr bilan işlayotganingiz körinib turdi."),
     (r"rus", "Rus tili darsini bunday qiziqarli ötganingiz bizga juda yoqdi."),
     (r"matemat|geometr|algebra", "Matematikani bunçalik tuşunarli tuşuntirganingiz uçun bolalar sizdan minnatdor bölsa kerak 🙂"),
-    (r"gimnast|jismoniy|taekvon|kamon|sport|kurash|suzish", "Bolalarning soğligi va xavfsizligiga bunday e'tibor — katta mas'uliyat, rahmat."),
+    (r"gimnast|jismoniy|taekvon|kamon|sport|kurash|suzish", "Bolalarning soğliği va xavfsizligiga bunday eʼtibor — katta masʼuliyat, rahmat."),
     (r"tasviriy|sanat|musiqa|raqs", "Bolalarda gözallikka mehr uyğotayotganingiz uçun rahmat."),
     (r"shaxmat", "Şaxmat orqali bolalarni öylaşga örgatayotganingiz juda qadrli."),
-    (r"robot|texnolog|texnalog|\bit\b|informat|dastur", "Bolalar özi nimadir yaratib körganidan juda xursand böldi."),
+    (r"robot|texnolog|texnalog|\bit\b|informat|dastur", "Bolalar öz qöllari bilan nimadir yaratganidan juda xursand böldi."),
     (r"tarix", "Tarixni şunday qiziqarli hikoya qildingizki, biz ham tinglab qoldik."),
     (r"arab|nemis|xitoy|koreys|turk", "Til örgatişdagi sabr-toqatingizni his qildik."),
 ]
@@ -114,7 +114,7 @@ KIRISH = [
     ["{U}, bugungi darsingizni katta zavq bilan kuzatdik.",
      "{U}, {sinf} sinfdagi darsingizni körib juda xursand böldik!",
      "Assalomu alaykum, {U}! Bugungi darsingizni körib, sizga albatta yozgimiz keldi.",
-     "{U}, darsingizni kuzatarkanmiz, vaqt qanday ötganini sezmay qoldik 🙂",
+     "{U}, darsingizni kuzatar ekanmiz, vaqt qanday ötganini sezmay qoldik 🙂",
      "{U}, bugun sizning darsingiz bizga juda yoqdi."],
     ["{U}, yana siz! Bugungi darsingizni ham katta qiziqiş bilan kuzatdik.",
      "{U}, darsingizni yana kuzatdik — va yana xursand böldik.",

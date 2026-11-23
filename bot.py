@@ -1346,7 +1346,30 @@ def roster_dedupe(st):
     return gone
 
 
+ONE_TIME_IZOH_FIX = [["Texnologiyani şunday öz öğrida işlatganingiz bizga juda yoqdi.", "Texnologiyani şunday öz örnida işlatganingiz bizga juda yoqdi."], ["Bolalarning soğligi va xavfsizligiga", "Bolalarning soğliği va xavfsizligiga"], ["{U}, darsingizni kuzatarkanmiz, vaqt qanday ötganini sezmay qoldik 🙂", "{U}, darsingizni kuzatar ekanmiz, vaqt qanday ötganini sezmay qoldik 🙂"], ["Avval özingiz körsatib, keyin bolalardan sörganingiz bizga juda yoqdi.", "Avval özingiz körsatib, keyin bolalarga bajartirganingiz bizga juda yoqdi."], ["Bolalar özi qöli bilan bajarib örgandi", "Bolalar öz qöllari bilan bajarib örgandi"], ["Bolalar tayyor javobni emas, özi öylab topişni örgandi", "Bolalar tayyor javobni emas, özlari öylab topişni örgandi"], ["Dars oxirida bolalar nimani örganganini özi aytib berdi", "Dars oxirida bolalar nimani örganganini özlari aytib berdi"], ["Bolalar özi nimadir yaratib körganidan juda xursand böldi.", "Bolalar öz qöllari bilan nimadir yaratganidan juda xursand böldi."], ["Bolalarga özini ijodda körsatiş", "Bolalarga özlarini ijodda körsatiş"], ["Bolalar sizning darsingizda özini juda erkin", "Bolalar sizning darsingizda özlarini juda erkin"], ["e'tibor", "eʼtibor"], ["mas'uliyat", "masʼuliyat"]]
+ONE_TIME_ALBUM2 = [105, 106, 107, 108]   # 23.11: imlo tuzatilgan izoh bilan qayta
+
+
 def apply_fixes(st):
+    if "izohfix|1" not in st["fixes_done"]:
+        st["fixes_done"].append("izohfix|1")
+        nfix = 0
+        for r in st["results"]:
+            im = r.get("izoh_m")
+            if im and im.get("t"):
+                t0 = im["t"]
+                for a, b in ONE_TIME_IZOH_FIX:
+                    im["t"] = im["t"].replace(a.replace("{U}, ", ""), b.replace("{U}, ", ""))
+                nfix += im["t"] != t0
+        audit(st, "izoh-imlo", f"{nfix} ta izohda imlo tuzatildi")
+        save_state(st, "izohfix|1")
+    for rid in ONE_TIME_ALBUM2:
+        key = f"albom2|{rid}"
+        r = next((x for x in st["results"] if x["id"] == rid), None)
+        if key not in st["fixes_done"] and r and r["cert_sent"] and r["cert"]:
+            st["fixes_done"].append(key)
+            save_state(st, key)
+            send_cert(st, r, r["cert"], r.get("paket") or "qayta")
     key = "fish|2026-11-23"
     if key not in st["fixes_done"]:
         st["fixes_done"].append(key)
