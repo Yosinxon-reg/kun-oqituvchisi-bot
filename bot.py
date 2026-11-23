@@ -15,6 +15,7 @@ import json
 import os
 import re
 import subprocess
+import threading
 import sys
 import time
 import traceback
@@ -402,7 +403,6 @@ def ingest(st, m, notify=True, edited=False):
             if notify:
                 live_ism(st, old)
         if (old["ism"], old["filial"], old["holat"]) != before:
-            old["tuzatildi"] = bool(old["cert_sent"])
             audit(st, "tahrir", f"#{old['id']}: {before} -> {(old['ism'], old['filial'], old['holat'])}")
             return True
         return False
@@ -690,21 +690,28 @@ def send_package(st, day, tur="yakuniy", sinov=False):
         st["packages"][key]["rec"] = rec_parts
         save_state(st, f"paket {key}")
     steps = st["packages"].get(key, {"steps": []})["steps"] if not sinov else []
+    def mark(x):
+        steps.append(x)
+        if not sinov:
+            st["packages"][key]["steps"] = steps
+            save_state(st, f"paket {key} {x}")
     if "rating" not in steps:
-        say(st, pref + pk["rating"]); steps.append("rating")
+        say(st, pref + pk["rating"]); mark("rating")
     if "counts" not in steps:
-        say(st, (pref + pk["counts"]) if sinov else pk["counts"]); steps.append("counts")
+        say(st, (pref + pk["counts"]) if sinov else pk["counts"]); mark("counts")
     for r in pk["certs"]:
-        if not sinov and r["cert_sent"] and not r.get("tuzatildi"):
+        if not sinov and r["cert_sent"]:
             continue
         n = r["cert"] if r["cert"] is not None else 0
         send_cert(st, r, n, key, sinov=sinov)
+        if not sinov:
+            save_state(st, f"taşakkurnoma {n}")
         time.sleep(0.5)
     if "royxat" not in steps:
         lm = day_list_msg(st, day)
         if lm:
             say(st, (pref if sinov else "") + lm)
-        steps.append("royxat")
+        mark("royxat")
     if pk["held"] and "held" not in steps:
         say(st, (pref if sinov else "") + f"⏳ {len(pk['held'])} ta taşakkurnoma ism tasdiğini kutmoqda "
             f"({'RegMon guruhida' if st.get('regmon') else 'sizga'} savol yuborilgan). Qaror bölişi bilan şu yerga keladi:\n" +
@@ -879,7 +886,14 @@ def make_video(st, r, n, ism, data):
         if r.get("izoh_m"):
             e["izoh"], e["imzo"] = r["izoh_m"]["t"], r["izoh_m"]["imzo"]
         ents = [x for x in ents if x["n"] != n] + [e]
-        return video.render(websayt.DIR, n, ents)
+        box = {}
+        th = threading.Thread(target=lambda: box.setdefault("v", video.render(websayt.DIR, n, ents)), daemon=True)
+        th.start()
+        th.join(300)                              # 5 daqiqadan oşsa — videosiz, faqat taşakkurnoma
+        if th.is_alive():
+            print(f"video #{n}: vaqt tugadi, videosiz yuboriladi", flush=True)
+            return None
+        return box.get("v")
     except Exception:
         traceback.print_exc()
         return None
@@ -951,8 +965,8 @@ def apply_check(st, r, force=False):
         nc["xabar"] = True
     before = r.get("cert_ism")
     r["ism_r"] = nc["rasmiy"] if nc["holat"] in ("ok", "auto") else None
-    if r["cert_sent"] and r["ism_r"] and before and r["ism_r"] != before:
-        r["tuzatildi"] = True
+    if r["cert_sent"] and before:                 # yuborilgan taşakkurnoma ismi avtomatik özgarmaydi
+        r["ism_r"] = before
 
 
 def ism_target(st):
@@ -1051,7 +1065,6 @@ def refresh_from_text(st, r):
             r["sabab"] = p["sabab"]
     if (r["ism"], r["filial"], r["holat"]) != before:
         audit(st, "yangilandi", f"#{r['id']}: {before} -> {(r['ism'], r['filial'], r['holat'])}")
-        r["tuzatildi"] = bool(r["cert_sent"])
 
 
 def fan_of(r):
@@ -1351,6 +1364,18 @@ ONE_TIME_ALBUM2 = [105, 106, 107, 108]   # 23.11: imlo tuzatilgan izoh bilan qay
 
 
 def apply_fixes(st):
+    key = "yakun|2026-11-23"
+    if key not in st["fixes_done"]:
+        st["fixes_done"].append(key)
+        for r in st["results"]:
+            if r.get("tuzatildi"):
+                r["tuzatildi"] = False
+                if r.get("cert_ism"):
+                    r["ism_r"] = r["cert_ism"]
+        save_state(st, key)
+        pk = st["packages"].get("2026-11-23|yakuniy")
+        if pk is not None and "royxat" not in pk.get("steps", []):
+            send_package(st, dt.date(2026, 11, 23))
     if "izohfix|1" not in st["fixes_done"]:
         st["fixes_done"].append("izohfix|1")
         nfix = 0
@@ -1590,8 +1615,6 @@ def resolve(st, r, action, arg, user):
         recheck_cap(st, r)
     nc["qaror"] = {"matn": matn, "kim": kim, "ts": now().isoformat(timespec="seconds"), "action": action}
     audit(st, "ism-qaror", f"#{r['id']} {r['ism']}: {matn} — {kim}")
-    if r["cert_sent"] and r.get("ism_r") and r["ism_r"] != r.get("cert_ism"):
-        r["tuzatildi"] = True
     deliver_now(st, r)
     return f"✅ #{r['id']}: {matn}"
 
