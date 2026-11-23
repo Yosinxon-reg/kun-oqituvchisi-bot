@@ -630,9 +630,9 @@ def pending_for_package(st):
 
 def build_package(st, day):
     new = pending_for_package(st)
-    if not new:
-        return None
     today = day.isoformat()
+    if not new and not any(r["sana"] == today and r["holat"] == "hisob" for r in st["results"]):
+        return None              # bugun hech kim yöq (taşakkurnomalar 20 daqiqalik tartibda ketgan bölsa ham yakun çiqadi)
     by_today = day_counts(st, today)
     late = [r for r in new if r["sana"] < today and r["paket"] is None]
     late_note = ""
@@ -798,6 +798,38 @@ def schedule_tick(st, t):
 
 
 # ================================================================ ismlar tekşiruvi (rasmiy röyxat)
+USTOZ_KUTISH = 20 * 60   # guruhda e'lon qilinganidan 20 daqiqa keyin
+
+
+def ustoz_tick(st, t):
+    """Har bir ustoz: e'londan 20 daqiqa ötib — ism tekşiruvi, keyin taşakkurnoma + video bitta albomda."""
+    today = t.date().isoformat()
+    if f"{today}|yakuniy" in st["packages"]:
+        return False
+    h, mi = map(int, kun_vaqti(st, today).split(":"))
+    if (t.hour, t.minute) >= (h, mi):
+        return False
+    for r in sorted(st["results"], key=lambda x: (x["posted"], x["id"])):
+        if r["sana"] != today or r["holat"] != "hisob" or r.get("paket") or r["cert_sent"]:
+            continue
+        if (t - dt.datetime.fromisoformat(r["posted"])).total_seconds() < USTOZ_KUTISH:
+            continue
+        if not (r.get("nc") or {}).get("qaror"):
+            apply_check(st, r)
+        if held(r):
+            if not r["nc"].get("xabar"):
+                post_question(st, r)
+                audit(st, "ustoz-savol", f"#{r['id']} {r['ism']}: röyxatda topilmadi — RegMon'ga savol")
+                return True
+            continue
+        r["paket"] = f"{today}|ustoz"
+        save_state(st, f"ustoz #{r['id']}")
+        deliver_now(st, r)
+        audit(st, "ustoz", f"#{r['id']} {cname(r)}: taşakkurnoma + video yuborildi (№ {r['cert']})")
+        return True
+    return False
+
+
 def held(r):
     nc = r.get("nc")
     return bool(nc) and nc["holat"] in ("savol", "yoq") and not nc.get("qaror")
@@ -806,6 +838,37 @@ def held(r):
 def cname(r):
     """Taşakkurnomadagi ism: tasdiqlangan rasmiy şakl (yangi alifboda)."""
     return r.get("ism_r") or names.yangi(r["ism"] or "")
+
+
+VIDEO_ON = bool(os.environ.get("BOT_TOKEN")) and os.environ.get("VIDEO", "1") == "1"
+
+
+def make_video(st, r, n, ism, data):
+    """Taşakkurnoma tabrik videosi (saytdagi bilan bir xil). Bölmasa — None."""
+    if not VIDEO_ON:
+        return None
+    try:
+        import video
+        if not websayt.ready(GIT_SYNC):
+            return None
+        websayt.put_image(n, data)
+        ents, _ = site_entries(st)
+        e = {"n": n, "ism": ism, "filial": r["filial"], "fan": names.yangi(fan_of(r)), "sana": r["sana"],
+             "maktab": r["maktab"], "img": f"c/{n:04d}.jpg", "thumb": f"c/{n:04d}_t.jpg"}
+        ents = [x for x in ents if x["n"] != n] + [e]
+        return video.render(websayt.DIR, n, ents)
+    except Exception:
+        traceback.print_exc()
+        return None
+
+
+def send_album(ch, cap, n, data, vid):
+    media = [{"type": "photo", "media": "attach://cert", "caption": cap[:1024]},
+             {"type": "video", "media": "attach://vid", "width": 1080, "height": 1920, "duration": 20,
+              "supports_streaming": True}]
+    return tg("sendMediaGroup", chat_id=ch, media=json.dumps(media, ensure_ascii=False),
+              files={"cert": (f"Kun-oqituvchisi-{n:04d}.jpg", data, "image/jpeg"),
+                     "vid": (f"Tabrik-{n:04d}.mp4", vid, "video/mp4")})
 
 
 def send_cert(st, r, n, key, sinov=False):
@@ -818,10 +881,13 @@ def send_cert(st, r, n, key, sinov=False):
         if sinov:
             cap = "🧪 SINOV\n" + cap
         data = img.getvalue() if hasattr(img, "getvalue") else img
+        vid = None if sinov else make_video(st, r, n, ism, data)
         ok = None
         for ch in owners(st):
-            res = tg("sendDocument", chat_id=ch, caption=cap[:1024],
-                     files={"document": (f"Kun öqituvçisi {n}.jpg", data, "image/jpeg")})
+            res = send_album(ch, cap, n, data, vid) if vid else None
+            if not res:
+                res = tg("sendDocument", chat_id=ch, caption=cap[:1024],
+                         files={"document": (f"Kun öqituvçisi {n}.jpg", data, "image/jpeg")})
             if ch == st.get("owner"):
                 ok = res
         if ok is not None and not sinov:
@@ -1232,7 +1298,8 @@ def reparse_fix(st, day, mids):
 ONE_TIME_SUMMARY = [("2026-11-19", "2", "Yunusobod: 2 ta — Karimova Barnoxon va Isakova Kamola")]
 
 
-ONE_TIME_EARLY = [("2026-11-21", "14:40")]   # egasi: iş kuni erta tugadi, natijalar hozir
+ONE_TIME_EARLY = [("2026-11-21", "14:40")]
+ONE_TIME_RECOVER += [("2026-11-23", 5528, 5620)]   # 23.11: bugungi öqilmay qolgan post   # egasi: iş kuni erta tugadi, natijalar hozir
 
 
 def apply_fixes(st):
@@ -2101,6 +2168,11 @@ def main():
         try:
             if ish_kuni(now()):
                 changed |= tahrir_tick(st, now())
+        except Exception:
+            traceback.print_exc()
+        try:
+            if ish_kuni(now()):
+                changed |= ustoz_tick(st, now())
         except Exception:
             traceback.print_exc()
         try:
