@@ -1330,7 +1330,7 @@ ONE_TIME_EARLY = [("2026-11-21", "14:40")]
 ONE_TIME_RECOVER += [("2026-11-23", 5528, 5620)]   # 23.11: bugungi öqilmay qolgan post   # egasi: iş kuni erta tugadi, natijalar hozir
 
 
-ONE_TIME_ALBUM = [99]   # 23.11: Azzamova Lola — fayl körinişida qayta
+ONE_TIME_ALBUM = [99, 105, 106]   # 23.11: Azzamova Lola (fayl); Asanova Nigina, Garyayeva Rita (izoh alohida sahifada)
 
 
 def roster_dedupe(st):
