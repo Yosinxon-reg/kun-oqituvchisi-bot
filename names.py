@@ -100,6 +100,12 @@ def display(name):
     return " ".join(ws)
 
 
+def same_core(a, b):
+    """Faqat otasining ismi qöşilgan bölsa (Familiya Ism bir xil) — bu tuzatiş emas, töliq F.I.Sh. xolos."""
+    ta, tb = tokens(a), tokens(b)
+    return len(ta) == len(tb) == 2 and sorted(phon(t) for t in ta) == sorted(phon(t) for t in tb)
+
+
 def lev(a, b):
     if a == b:
         return 0
@@ -262,7 +268,7 @@ def check(st, ism, filial, fan_text):
         e = next((x for x in R if x["ism"] == al["ism"] and x["filial"] == al["filial"]), None)
         if e:
             disp = al.get("disp") or display(e["ism"])
-            return {"holat": "ok" if disp == post_disp else "auto", "rasmiy": disp, "nomzodlar": [_c(e, 0, "alias")],
+            return {"holat": "ok" if (disp == post_disp or same_core(disp, post_disp)) else "auto", "rasmiy": disp, "nomzodlar": [_c(e, 0, "alias")],
                     "izoh": "avvalgi qaror asosida", "turi": "alias"}
     scored = []
     for e in R:
@@ -306,7 +312,7 @@ def check(st, ism, filial, fan_text):
         if prim == 3:
             return {"holat": "savol", "rasmiy": None, "nomzodlar": nom, "turi": c[0],
                     "izoh": f"postda filial yözilmagan; röyxatda {e['filial']}, {e['fan']}"}
-        return {"holat": "ok" if disp == post_disp else "auto", "rasmiy": disp, "nomzodlar": nom, "turi": c[0],
+        return {"holat": "ok" if (disp == post_disp or same_core(disp, post_disp)) else "auto", "rasmiy": disp, "nomzodlar": nom, "turi": c[0],
                 "izoh": "" if disp == post_disp else _why(c)}
     if len(P) > 1:
         return {"holat": "savol", "rasmiy": None, "nomzodlar": [_c(e, c[1], c[0]) for e, c in P[:3]], "turi": "kop",

@@ -1333,7 +1333,26 @@ ONE_TIME_RECOVER += [("2026-11-23", 5528, 5620)]   # 23.11: bugungi öqilmay qol
 ONE_TIME_ALBUM = [99]   # 23.11: Azzamova Lola — fayl körinişida qayta
 
 
+def roster_dedupe(st):
+    """Asosiy röyxatga (F.I.Sh. bilan) kirgan ustozlar roster_add'dan olib taşlanadi — ikkilanmasin."""
+    base = names.base_roster()
+    keep, gone = [], []
+    for e in st.get("roster_add", []):
+        tk = names.tokens(e["ism"])
+        dup = any(b["filial"] == e["filial"] and (lambda c: c and c[1] <= 1)(names.compare(tk, names.tokens(b["ism"])))
+                  for b in base)
+        (gone if dup else keep).append(e)
+    st["roster_add"] = keep
+    return gone
+
+
 def apply_fixes(st):
+    key = "fish|2026-11-23"
+    if key not in st["fixes_done"]:
+        st["fixes_done"].append(key)
+        gone = roster_dedupe(st)
+        audit(st, "fish", f"HR F.I.Sh. röyxati: {len(gone)} ta takror röyxatdan olindi: " + ", ".join(e["ism"] for e in gone))
+        save_state(st, key)
     for rid in ONE_TIME_ALBUM:
         key = f"albom|{rid}"
         r = next((x for x in st["results"] if x["id"] == rid), None)
