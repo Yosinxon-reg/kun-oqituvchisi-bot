@@ -242,7 +242,7 @@ def say(st, text):
 # ================================================================ postni tanib oliş
 WORD = r"[A-ZÖĞŞÇ][\w'ʻ‘’`\-]+"
 OTA = re.compile(r"(ovich|evich|ovna|evna|qizi|o['ʻ‘’`]?g['ʻ‘’`]?li|ugli)$", re.I)
-FIELD = re.compile(r"^[^\w\n]*([\w'ʻ‘’` ]{2,40}?)[^\w\n]*\s*[:;]\s*(.+)$", re.M)
+FIELD = re.compile(r"^[^\w\n]*([\w'ʻ‘’` ]{2,40}?)[^\w\n]*[ \t]*[:;][ \t]*(.+)$", re.M)   # böş «Dars:» keyingi qatorni yutmasin
 STOP = {"robototexnika", "texnologiya", "taekvondo", "kamon", "kamondan", "shaxmat", "şaxmat",
         "futbol", "gimnastika", "suziş", "suzish", "rus", "ingliz", "arab", "ona", "matematika",
         "musiqa", "rasm", "tasviriy", "boşlanğiç", "boshlang'ich", "fan", "fani", "tili", "sinf",
@@ -434,6 +434,7 @@ def ingest(st, m, notify=True, edited=False):
         recheck_cap(st, r)
     st["results"].append(r)
     apply_check(st, r)
+    takror_check(st, r)
     audit(st, "yangi", f"#{r['id']} {r['ism']} | {r['filial']} | {r['holat']} {r['sabab']} | ism: {r['nc']['holat']}")
     if notify:
         live_ism(st, r)
@@ -1368,7 +1369,48 @@ ONE_TIME_IZOH_FIX = [["Texnologiyani şunday öz öğrida işlatganingiz bizga j
 ONE_TIME_ALBUM2 = [105, 106, 107, 108]   # 23.11: imlo tuzatilgan izoh bilan qayta
 
 
+def _dkey(s):
+    return re.sub(r"[^0-9a-z]", "", _norm(s or ""))
+
+
+def _body(r):
+    """Post matnining asosiy qismi (sarlavha qatorlaridan keyin) — bir xil postni taniş uçun."""
+    parts = (r.get("matn") or "").split("\n\n", 1)
+    return _dkey(parts[1])[:150] if len(parts) > 1 and len(_dkey(parts[1])) > 40 else ""
+
+
+def takror_check(st, r):
+    """Şu kuni, şu filialda, şu ustoz (rasmiy ismi bir xil) allaqaçon hisobda bölsa — ikkinçisi hisobga kirmaydi."""
+    if r["holat"] != "hisob" or not r.get("ism_r"):
+        return False
+    dup = next((x for x in st["results"] if x["id"] != r["id"] and x["holat"] == "hisob" and x["sana"] == r["sana"]
+                and x["filial"] == r["filial"] and x.get("ism_r") == r["ism_r"] and x["id"] < r["id"]
+                and ((_dkey(x.get("dars")) and _dkey(x.get("dars")) == _dkey(r.get("dars")))
+                     or (_body(x) and _body(x) == _body(r)))), None)
+    if not dup:
+        return False
+    r["holat"], r["sabab"] = "bekor", f"takror: #{dup['id']} bilan bir xil ustoz, şu kuni allaqaçon hisobda"
+    audit(st, "takror", f"#{r['id']} {r['ism_r']} — #{dup['id']} takrori, hisobga qöşilmadi")
+    say(st, f"♻️ Takror post: {r['ism_r']} ({r['filial']}) bugun allaqaçon hisobda (#{dup['id']}). "
+            f"Ikkinçi post (#{r['id']}) hisobga qöşilmadi.")
+    return True
+
+
 def apply_fixes(st):
+    key = "takror-xumora|2026-11-24"
+    if key not in st["fixes_done"]:
+        st["fixes_done"].append(key)
+        save_state(st, key)
+        r130 = next((x for x in st["results"] if x["id"] == 130), None)
+        if r130 and r130["holat"] == "hisob":
+            r130["holat"], r130["sabab"] = "bekor", "takror: #128 bilan bir xil ustoz (Şomuratova Kumuşoy), şu kuni"
+            audit(st, "takror", "#130 Şomuratova Kumuşoy — #128 takrori, hisobdan olindi (№ 281 bekor)")
+            say(st, "♻️ Turkiston: Şomuratova Kumuşoy Isoq qizi bugun 2 marta qayd etilgan ekan (#128 va #130). "
+                    "Ikkinçisi hisobdan olindi, № 0281 taşakkurnoma bekor. Turkistonda bugun 2 ta.")
+        done = reparse_fix(st, "2026-11-24", [5676])
+        save_state(st, key + " tayyor")
+        if done:
+            say(st, "✏️ Qolib ketgan taşakkurnoma yuborildi:\n" + "\n".join(done))
     key = "yakun|2026-11-23"
     if key not in st["fixes_done"]:
         st["fixes_done"].append(key)
