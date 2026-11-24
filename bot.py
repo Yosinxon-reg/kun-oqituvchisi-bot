@@ -302,6 +302,11 @@ def parse_post(text):
                 ism, _ = split_name(v)
                 fan = k.lower()
                 break
+            if _norm(k).endswith(("ustozi", "ustoz")) and len(k.split()) >= 2:   # «Boşlanğiç ustozi: ...»
+                ism, _ = split_name(v)
+                fan = re.sub(r"\s*ustozi?$", "", k.strip(), flags=re.I).lower()
+                fan = (fan + (" sinf" if _norm(fan).startswith("boshlan") or _norm(fan).startswith("boslan") else "") + " öqituvçisi")
+                break
     has_person = ism is not None or "ustoz" in f
     if not has_person and "filial" not in f:
         return None                                       # oddiy yozişma
@@ -1301,7 +1306,7 @@ def recover_range(st, day, a, b):
     return added
 
 
-ONE_TIME_REPARSE = [("2026-11-19", [5413, 5435, 5438, 5454, 5456])]   # 19.11: «Ism-Ingliz tili» va «İsakova» xatolari
+ONE_TIME_REPARSE = [("2026-11-19", [5413, 5435, 5438, 5454, 5456]), ("2026-11-24", [5661])]   # 24.11: «Boşlanğiç ustozi:»   # 19.11: «Ism-Ingliz tili» va «İsakova» xatolari
 
 
 def reparse_fix(st, day, mids):
