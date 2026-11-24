@@ -1703,26 +1703,28 @@ def shablon(e):
     return t, "<code>" + _h.escape(t) + "</code>"
 
 
-SHABLON_HELP = ("✍️ Ustoz ismi yoki familiyasining bir qismini yozing (masalan: <b>nigina</b> yoki <b>açilova nig</b>).\n"
+SHABLON_HELP = ("✍️ Ustoz ismi yoki familiyasining bir qismini yozing (masalan: <b>/u nigina</b> yoki <b>/u açilova nig</b>).\n"
                 "Bot röyxatdan topib, tayyor shablonni beradi: ustiga bosing — nusxa olinadi, "
                 "guruhga qöyib, «Dars» va izohni qöşasiz.")
 
 
-def shablon_javob(st, chat, q):
+def shablon_javob(st, chat, q, **kw):
+    def send(**a):
+        return tg("sendMessage", chat_id=chat, **a, **kw)
     if q.lower() in ("/start", "/help", "/shablon", ""):
-        tg("sendMessage", chat_id=chat, text=SHABLON_HELP, parse_mode="HTML")
+        send(text=SHABLON_HELP, parse_mode="HTML")
         return
     found = ustoz_qidir(st, q)
     if not found:
-        tg("sendMessage", chat_id=chat, text=f"«{q[:40]}» röyxatda topilmadi. Boşqaça yozib köring (familiya yoki ism).")
+        send(text=f"«{q[:40]}» röyxatda topilmadi. Boşqaça yozib köring (familiya yoki ism).")
     elif len(found) == 1:
-        tg("sendMessage", chat_id=chat, text=shablon(found[0])[1], parse_mode="HTML")
+        send(text=shablon(found[0])[1], parse_mode="HTML")
     elif len(found) <= 10:
         kb = [[{"text": f"{names.yangi(e['ism'])} · {e['filial']}"[:60], "callback_data": f"u|{e['k']}"}] for e in found]
-        tg("sendMessage", chat_id=chat, text=f"{len(found)} ta ustoz topildi, keragini tanlang:",
-           reply_markup=json.dumps({"inline_keyboard": kb}, ensure_ascii=False))
+        send(text=f"{len(found)} ta ustoz topildi, keragini tanlang:",
+             reply_markup=json.dumps({"inline_keyboard": kb}, ensure_ascii=False))
     else:
-        tg("sendMessage", chat_id=chat, text=f"{len(found)} ta ustoz çiqdi — aniqroq yozing (familiya + ism).")
+        send(text=f"{len(found)} ta ustoz çiqdi — aniqroq yozing (familiya + ism).")
 
 
 def shablon_cb(st, cq):
@@ -1734,12 +1736,27 @@ def shablon_cb(st, cq):
     e = next((x for x in names.roster(st) if x["k"] == k), None)
     tg("answerCallbackQuery", callback_query_id=cq["id"])
     if e:
-        tg("sendMessage", chat_id=cq["message"]["chat"]["id"], text=shablon(e)[1], parse_mode="HTML")
+        msg = cq["message"]
+        tg("editMessageText", chat_id=msg["chat"]["id"], message_id=msg["message_id"], text=shablon(e)[1], parse_mode="HTML")
     return False
+
+
+def tahrir_shablon(st, m):
+    """Tahrir guruhida: «/u nigina» yoki «@kun_oqituvchisi_bot nigina» -> şu yerning özida shablon."""
+    t = (m.get("text") or "").strip()
+    head, _, q = t.partition(" ")
+    if head.lower().split("@")[0] not in ("/u", "/ustoz", "/shablon") and head.lower() != "@kun_oqituvchisi_bot":
+        return False
+    kw = {"reply_to_message_id": m["message_id"]}
+    if m.get("message_thread_id") and m.get("is_topic_message"):
+        kw["message_thread_id"] = m["message_thread_id"]
+    shablon_javob(st, m["chat"]["id"], q.strip() or "/help", **kw)
+    return True
 
 def handle_callback(st, cq):
     data = cq.get("data") or ""
-    if data.startswith("u|") and (cq.get("message") or {}).get("chat", {}).get("type") == "private":
+    if data.startswith("u|") and ((cq.get("message") or {}).get("chat", {}).get("type") == "private"
+                                  or (cq.get("message") or {}).get("chat", {}).get("id") == st.get("tahrir")):
         return shablon_cb(st, cq)
     if data.startswith("t|") and (cq.get("message") or {}).get("chat", {}).get("id") == st.get("tahrir"):
         return handle_tahrir_cb(st, cq)
@@ -2355,6 +2372,8 @@ def main():
                             changed |= bool(ingest(st, m))
                         else:                         # RegMon va boşqa guruhlar — manba emas
                             note_chat(st, m["chat"], m.get("from"), m.get("text") or "")
+                            if m["chat"]["id"] == st.get("tahrir"):
+                                tahrir_shablon(st, m)
                             if (m.get("text") or "").split("@")[0].strip().lower() == "/tahrir" and \
                                     (m.get("from") or {}).get("id") in owners(st):
                                 st["tahrir"] = m["chat"]["id"]
