@@ -1699,12 +1699,19 @@ def shablon(e):
          f"Filial: {e['filial']}\n"
          f"{fan_txt(e)}: {names.yangi(e['ism'])}\n"
          f"Dars: \n"
-         f"Natija: 25 ball — “Kun öqituvçisi”")
+         f"Natija: 25 ball — “Kun o‘qituvchisi”")
     return t, "<code>" + _h.escape(t) + "</code>"
 
 
+def shablon_msg(e):
+    """Oddiy matn (kod şrifti emas) + «📋 Nusxa olish» tugmasi — bosilsa matn toza holda nusxalanadi."""
+    t = shablon(e)[0]
+    kb = {"inline_keyboard": [[{"text": "📋 Nusxa olish", "copy_text": {"text": t}}]]}
+    return {"text": t, "reply_markup": json.dumps(kb, ensure_ascii=False)}
+
+
 SHABLON_HELP = ("✍️ Ustoz ismi yoki familiyasining bir qismini yozing (masalan: <b>/u nigina</b> yoki <b>/u açilova nig</b>).\n"
-                "Bot röyxatdan topib, tayyor shablonni beradi: ustiga bosing — nusxa olinadi, "
+                "Bot röyxatdan topib, tayyor shablonni beradi: «📋 Nusxa olish» tugmasini bosing, "
                 "guruhga qöyib, «Dars» va izohni qöşasiz.")
 
 
@@ -1718,7 +1725,9 @@ def shablon_javob(st, chat, q, **kw):
     if not found:
         send(text=f"«{q[:40]}» röyxatda topilmadi. Boşqaça yozib köring (familiya yoki ism).")
     elif len(found) == 1:
-        send(text=shablon(found[0])[1], parse_mode="HTML")
+        sm = shablon_msg(found[0])
+        if not send(**sm):
+            send(text=sm["text"])
     elif len(found) <= 10:
         kb = [[{"text": f"{names.yangi(e['ism'])} · {e['filial']}"[:60], "callback_data": f"u|{e['k']}"}] for e in found]
         send(text=f"{len(found)} ta ustoz topildi, keragini tanlang:",
@@ -1737,7 +1746,9 @@ def shablon_cb(st, cq):
     tg("answerCallbackQuery", callback_query_id=cq["id"])
     if e:
         msg = cq["message"]
-        tg("editMessageText", chat_id=msg["chat"]["id"], message_id=msg["message_id"], text=shablon(e)[1], parse_mode="HTML")
+        sm = shablon_msg(e)
+        if not tg("editMessageText", chat_id=msg["chat"]["id"], message_id=msg["message_id"], **sm):
+            tg("editMessageText", chat_id=msg["chat"]["id"], message_id=msg["message_id"], text=sm["text"])
     return False
 
 
