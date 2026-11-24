@@ -1645,8 +1645,102 @@ def finish_q(st, chat, mid, r, res):
        disable_web_page_preview=True)
 
 
+
+# ================================================================ shablon (Tahrir guruhi a'zolari uçun)
+SHABLON_KESH = 6 * 3600
+
+
+def tahrir_azo(st, uid):
+    """Tahrir guruhi a'zosimi (yoki egasi/ruxsatli). Natija 6 soat eslab qolinadi."""
+    if uid in owners(st):
+        return True
+    if not st.get("tahrir"):
+        return False
+    kesh = st.setdefault("tahrir_azo", {})
+    v = kesh.get(str(uid))
+    if v and time.time() - v[1] < SHABLON_KESH:
+        return v[0]
+    res = tg("getChatMember", chat_id=st["tahrir"], user_id=uid) or {}
+    ok = (res.get("status") if isinstance(res, dict) else None) in ("creator", "administrator", "member", "restricted")
+    kesh[str(uid)] = [ok, time.time()]
+    return ok
+
+
+def _phon_words(s):
+    return [names.phon(w) for w in names.canon(s).split(" ") if w]
+
+
+def ustoz_qidir(st, q):
+    qt = [w for w in _phon_words(q) if len(w) >= 2]
+    if not qt:
+        return []
+    out, seen = [], set()
+    for e in names.roster(st):
+        nw = _phon_words(e["ism"])
+        if all(any(w.startswith(t) for w in nw) for t in qt):
+            key = (names.yangi(e["ism"]), e["filial"])
+            if key not in seen:
+                seen.add(key)
+                out.append(e)
+    return out
+
+
+def fan_txt(e):
+    """«<Fan> ustozi» yorliği (parse_post şuni taniydi)."""
+    f = names.yangi((e.get("fan") or "").strip())
+    if _norm(f).startswith(("boshlan", "boslan")):
+        f = "Boşlanğiç"
+    return (f + " ustozi") if f else "Ustoz"
+
+
+def shablon(e):
+    import html as _h
+    t = (f"Sana: {now().strftime('%d.%m.%Y')}\n"
+         f"Filial: {e['filial']}\n"
+         f"{fan_txt(e)}: {names.yangi(e['ism'])}\n"
+         f"Dars: \n"
+         f"Natija: 25 ball — “Kun öqituvçisi”")
+    return t, "<code>" + _h.escape(t) + "</code>"
+
+
+SHABLON_HELP = ("✍️ Ustoz ismi yoki familiyasining bir qismini yozing (masalan: <b>nigina</b> yoki <b>açilova nig</b>).\n"
+                "Bot röyxatdan topib, tayyor shablonni beradi: ustiga bosing — nusxa olinadi, "
+                "guruhga qöyib, «Dars» va izohni qöşasiz.")
+
+
+def shablon_javob(st, chat, q):
+    if q.lower() in ("/start", "/help", "/shablon", ""):
+        tg("sendMessage", chat_id=chat, text=SHABLON_HELP, parse_mode="HTML")
+        return
+    found = ustoz_qidir(st, q)
+    if not found:
+        tg("sendMessage", chat_id=chat, text=f"«{q[:40]}» röyxatda topilmadi. Boşqaça yozib köring (familiya yoki ism).")
+    elif len(found) == 1:
+        tg("sendMessage", chat_id=chat, text=shablon(found[0])[1], parse_mode="HTML")
+    elif len(found) <= 10:
+        kb = [[{"text": f"{names.yangi(e['ism'])} · {e['filial']}"[:60], "callback_data": f"u|{e['k']}"}] for e in found]
+        tg("sendMessage", chat_id=chat, text=f"{len(found)} ta ustoz topildi, keragini tanlang:",
+           reply_markup=json.dumps({"inline_keyboard": kb}, ensure_ascii=False))
+    else:
+        tg("sendMessage", chat_id=chat, text=f"{len(found)} ta ustoz çiqdi — aniqroq yozing (familiya + ism).")
+
+
+def shablon_cb(st, cq):
+    uid = (cq.get("from") or {}).get("id")
+    if not tahrir_azo(st, uid):
+        tg("answerCallbackQuery", callback_query_id=cq["id"], text="Ruxsat yöq.")
+        return False
+    k = int(cq["data"].split("|")[1])
+    e = next((x for x in names.roster(st) if x["k"] == k), None)
+    tg("answerCallbackQuery", callback_query_id=cq["id"])
+    if e:
+        tg("sendMessage", chat_id=cq["message"]["chat"]["id"], text=shablon(e)[1], parse_mode="HTML")
+    return False
+
 def handle_callback(st, cq):
     data = cq.get("data") or ""
+    if data.startswith("u|") and (cq.get("message") or {}).get("chat", {}).get("type") == "private":
+        return shablon_cb(st, cq)
     if data.startswith("t|") and (cq.get("message") or {}).get("chat", {}).get("id") == st.get("tahrir"):
         return handle_tahrir_cb(st, cq)
     msg = cq.get("message") or {}
@@ -1836,6 +1930,7 @@ def handle_roster_doc(st, m):
 
 # ================================================================ egasi buyruqlari
 HELP = """Boşqaruv buyruqlari (faqat siz uçun):
+(ustoz ismini oddiy yozsangiz — post shabloni keladi; Tahrir guruhi a'zolari ham şunday foydalanadi)
 /bugun — bugungi hisob
 /reyting — oylik reyting
 /rekordlar — rekordlar holati
@@ -1875,6 +1970,9 @@ def handle_private(st, m):
         st["owner"] = chat
         say(st, HELP)
         return True
+    if chat not in owners(st) and tahrir_azo(st, chat):       # Tahrir guruhi a'zosi — faqat shablon
+        shablon_javob(st, chat, text)
+        return False
     if chat not in owners(st):
         frm = m.get("from") or {}
         kut = st.setdefault("kutish", {})
@@ -1890,8 +1988,8 @@ def handle_private(st, m):
         return handle_roster_doc(st, m)
     if m.get("reply_to_message") and handle_answer_msg(st, m):
         return True
-    if not text.startswith("/"):
-        say(st, "Buyruqlar röyxati: /help")
+    if not text.startswith("/") or text.split("@")[0].lower() == "/shablon":
+        shablon_javob(st, chat, text if not text.startswith("/") else "")
         return False
     cmd, _, arg = text.partition(" ")
     cmd, arg = cmd.split("@")[0].lower(), arg.strip()
