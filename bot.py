@@ -2369,6 +2369,9 @@ def outbox_tick(st):
                             files={"video": (fn, fh, "video/mp4")})
                 elif ext == "pdf":
                     r_ = tg("sendDocument", chat_id=chat, caption=cap[:1024], files={"document": (fn, fh, "application/pdf")})
+                elif fn.lower().endswith("_doc.jpg"):        # asl sifatdagi fayl (siqilmaydi)
+                    r_ = tg("sendDocument", chat_id=chat, caption=cap[:1024],
+                            files={"document": (fn[:-8] + ".jpg", fh, "image/jpeg")})
                 else:
                     r_ = tg("sendPhoto", chat_id=chat, caption=cap[:1024], files={"photo": (fn, fh, "image/jpeg")})
             ok = ok or r_
