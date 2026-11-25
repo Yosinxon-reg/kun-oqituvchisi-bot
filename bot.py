@@ -1741,7 +1741,7 @@ def shablon(e):
          f"Filial: {e['filial']}\n"
          f"{fan_txt(e)}: {names.yangi(e['ism'])}\n"
          f"Dars: \n"
-         f"Natija: 25 ball — “Kun o‘qituvchisi”")
+         f"Natija: 25 ball — “Kun öqituvçisi”")
     return t, "<code>" + _h.escape(t) + "</code>"
 
 
