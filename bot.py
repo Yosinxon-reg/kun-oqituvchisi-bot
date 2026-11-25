@@ -2333,6 +2333,31 @@ OUTBOX = os.path.join(os.path.dirname(os.path.abspath(__file__)), "outbox")
 _last_pull = [0.0]
 
 
+def outbox_album(st, fn, path, targets, where):
+    """X_alb.jpg + X_alb.mp4 (+ X_alb.txt izoh) -> bitta albom: ikkalasi fayl sifatida, izoh oxirgisida."""
+    base = path[:-4]
+    vid = base + ".mp4"
+    if not os.path.exists(vid):
+        return False
+    key = f"{where}|alb|{fn}|{os.path.getsize(path)}|{os.path.getsize(vid)}"
+    if key in st["outbox_sent"]:
+        return False
+    cap = open(base + ".txt", encoding="utf-8").read().strip() if os.path.exists(base + ".txt") else ""
+    st["outbox_sent"].append(key)
+    save_state(st, f"outbox {fn}")
+    name = fn[:-8]
+    data, vdata = open(path, "rb").read(), open(vid, "rb").read()
+    ok = None
+    for chat in targets:
+        media = [{"type": "document", "media": "attach://cert"},
+                 {"type": "document", "media": "attach://vid", "caption": cap[:1024]}]
+        r_ = tg("sendMediaGroup", chat_id=chat, media=json.dumps(media, ensure_ascii=False),
+                files={"cert": (f"{name}.jpg", data, "image/jpeg"), "vid": (f"{name}.mp4", vdata, "video/mp4")})
+        ok = ok or r_
+    audit(st, "outbox", f"{fn} (+mp4 albom): {'yuborildi' if ok else 'XATO'}")
+    return True
+
+
 def outbox_tick(st):
     """outbox/ papkasidagi yangi fayllar (repo orqali) RegMon guruhiga bir marta yuboriladi. Izoh — şu nomli .txt."""
     if GIT_SYNC and time.time() - _last_pull[0] > 300:
@@ -2353,6 +2378,11 @@ def outbox_tick(st):
         if ext not in ("mp4", "jpg", "jpeg", "png", "pdf"):
             continue
         if os.path.isdir(path):
+            continue
+        if fn.lower().endswith("_alb.mp4"):              # albomning videosi — jpg bilan birga yuboriladi
+            continue
+        if fn.lower().endswith("_alb.jpg"):
+            changed |= outbox_album(st, fn, path, targets, where)
             continue
         key = f"{where}|{fn}|{os.path.getsize(path)}" if where != "regmon" else f"{fn}|{os.path.getsize(path)}"
         if key in st["outbox_sent"]:
