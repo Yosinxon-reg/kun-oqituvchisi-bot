@@ -307,6 +307,12 @@ def parse_post(text):
                 fan = re.sub(r"\s*ustozi?$", "", k.strip(), flags=re.I).lower()
                 fan = (fan + (" sinf" if _norm(fan).startswith("boshlan") or _norm(fan).startswith("boslan") else "") + " öqituvçisi")
                 break
+    if not ism and f.get("fan"):                          # «Fan: Ona tili ustozi: Ism Familiya»
+        m_ = re.match(r"^(.{2,40}?)\s*(ustozi?|öqituvçisi|o['ʻ‘’`]?qituvchisi|oqituvchisi)\s*[:;—–-]\s*(.+)$", f["fan"], re.I)
+        if m_:
+            ism, _ = split_name(m_.group(3))
+            fan = m_.group(1).strip().lower()
+            fan = fan + (" sinf" if _norm(fan).startswith(("boshlan", "boslan")) else "") + " öqituvçisi"
     has_person = ism is not None or "ustoz" in f
     if not has_person and "filial" not in f:
         return None                                       # oddiy yozişma
@@ -1337,7 +1343,7 @@ def reparse_fix(st, day, mids):
             deliver_now(st, r)
         elif r["cert_sent"]:
             fix_name(st, r, r["ism_r"] or p["ism"])
-        done.append(f"#{r['id']} «{old}» -> «{cname(r)}»")
+        done.append(f"#{r['id']} «{old}» -> «{cname(r)}»" if old else f"#{r['id']} {cname(r)} ({r['filial']})")
     audit(st, "qayta-öqiş", "; ".join(done))
     return done
 
@@ -1397,6 +1403,14 @@ def takror_check(st, r):
 
 
 def apply_fixes(st):
+    key = "fan-ustozi|2026-11-26"
+    if key not in st["fixes_done"] and st.get("group"):
+        st["fixes_done"].append(key)
+        save_state(st, key)
+        done = reparse_fix(st, "2026-11-26", [5855])
+        save_state(st, key + " tayyor")
+        if done:
+            say(st, "✏️ «Fan: … ustozi: Ism» shaklidagi post hisobga olindi, taşakkurnoma yuborildi:\n" + "\n".join(done))
     key = "takror-xumora|2026-11-24"
     if key not in st["fixes_done"]:
         st["fixes_done"].append(key)
