@@ -901,7 +901,7 @@ def make_video(st, r, n, ism, data):
         box = {}
         th = threading.Thread(target=lambda: box.setdefault("v", video.render(websayt.DIR, n, ents)), daemon=True)
         th.start()
-        th.join(300)                              # 5 daqiqadan oşsa — videosiz, faqat taşakkurnoma
+        th.join(600)                              # 10 daqiqadan oşsa — videosiz, faqat taşakkurnoma
         if th.is_alive():
             print(f"video #{n}: vaqt tugadi, videosiz yuboriladi", flush=True)
             return None

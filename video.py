@@ -45,7 +45,7 @@ def _browser(pw):
     raise RuntimeError("brauzer topilmadi")
 
 
-def render(site_dir, n, entries=None, timeout=240):
+def render(site_dir, n, entries=None, timeout=420):
     """-> MP4 baytlari. entries: barça taşakkurnomalar röyxati (yangisi bilan) — izoh va unvon raqami şundan hisoblanadi."""
     from playwright.sync_api import sync_playwright
     t0 = time.time()
@@ -61,11 +61,12 @@ def render(site_dir, n, entries=None, timeout=240):
             if entries:
                 p.evaluate("""(e) => { DATA.length = 0; DATA.push(...e); izohlar(); }""", entries)
             dur = p.evaluate("(n) => window.__kunScene(n)", int(n))
+            music = p.evaluate("() => window.__kunMusic || 'assets/taqdirlov.mp3'").split("?")[0]
             total = int(round(dur * FPS))
             ff = subprocess.Popen(
                 [_ffmpeg(), "-y", "-loglevel", "error",
                  "-f", "image2pipe", "-framerate", str(FPS), "-c:v", "mjpeg", "-i", "-",
-                 "-i", os.path.join(site_dir, "assets", "taqdirlov.mp3"),
+                 "-stream_loop", "-1", "-i", os.path.join(site_dir, *music.split("/")),
                  "-map", "0:v", "-map", "1:a", "-t", str(dur),
                  "-af", f"afade=t=out:st={dur - 2.2}:d=2.2",
                  "-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p",
