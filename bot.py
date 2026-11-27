@@ -427,7 +427,8 @@ def ingest(st, m, notify=True, edited=False):
          "fan": p["fan"], "dars": p["dars"], "natija": p["natija"], "matn": text[:600],
          "holat": "hisob" if p["tasdiq"] else "tekshir", "sabab": p["sabab"],
          "forward": bool(m.get("forward_origin") or m.get("forward_date")),
-         "paket": None, "cert": None, "cert_sent": False, "tuzatildi": False}
+         "paket": None, "cert": None, "cert_sent": False, "tuzatildi": False,
+         "author": author_of(m)}
     base = st["baseline"].get(month_of(r["sana"]))
     if base and r["sana"] <= base["as_of"]:
         r["holat"], r["sabab"] = "bekor", f"{base['as_of']} gaça boşlanğiç qoldiq içida — qayta qöşilmaydi"
@@ -2427,6 +2428,155 @@ def outbox_tick(st):
 
 
 # ================================================================ asosiy sikl
+
+# ================================================================ portal integratsiyasi (faqat maʼlumot almaşiş)
+PORTAL_URL = os.environ.get("PORTAL_URL", "").rstrip("/")
+PORTAL_ANON = os.environ.get("PORTAL_ANON", "")
+PORTAL_KEY = os.environ.get("PORTAL_KUN_KEY", "")
+PORTAL_FROM = "2026-11-01"
+
+
+def author_of(m):
+    f = m.get("from") or {}
+    if m.get("sender_chat") and not f.get("first_name"):
+        return (m["sender_chat"].get("title") or "").strip() or None
+    n = " ".join(x for x in (f.get("first_name"), f.get("last_name")) if x).strip()
+    return n or None
+
+
+def portal_on():
+    return bool(PORTAL_URL and PORTAL_ANON and PORTAL_KEY)
+
+
+def portal_rpc(fn, body, timeout=30):
+    r = requests.post(f"{PORTAL_URL}/rest/v1/rpc/{fn}", json=body, timeout=timeout,
+                      headers={"apikey": PORTAL_ANON, "Authorization": f"Bearer {PORTAL_ANON}",
+                               "Content-Type": "application/json"})
+    r.raise_for_status()
+    return r.json()
+
+
+def post_sana(r):
+    """Postdagi «Sana: 27.11.2026» (dars kuni); bölmasa — botning kuni."""
+    m = re.search(r"Sana\s*[:;]\s*(\d{1,2})[./-](\d{1,2})[./-](\d{4})", r.get("matn") or "")
+    if m:
+        try:
+            return dt.date(int(m.group(3)), int(m.group(2)), int(m.group(1))).isoformat()
+        except ValueError:
+            pass
+    return r["sana"]
+
+
+def portal_post(r):
+    return {"chat_id": r["chat"], "msg_id": r["mid"], "day": post_sana(r), "filial": r["filial"],
+            "teacher": cname(r), "subject": fan_of(r) or r.get("fan"),
+            "natija": "25 ball, Kun öqituvçisi", "ball": 25, "link": r.get("link"),
+            "author": r.get("author"), "posted_at": r.get("posted")}
+
+
+def portal_tick(st, t, force_day=None):
+    """Hisobdagi postlarni portalga yuboradi: yangi/özgarganlari (imzo bo'yiça), 17:55 da bugungi hammasi.
+    Portal ishlamasa — bot öz işini davom ettiradi (5 daqiqadan keyin qayta urinadi)."""
+    if not portal_on():
+        return False
+    ps = st.setdefault("portal", {"sig": {}, "next": 0, "full": "", "cmp": ""})
+    if time.time() < ps.get("next", 0):
+        return False
+    full = ish_kuni(t) and t.strftime("%H:%M") >= "17:55" and ps.get("full") != t.date().isoformat()
+    batch, sigs = [], {}
+    for r in st["results"]:
+        if r["holat"] != "hisob" or r["chat"] != st.get("group") or r["sana"] < PORTAL_FROM:
+            continue
+        p = portal_post(r)
+        sig = hashlib.md5(json.dumps(p, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:12]
+        if ps["sig"].get(str(r["id"])) != sig or (full and r["sana"] == t.date().isoformat()):
+            batch.append(p)
+            sigs[str(r["id"])] = sig
+    if not batch:
+        if full:
+            ps["full"] = t.date().isoformat()
+        return bool(full)
+    ok = 0
+    try:
+        for i in range(0, len(batch), 50):
+            res = portal_rpc("kun_push", {"k": PORTAL_KEY, "posts": batch[i:i + 50]})
+            ok += int((res or {}).get("ok", 0)) if isinstance(res, dict) else 0
+        ps["sig"].update(sigs)
+        if full:
+            ps["full"] = t.date().isoformat()
+        audit(st, "portal", f"kun_push: {len(batch)} ta yuborildi, portal javobi ok={ok}")
+        ps["next"] = time.time() + 60
+    except Exception as e:
+        ps["next"] = time.time() + 300
+        audit(st, "portal", f"kun_push xatosi (bot davom etadi): {type(e).__name__}")
+    return True
+
+
+def portal_cmp_tick(st, t):
+    """18:00 — portal bilan solişturuv xulosasi, faqat egasiga."""
+    if not portal_on() or not ish_kuni(t) or t.strftime("%H:%M") < "18:00":
+        return False
+    ps = st.setdefault("portal", {"sig": {}, "next": 0, "full": "", "cmp": ""})
+    d = t.date().isoformat()
+    if ps.get("cmp") == d or ps.get("cmp_next", 0) > time.time():
+        return False
+    try:
+        res = portal_rpc("kun_cmp_bot", {"k": PORTAL_KEY, "d": d})
+    except Exception as e:
+        ps["cmp_next"] = time.time() + 300
+        audit(st, "portal", f"kun_cmp_bot xatosi: {type(e).__name__}")
+        return True
+    ps["cmp"] = d
+    owner = st.get("owner")
+    if owner:
+        tg("sendMessage", chat_id=owner, text=portal_xabar(res, t.date()))
+    audit(st, "portal", "solişturuv xulosasi egasiga yuborildi")
+    return True
+
+
+PORTAL_HOLAT = [("guruhga chiqmagan", "⚠️", "Guruhga chiqmagan"), ("portalda yo'q", "❗", "Portalda yöq"),
+                ("portalda yo'q (amaliyot)", "❗", "Portalda yöq (amaliyot)"), ("ism topilmadi", "❓", "Ism topilmadi"),
+                ("farqli (filial)", "🔀", "Filiali farqli"), ("takror", "♻️", "Takror")]
+
+
+def portal_xabar(res, d):
+    res = res or {}
+    jami = res.get("jami") or {}
+    farq = res.get("farqlar") or []
+    mos = sum(v for k, v in jami.items() if str(k).startswith("mos") and isinstance(v, int))
+    head = f"🔎 Portal bilan solişturuv — {d.strftime('%d.%m')}"
+    if not farq:
+        return f"{head}\n✅ Bugun portal va guruh töliq mos ({mos} ta)"
+    lines = [head]
+    top = [f"✅ Mos: {mos}"] + [f"{e} {nom}: {jami[k]}" for k, e, nom in PORTAL_HOLAT if jami.get(k)]
+    lines.append(" · ".join(top))
+    for k, e, nom in PORTAL_HOLAT:
+        xs = [f for f in farq if f.get("holat") == k]
+        if not xs:
+            continue
+        lines.append(f"\n{e} {nom}:")
+        for f in xs[:25]:
+            det = [x for x in (f.get("fan"), f.get("filial")) if x]
+            info = []
+            if f.get("guruh"):
+                info.append(f"guruhda {f['guruh']}")
+            if f.get("portal"):
+                info.append(f"portalda {f['portal']}")
+            if f.get("kiritgan"):
+                info.append(f"kiritgan: {f['kiritgan']}")
+            if f.get("tashlagan"):
+                info.append(f"post: {f['tashlagan']}")
+            lines.append(f"• {f.get('ustoz') or '—'}" + (f" ({', '.join(det)})" if det else "") +
+                         (" — " + ", ".join(info) if info else ""))
+        if len(xs) > 25:
+            lines.append(f"… yana {len(xs) - 25} ta")
+    rest = [f for f in farq if f.get("holat") not in {k for k, _, _ in PORTAL_HOLAT}]
+    for f in rest[:10]:
+        lines.append(f"• {f.get('holat')}: {f.get('ustoz') or '—'} ({f.get('filial') or ''})")
+    lines.append("\nBatafsil: portal → Öqituvçilar → Kun ustozi → «Guruh bilan solişturuv»")
+    return "\n".join(lines)[:4000]
+
+
 def main():
     if GIT_SYNC:   # navbat kutib turgan bölsa ham — eng oxirgi holatdan boşlaymiz
         subprocess.run(["git", "fetch", "-q", "origin", "main"], check=False)
@@ -2503,6 +2653,11 @@ def main():
         try:
             if ish_kuni(now()):
                 changed |= fan_tick(st, now())
+        except Exception:
+            traceback.print_exc()
+        try:
+            changed |= portal_tick(st, now())
+            changed |= portal_cmp_tick(st, now())
         except Exception:
             traceback.print_exc()
         try:
