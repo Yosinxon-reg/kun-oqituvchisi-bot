@@ -1728,7 +1728,7 @@ def _phon_words(s):
 
 
 def ustoz_qidir(st, q):
-    qt = [w for w in _phon_words(q) if len(w) >= 2]
+    qt = [w for w in _phon_words(q) if len(w) >= 3]
     if not qt:
         return []
     out, seen = [], set()
@@ -2015,7 +2015,7 @@ def handle_roster_doc(st, m):
 
 # ================================================================ egasi buyruqlari
 HELP = """Boşqaruv buyruqlari (faqat siz uçun):
-(ustoz ismini oddiy yozsangiz — post shabloni keladi; Tahrir guruhi a'zolari ham şunday foydalanadi)
+/u ism — post shabloni (masalan: /u nigina)
 /bugun — bugungi hisob
 /reyting — oylik reyting
 /rekordlar — rekordlar holati
@@ -2075,8 +2075,11 @@ def handle_private(st, m):
         return handle_roster_doc(st, m)
     if m.get("reply_to_message") and handle_answer_msg(st, m):
         return True
-    if not text.startswith("/") or text.split("@")[0].lower() == "/shablon":
-        shablon_javob(st, chat, text if not text.startswith("/") else "")
+    head = text.split(" ")[0].split("@")[0].lower()
+    if head in ("/u", "/ustoz", "/shablon"):                # egasi uçun shablon faqat buyruq bilan
+        shablon_javob(st, chat, text.partition(" ")[2].strip())
+        return False
+    if not text.startswith("/"):                           # oddiy gap («ok», «rahmat») — javob bermaydi
         return False
     cmd, _, arg = text.partition(" ")
     cmd, arg = cmd.split("@")[0].lower(), arg.strip()
