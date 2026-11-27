@@ -403,123 +403,167 @@ const ease = t => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
 const clamp01 = t => Math.min(1, Math.max(0, t));
 
 async function buildScene(c, cvv){
-  const W = 1080, H = 1920, DUR = 26, g = cvv.getContext("2d");
-  await document.fonts.load("800 80px Montserrat"); await document.fonts.load("500 40px Montserrat"); await document.fonts.load("300 60px Montserrat");
-  await document.fonts.load("600 40px Montserrat"); await document.fonts.load("700 40px Montserrat");
-  const [cert, emb, embY] = await Promise.all([loadImg(c.img), loadImg("assets/registon-white.svg"), loadImg("assets/registon-yellow.svg")]);
-  const R = rng(c.n * 977 + 13), P = [];
-  const COLS = ["#F6B306", "#FFFFFF", "#8FA6E0", "#0D6D59", "#FFE7A3"];
-  for (let i = 0; i < 260; i++){ const a = R()*Math.PI*2, v = 9 + R()*26;
-    P.push({x: W/2, y: 760, vx: Math.cos(a)*v, vy: Math.sin(a)*v - 14, w: 12 + R()*16, h: 18 + R()*18, r: R()*6, vr: (R()-.5)*.35, c: COLS[i % 5]}); }
-  const RAIN = []; for (let i = 0; i < 120; i++) RAIN.push({x: R()*W, y: -R()*H, v: 4 + R()*6, w: 10 + R()*12, h: 16 + R()*14, r: R()*6, vr: (R()-.5)*.2, c: COLS[i % 5]});
-  const SPK = []; for (let i = 0; i < 46; i++) SPK.push({x: 60 + R()*(W-120), y: 300 + R()*1400, p: R()*6.28, s: 3 + R()*5});
-  const nameL = (() => { let fs = 92; g.font = `800 ${fs}px Montserrat`; let L = wrap(g, c.ism.toUpperCase(), 980);
-    while ((L.length > 2 || L.some(l => g.measureText(l).width > 980)) && fs > 56){ fs -= 4; g.font = `800 ${fs}px Montserrat`; L = wrap(g, c.ism.toUpperCase(), 980); } return {L, fs}; })();
-  const cw = 940, ch = cw * cert.naturalHeight / cert.naturalWidth;
-  // ---- izoh sahifasi: matn özi siğadigan şriftda ----
+  /* v3: oq 45% · kök 35% · tillarang 20%. Taşakkurnoma -> izoh jumlama-jumla -> yakun. Registon emblemasi mušakbozligi. */
+  const W = 1080, H = 1920, g = cvv.getContext("2d");
+  const BLUE = "#3955A1", NAVY = "#1B2340", GOLD = "#E9A90C", GOLD2 = "#F6C64A", SKY = "#EEF3FC";
+  for (const f of ["800 80px Montserrat", "700 40px Montserrat", "600 40px Montserrat", "500 40px Montserrat", "300 60px Montserrat"]) await document.fonts.load(f);
+  const [cert, embB, embW, embY] = await Promise.all([loadImg(c.img), loadImg("assets/registon.svg"), loadImg("assets/registon-white.svg"), loadImg("assets/registon-yellow.svg")]);
+  const R = rng(c.n * 977 + 13);
   const EMO = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]+/gu;
   const IZ = (c.izoh || "").replace(new RegExp("([^.!?…])\\s*" + EMO.source + "\\s+(?=[A-ZÖĞŞÇʻ])", "gu"), "$1. ")
     .replace(EMO, "").replace(/\s+([.!?,])/g, "$1").replace(/\s+/g, " ").trim();
-  const TW = 800, MAXH = 860;
-  const fit = (() => { let fs = 58, L, lh;
-    for (; fs >= 32; fs -= 2){ g.font = `500 ${fs}px Montserrat`; L = wrap(g, IZ, TW); lh = Math.round(fs * 1.45); if (L.length * lh <= MAXH) break; }
-    return {fs, L, lh}; })();
-  const w0 = c.ism.trim().split(/\s+/), kimga = (w0[1] || w0[0]) + " ustozga";
-  const cardH = 150 + fit.L.length * fit.lh + 60, cardY = Math.min(H - 300 - cardH, Math.max(600, Math.round(1100 - cardH/2)));
-  const T_IN = 8.9, T_TYPE = 9.8, TYPE_D = Math.min(10.5, Math.max(5, IZ.length * 0.05));
-  let lastT = 0;
+  // jumlalar: har biriga öqişga yetarli vaqt
+  const SENT = IZ ? IZ.split(/(?<=[.!?])\s+(?=[A-ZÖĞŞÇ«“"])/u).filter(Boolean) : [];
+  const TW = 860;
+  const SL = SENT.map((s, i) => { const last = i === SENT.length - 1 && SENT.length > 1;
+    let fs = last ? 76 : 66, L; for (; fs >= 44; fs -= 2){ g.font = `${last ? 800 : 600} ${fs}px Montserrat`; L = wrap(g, s, TW); if (L.length <= 6) break; }
+    const words = s.split(" ").length; return {s, L, fs, last, d: Math.max(3.4, Math.min(7.5, 1.2 + words * 0.36))}; });
+  const T1 = 11.0;                                    // izoh sahnasi boşlanişi
+  let acc = T1 + 1.0; for (const x of SL){ x.t0 = acc; acc += x.d; }
+  const T2 = acc + 0.2, DUR = Math.max(30, Math.min(48, T2 + 6.0));
+  const nameL = (() => { let fs = 88; g.font = `800 ${fs}px Montserrat`; let L = wrap(g, c.ism, 960);
+    while ((L.length > 2 || L.some(l => g.measureText(l).width > 960)) && fs > 54){ fs -= 4; g.font = `800 ${fs}px Montserrat`; L = wrap(g, c.ism, 960); } return {L, fs}; })();
+  const cw = 900, ch = cw * cert.naturalHeight / cert.naturalWidth;
+  const w0 = c.ism.trim().split(/\s+/), kimga = w0.length >= 3 ? w0.slice(1).join(" ") : (w0[1] || w0[0]) + " ustoz";
+  const seg = (t, a, b) => clamp01((t - a) / (b - a));
+  const back = x => { x = clamp01(x); const k = 1.9; return 1 + (k + 1) * Math.pow(x - 1, 3) + k * Math.pow(x - 1, 2); };
+  // emblem mušakbozligi: [vaqt, x, y, soni, kuç]
+  const BURSTS = [[3.4, W/2, 640, 34, 1.15], [4.6, 230, 420, 18, .8], [5.4, 850, 380, 18, .8], [T2 + .3, W/2, 760, 34, 1.15], [T2 + 1.4, 250, 520, 18, .85], [T2 + 2.3, 830, 460, 18, .85]];
+  const PB = []; for (const [t0, x, y, n, k] of BURSTS) for (let i = 0; i < n; i++){
+    const a = i / n * 6.283 + R() * .3, v = (380 + R() * 420) * k;
+    PB.push({t0, x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 220 * k, r: R() * 6.28, vr: (R() - .5) * 4, s: 52 + R() * 40, gold: R() < .55}); }
+  const RAIN = []; for (let i = 0; i < 30; i++) RAIN.push({x: R() * W, y0: R() * H, v: 120 + R() * 150, sw: R() * 6.28, s: 40 + R() * 30, gold: i % 5 < 2, r: R() * 6.28});
+  const SPK = []; for (let i = 0; i < 40; i++) SPK.push({x: R() * W, y: R() * H, p: R() * 6.28, s: 2 + R() * 4});
+  function emb(img, x, y, w, rot, flip, a){ if (a <= 0) return; const h = w * 172 / 241; g.save(); g.globalAlpha = a; g.translate(x, y); g.rotate(rot);
+    g.scale(1, .45 + .55 * Math.abs(flip)); g.drawImage(img, -w/2, -h/2, w, h); g.restore(); }
   function bg(t){
-    const gr = g.createRadialGradient(W/2, 700, 50, W/2, 900, 1300); gr.addColorStop(0, "#2C4590"); gr.addColorStop(.55, "#1B2340"); gr.addColorStop(1, "#0E1428");
+    const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#FFFFFF"); gr.addColorStop(.6, "#FFFFFF"); gr.addColorStop(1, SKY);
     g.fillStyle = gr; g.fillRect(0, 0, W, H);
-    g.save(); g.translate(W/2, t < T_IN ? 760 : 760 + 300*ease((t - T_IN)/1.2)); g.rotate(t * .12);
-    for (let i = 0; i < 24; i++){ g.rotate(Math.PI*2/24); g.fillStyle = "rgba(246,179,6,0.07)"; g.beginPath(); g.moveTo(0,0); g.lineTo(-70, -1400); g.lineTo(70, -1400); g.closePath(); g.fill(); }
-    g.restore();
+    // tillarang nurlar (markazdan)
+    const ri = .55 * seg(t, 3.2, 4.2) * (1 - seg(t, T1 - .8, T1)) + .45 * seg(t, T2, T2 + 1);
+    if (ri > 0){ g.save(); g.translate(W/2, t < T1 ? 640 : 760); g.rotate(t * .1);
+      for (let i = 0; i < 28; i++){ g.rotate(6.283 / 28); g.fillStyle = `rgba(246,198,74,${.16 * ri})`; g.beginPath(); g.moveTo(0, 0); g.lineTo(-60, -1500); g.lineTo(60, -1500); g.closePath(); g.fill(); }
+      g.restore(); }
+    // yuqori va pastki kök hoşiya
+    g.fillStyle = BLUE; g.fillRect(0, 0, W, 14); g.fillRect(0, H - 120, W, 120);
+    g.fillStyle = GOLD; g.fillRect(0, H - 124, W, 6);
+    g.fillStyle = "#fff"; g.font = "600 30px Montserrat"; g.textAlign = "center"; g.fillText("REGISTAN SCHOOL · MONITORING BÖLIMI", W/2, H - 48);
+    // yaltiroq zarralar
+    for (const s of SPK){ const a = (Math.sin(t * 2 + s.p) + 1) / 2; g.fillStyle = `rgba(233,169,12,${.35 * a})`; g.beginPath(); g.arc(s.x, s.y, s.s, 0, 6.283); g.fill(); }
+  }
+  function particles(t){
+    for (const p of PB){ const s = t - p.t0; if (s < 0 || s > 3.2) continue;
+      const dr = (1 - Math.exp(-s * 1.6)) / 1.6;
+      emb(p.gold ? embY : embB, p.x + p.vx * dr, p.y + p.vy * dr + 260 * s * s, p.s * (1 - s * .12), p.r + p.vr * s, Math.cos(s * 3 + p.r), 1 - seg(s, 2.2, 3.2)); }
+    const ra = seg(t, 4, 5) * (1 - seg(t, T1 - 1, T1)) * .7 + seg(t, T2, T2 + 1) * .6 * (1 - seg(t, DUR - 1.5, DUR - .5));
+    if (ra > 0) for (const q of RAIN){ const y = ((q.y0 + t * q.v) % (H + 80)) - 40;
+      emb(q.gold ? embY : embB, q.x + Math.sin(t * 1.4 + q.sw) * 26, y, q.s, q.r + Math.sin(t * 1.2 + q.sw) * .8, Math.cos(t * 1.8 + q.sw), ra * .8); }
+  }
+  function flash(t){
+    const f = Math.max(seg(t, 3.15, 3.4) * (1 - seg(t, 3.4, 4.0)), (t > T2 ? 1 - seg(t, T2, T2 + .6) : 0) * .8);
+    if (f > 0){ const gr = g.createRadialGradient(W/2, 700, 0, W/2, 700, 1100); gr.addColorStop(0, `rgba(255,236,170,${f})`); gr.addColorStop(1, `rgba(255,255,255,${f * .7})`);
+      g.fillStyle = gr; g.fillRect(0, 0, W, H); }
   }
   function frame(t){
-    const dt = Math.min(.1, t - lastT); lastT = t;
     bg(t);
-    const outA = 1 - ease((t - 8.4) / 0.9);            // 1-sahna çiqib ketadi
-    // ===== 1-sahna: emblem, taşakkurnoma, ism =====
-    if (outA > 0){
-      g.save(); g.globalAlpha = outA; g.translate(W/2, H/2); g.scale(1 - .08*(1-outA), 1 - .08*(1-outA)); g.translate(-W/2, -H/2 - 120*(1-outA));
-      const e1 = ease(t / 1.4), e2 = ease((t - 2.4) / 1.0);
-      const es = (0.6 + 0.4*e1) * (1 - 0.55*e2), ey = 760 - 560*e2;
-      g.save(); g.globalAlpha *= e1; g.shadowColor = "rgba(246,179,6,.9)"; g.shadowBlur = 80;
-      const ew = 360*es, eh = ew * 172/241; g.drawImage(t < 2.4 ? emb : embY, W/2 - ew/2, ey - eh/2, ew, eh); g.restore();
-      if (t < 2.6){ g.save(); g.globalAlpha *= clamp01(t - .6) * (1 - clamp01((t - 2.2)/.4)); g.fillStyle = "#F6B306"; g.font = "700 46px Montserrat"; g.textAlign = "center";
-        g.fillText("T A B R I K L A Y M I Z", W/2, 1060); g.fillStyle = "#fff"; g.font = "300 54px Montserrat"; g.fillText("Hurmatli ustoz", W/2, 1150); g.restore(); }
-      const k = ease((t - 2.6) / 1.4);
-      if (t > 2.6){
-        g.save(); g.translate(W/2, 640 + (1-k)*500); g.rotate((1-k) * -.12); g.scale(.75 + .25*k, .75 + .25*k); g.globalAlpha *= k;
-        g.shadowColor = "rgba(246,179,6,.75)"; g.shadowBlur = 70 + 30*Math.sin(t*3);
-        g.fillStyle = "#fff"; g.fillRect(-cw/2 - 8, -ch/2 - 8, cw + 16, ch + 16); g.shadowBlur = 0;
-        g.drawImage(cert, -cw/2, -ch/2, cw, ch); g.restore();
-      }
-      const kn = ease((t - 3.6) / 1.0);
-      if (t > 3.6){
-        g.save(); g.globalAlpha *= kn; g.textAlign = "center";
-        let y = 1080 + (1-kn)*40; g.fillStyle = "#F6B306"; g.font = "700 36px Montserrat"; g.fillText("«KUN ÖQITUVÇISI»", W/2, y); y += 30;
-        g.fillStyle = "#fff"; g.font = `800 ${nameL.fs}px Montserrat`;
-        for (const l of nameL.L){ y += nameL.fs * 1.05; g.fillText(l, W/2, y); }
-        y += 58; g.font = "500 34px Montserrat"; g.fillStyle = "rgba(255,255,255,.8)";
-        g.fillText(`${c.filial} filiali · ${c.fan}`, W/2, y); y += 46; g.fillText(`${sana(c.sana)} · № ${pad(c.n)}`, W/2, y);
-        g.fillStyle = "#F6B306"; g.font = "700 34px Montserrat"; y += 56; g.fillText(`${"★".repeat(Math.min(c.nth, 10))}  ${c.nth}-unvon`, W/2, y);
-        g.restore();
+    g.textAlign = "center";
+    // ===== 0) kiriş: emblema =====
+    if (t < 4.2){
+      const e1 = ease(t / 1.3), out = seg(t, 3.3, 4.0);
+      emb(embB, W/2, 700 - out * 120, 380 * (.7 + .3 * e1) * (1 + out * .2), 0, 1, e1 * (1 - out));
+      // tillarang halqa
+      const rr = seg(t, .4, 2.2); if (rr > 0 && rr < 1){ g.save(); g.strokeStyle = `rgba(233,169,12,${1 - rr})`; g.lineWidth = 10; g.beginPath(); g.arc(W/2, 700, 160 + rr * 300, 0, 6.283); g.stroke(); g.restore(); }
+      const ta = seg(t, 1.0, 1.8) * (1 - out);
+      g.globalAlpha = ta; g.fillStyle = GOLD; g.font = "700 46px Montserrat"; g.fillText("T A B R I K L A Y M I Z", W/2, 1180);
+      g.fillStyle = NAVY; g.font = "300 56px Montserrat"; g.fillText("Hurmatli ustoz", W/2, 1270); g.globalAlpha = 1;
+    }
+    // ===== 1) taşakkurnoma + ism =====
+    const o1 = 1 - seg(t, T1 - .8, T1);
+    if (t > 3.4 && o1 > 0){
+      g.save(); g.globalAlpha = o1;
+      const k = back(seg(t, 3.5, 4.8));
+      g.save(); g.translate(W/2, 560 - (1 - o1) * 80); g.scale(.6 + .4 * k, .6 + .4 * k); g.globalAlpha = o1 * clamp01(k * 2);
+      g.shadowColor = "rgba(233,169,12,.55)"; g.shadowBlur = 60 + 20 * Math.sin(t * 3); g.fillStyle = "#fff"; g.fillRect(-cw/2 - 10, -ch/2 - 10, cw + 20, ch + 20);
+      g.shadowBlur = 0; g.strokeStyle = GOLD; g.lineWidth = 4; g.strokeRect(-cw/2 - 10, -ch/2 - 10, cw + 20, ch + 20);
+      g.drawImage(cert, -cw/2, -ch/2, cw, ch);
+      // yaltiroq nur
+      const sh = seg(t, 5.0, 6.2); if (sh > 0 && sh < 1){ const x = -cw/2 - 200 + sh * (cw + 400); const gr = g.createLinearGradient(x - 120, 0, x + 120, 0);
+        gr.addColorStop(0, "rgba(255,255,255,0)"); gr.addColorStop(.5, "rgba(255,255,255,.65)"); gr.addColorStop(1, "rgba(255,255,255,0)"); g.fillStyle = gr; g.fillRect(-cw/2, -ch/2, cw, ch); }
+      g.restore();
+      const kn = ease(seg(t, 5.6, 6.6));
+      if (kn > 0){
+        g.globalAlpha = o1 * kn; let y = 560 + ch/2 + 120 + (1 - kn) * 40;
+        g.fillStyle = GOLD; g.font = "700 38px Montserrat"; g.fillText("«KUN ÖQITUVÇISI»", W/2, y); y += 24;
+        g.fillStyle = NAVY; g.font = `800 ${nameL.fs}px Montserrat`;
+        for (const l of nameL.L){ y += nameL.fs * 1.08; g.fillText(l, W/2, y); }
+        const uw = 220 * ease(seg(t, 6.4, 7.2)); g.fillStyle = GOLD; g.fillRect(W/2 - uw/2, y + 26, uw, 7);
+        y += 96; g.font = "600 36px Montserrat"; g.fillStyle = BLUE; g.fillText(`${c.filial} filiali · ${c.fan}`, W/2, y);
+        y += 52; g.font = "500 32px Montserrat"; g.fillStyle = "#5A6585"; g.fillText(`${sana(c.sana)} · № ${pad(c.n)}`, W/2, y);
+        const ba = ease(seg(t, 7.0, 7.8)); if (ba > 0){ y += 88; g.globalAlpha = o1 * ba;
+          const txt = c.nth > 1 ? `${"★".repeat(Math.min(c.nth, 10))}  ${c.nth}-unvon` : "★  Ilk unvon";
+          g.font = "700 36px Montserrat"; const bw = g.measureText(txt).width + 70;
+          g.fillStyle = BLUE; g.beginPath(); g.roundRect ? g.roundRect(W/2 - bw/2, y - 52, bw, 74, 37) : g.rect(W/2 - bw/2, y - 52, bw, 74); g.fill();
+          g.fillStyle = GOLD2; g.fillText(txt, W/2, y); }
       }
       g.restore();
     }
-    // konfetti
-    if (t > 2.4){ const st = (t - 2.4);
-      for (const p of P){ if (st > 6) break; p.vy += 0.6; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr;
-        g.save(); g.translate(p.x, p.y); g.rotate(p.r); g.fillStyle = p.c; g.fillRect(-p.w/2, -p.h/2, p.w, p.h*Math.abs(Math.cos(p.r*1.7))); g.restore(); } }
-    if (t > 4){ const ra = t > T_IN ? .35 : .85;
-      for (const p of RAIN){ p.y += p.v * (dt*60); p.r += p.vr; if (p.y > H + 40) p.y = -40;
-        g.save(); g.globalAlpha = ra; g.translate(p.x, p.y); g.rotate(p.r); g.fillStyle = p.c; g.fillRect(-p.w/2, -p.h/2, p.w, p.h*Math.abs(Math.cos(p.r*1.7))); g.restore(); } }
-    // ===== 2-sahna: monitoring bölimi izohi (alohida sahifa) =====
-    if (t > T_IN && IZ){
-      const bi = ease((t - T_IN) / 1.0);
-      // yulduzçalar
-      for (const s of SPK){ const a = (Math.sin(t*2.2 + s.p) + 1) / 2 * bi;
-        g.save(); g.globalAlpha = a * .8; g.fillStyle = "#FFE7A3"; g.shadowColor = "#F6B306"; g.shadowBlur = 18;
-        g.beginPath(); g.arc(s.x, s.y, s.s * (.6 + a*.6), 0, 6.283); g.fill(); g.restore(); }
-      g.save(); g.globalAlpha = bi; g.textAlign = "center";
-      // tepa: emblem + sarlavha
-      const ty = 170 + (1-bi)*-60;
-      g.shadowColor = "rgba(246,179,6,.8)"; g.shadowBlur = 50; g.drawImage(embY, W/2 - 95, ty, 190, 136); g.shadowBlur = 0;
-      g.fillStyle = "#F6B306"; g.font = "700 34px Montserrat"; g.fillText("M O N I T O R I N G   B Ö L I M I", W/2, ty + 210);
-      g.fillStyle = "rgba(255,255,255,.9)"; g.font = "300 50px Montserrat"; g.fillText(kimga, W/2, ty + 290);
-      g.fillStyle = "#F6B306"; g.fillRect(W/2 - 50, ty + 320, 100, 5);
-      // kartoçka
-      const cy = cardY + (1-bi)*160;
-      g.shadowColor = "rgba(0,0,0,.35)"; g.shadowBlur = 60; g.shadowOffsetY = 20; g.fillStyle = "#FFFFFF";
-      g.beginPath(); g.roundRect ? g.roundRect(80, cy, W - 160, cardH, 44) : g.rect(80, cy, W - 160, cardH); g.fill();
-      g.shadowColor = "transparent"; g.shadowBlur = 0; g.shadowOffsetY = 0;
-      g.fillStyle = "#F6B306"; g.fillRect(80, cy + 44, 10, cardH - 88);
-      g.fillStyle = "#F6B306"; g.font = "800 190px Montserrat"; g.textAlign = "left"; g.fillText("“", 112, cy + 170);
-      // yoziluvçi matn
-      const shown = Math.floor(clamp01((t - T_TYPE) / TYPE_D) * IZ.length);
-      g.fillStyle = "#1B2340"; g.font = `500 ${fit.fs}px Montserrat`; let left = shown, lastX = 140, lastY = cy + 150;
-      fit.L.forEach((l, i) => { if (left <= 0) return; const part = l.slice(0, left); const y = cy + 150 + i*fit.lh + fit.fs*.35;
-        g.fillText(part, 140, y); lastX = 140 + g.measureText(part).width; lastY = y; left -= l.length + 1; });
-      const typing = t > T_TYPE && shown < IZ.length;
-      if (typing && Math.floor(t * 3) % 2 === 0){ g.fillStyle = "#3955A1"; g.fillRect(lastX + 6, lastY - fit.fs*.8, 5, fit.fs*.95); }
-      const sa = ease((t - (T_TYPE + TYPE_D + .2)) / .8);
-      // pastida: unvon
-      if (sa > 0){ g.globalAlpha = bi * sa; g.textAlign = "center"; g.fillStyle = "#F6B306"; g.font = "700 40px Montserrat";
-        g.fillText(`${"★".repeat(Math.min(c.nth, 10))}   ${c.nth}-«Kun öqituvçisi» unvoni`, W/2, cy + cardH + 90); }
+    // ===== 2) monitoring izohi — jumlama-jumla =====
+    if (t > T1 - .2 && t < T2 + .8 && SL.length){
+      const bi = ease(seg(t, T1 - .2, T1 + .8)), bo = 1 - seg(t, T2, T2 + .7);
+      g.save(); g.globalAlpha = bi * bo;
+      // kök sarlavha bloki
+      const hy = 150 - (1 - bi) * 80;
+      g.fillStyle = BLUE; g.beginPath(); g.roundRect ? g.roundRect(70, hy, W - 140, 330, 40) : g.rect(70, hy, W - 140, 330); g.fill();
+      emb(embW, W/2, hy + 105, 150, 0, 1, bi * bo);
+      g.fillStyle = GOLD2; g.font = "700 32px Montserrat"; g.fillText("M O N I T O R I N G   B Ö L I M I", W/2, hy + 222);
+      g.fillStyle = "#fff"; g.font = "500 44px Montserrat"; g.fillText(kimga + "ga", W/2, hy + 290);
+      // jumla kartoçkasi (oç kök fon, tillarang çiziq)
+      g.fillStyle = SKY; g.beginPath(); g.roundRect ? g.roundRect(70, 560, W - 140, 900, 40) : g.rect(70, 560, W - 140, 900); g.fill();
+      g.fillStyle = GOLD; g.fillRect(70, 620, 12, 780);
+      g.fillStyle = "rgba(233,169,12,.35)"; g.font = "800 220px Montserrat"; g.textAlign = "left"; g.fillText("“", 110, 760); g.textAlign = "center";
+      // jumlalar
+      SL.forEach((x, i) => {
+        const a = ease(seg(t, x.t0, x.t0 + .6)), z = i === SL.length - 1 ? 0 : seg(t, x.t0 + x.d - .45, x.t0 + x.d);
+        if (a <= 0 || z >= 1) return;
+        const words = x.s.split(" "), wr = seg(t, x.t0, x.t0 + Math.min(1.6, words.length * .07));
+        g.save(); g.globalAlpha = bi * bo * a * (1 - z);
+        g.font = `${x.last ? 800 : 600} ${x.fs}px Montserrat`; const lh = Math.round(x.fs * 1.42);
+        const blockH = x.L.length * lh, y0 = 1010 - blockH / 2 + (1 - a) * 40 - z * 40;
+        if (x.last){ g.fillStyle = GOLD; } else { g.fillStyle = NAVY; }
+        let shown = Math.ceil(wr * words.length), wi = 0;
+        x.L.forEach((l, li) => { const lw = l.split(" "); const vis = lw.slice(0, Math.max(0, shown - wi)).join(" "); wi += lw.length;
+          if (!vis) return; g.textAlign = "left"; const full = g.measureText(l).width; g.fillText(vis, W/2 - full/2, y0 + li * lh + x.fs); });
+        g.textAlign = "center"; g.restore();
+      });
+      // jumla nuqtalari
+      const cur = SL.findIndex(x => t < x.t0 + x.d); const ci = cur < 0 ? SL.length - 1 : cur;
+      SL.forEach((x, i) => { g.fillStyle = i === ci ? GOLD : "rgba(57,85,161,.25)"; g.beginPath(); g.arc(W/2 + (i - (SL.length - 1)/2) * 40, 1560, i === ci ? 11 : 8, 0, 6.283); g.fill(); });
+      g.fillStyle = BLUE; g.font = "600 34px Montserrat"; g.globalAlpha = bi * bo * seg(t, SL[SL.length-1].t0 + .8, SL[SL.length-1].t0 + 1.6);
+      g.fillText(c.imzo || "— Registon monitoring bölimi", W/2, 1660);
       g.restore();
     }
-    g.save(); g.globalAlpha = .75; g.fillStyle = "#fff"; g.font = "600 28px Montserrat"; g.textAlign = "center";
-    g.fillText("REGISTAN SCHOOL · MONITORING BÖLIMI", W/2, H - 70); g.restore();
-    if (t > DUR - 1.2){ g.fillStyle = `rgba(14,20,40,${clamp01((t - DUR + 1.2)/1.2)})`; g.fillRect(0, 0, W, H); }
+    // ===== 3) yakun =====
+    if (t > T2){
+      const e = ease(seg(t, T2 + .2, T2 + 1.2)); g.save(); g.globalAlpha = e;
+      emb(embB, W/2, 560, 260 * (0.8 + .2 * back(seg(t, T2 + .2, T2 + 1.2))), 0, 1, e);
+      let y = 860; g.fillStyle = GOLD; g.font = "700 40px Montserrat"; g.fillText("«KUN ÖQITUVÇISI»", W/2, y); y += 20;
+      g.fillStyle = NAVY; g.font = `800 ${nameL.fs}px Montserrat`; for (const l of nameL.L){ y += nameL.fs * 1.08; g.fillText(l, W/2, y); }
+      g.fillStyle = GOLD; g.fillRect(W/2 - 110, y + 30, 220, 7);
+      y += 110; g.fillStyle = BLUE; g.font = "600 36px Montserrat"; g.fillText(`${c.filial} filiali · ${sana(c.sana)}`, W/2, y);
+      y += 100; g.fillStyle = GOLD; g.font = "800 54px Montserrat"; g.fillText("TABRIKLAYMIZ!", W/2, y);
+      g.restore();
+    }
+    particles(t); flash(t);
+    if (t > DUR - 1.0){ g.fillStyle = `rgba(255,255,255,${seg(t, DUR - 1.0, DUR)})`; g.fillRect(0, 0, W, H); }
   }
-  return {frame, DUR};
+  return {frame, DUR, music: "assets/marosim.mp3"};
 }
 window.__kunScene = async (n) => {          // server: bot bu orqali videoni kadrma-kadr yasaydi
   const c = DATA.find(x => x.n === n); if (!c) throw new Error("topilmadi " + n);
   const cv = document.createElement("canvas"); cv.width = 1080; cv.height = 1920;
   const sc = await buildScene(c, cv);
   window.__kunFrame = (t) => { sc.frame(t); return cv.toDataURL("image/jpeg", 0.9); };
+  window.__kunMusic = sc.music || "assets/taqdirlov.mp3";
   return sc.DUR;
 };
 
@@ -537,9 +581,9 @@ async function makeVideo(c){
   try {
     const sc = await buildScene(c, cvv), frame = sc.frame; DUR = sc.DUR;
     ac = new (window.AudioContext || window.webkitAudioContext)(); await ac.resume();
-    const buf = await ac.decodeAudioData(await (await fetch("assets/taqdirlov.mp3")).arrayBuffer());
+    const buf = await ac.decodeAudioData(await (await fetch(sc.music || "assets/taqdirlov.mp3")).arrayBuffer());
     const dest = ac.createMediaStreamDestination(), gain = ac.createGain(), srcN = ac.createBufferSource();
-    srcN.buffer = buf; srcN.connect(gain); gain.connect(dest); gain.connect(ac.destination);
+    srcN.buffer = buf; srcN.loop = true; srcN.connect(gain); gain.connect(dest); gain.connect(ac.destination);
     gain.gain.setValueAtTime(1, ac.currentTime + DUR - 2.2); gain.gain.linearRampToValueAtTime(0, ac.currentTime + DUR);
     stream = new MediaStream([...cvv.captureStream(30).getVideoTracks(), ...dest.stream.getAudioTracks()]);
     const types = ['video/mp4;codecs="avc1.42E01E,mp4a.40.2"', 'video/mp4;codecs="avc1,mp4a"', "video/mp4;codecs=avc1", "video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm", "video/mp4"];
