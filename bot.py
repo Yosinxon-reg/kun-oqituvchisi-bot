@@ -2069,6 +2069,8 @@ def handle_private(st, m):
             return True
         tg("sendMessage", chat_id=chat, text="Bu bot faqat Monitoring bölimi rahbari uçun. Sörovingiz rahbarda turibdi.")
         return False
+    if m.get("document") and "kalit" in m["document"].get("file_name", "").lower() and chat == st.get("owner"):
+        return handle_portal_key(st, m)
     if m.get("document") and (m["document"].get("file_name", "").lower().endswith(".txt")):
         return handle_roster_doc(st, m)
     if m.get("reply_to_message") and handle_answer_msg(st, m):
@@ -2447,10 +2449,37 @@ def author_of(m):
 PORTAL_SITE = "https://yosinxon-reg.github.io/monitoring-portal/"
 
 
-def portal_on():
+def handle_portal_key(st, m):
+    """Egasi kun_bot_kalit.txt faylini botga taşlaydi -> kalit şifrlangan holatda saqlanadi, xabar öçiriladi."""
+    global PORTAL_KEY
+    d = m["document"]
+    val = ""
+    try:
+        f = tg("getFile", file_id=d["file_id"])
+        if f and d.get("file_size", 0) < 4096:
+            val = requests.get(f"https://api.telegram.org/file/bot{TOKEN}/{f['file_path']}", timeout=30).text.strip()
+    except Exception:
+        traceback.print_exc()
+    tg("deleteMessage", chat_id=m["chat"]["id"], message_id=m["message_id"])
+    if not val or len(val) < 16 or len(val) > 400 or "\n" in val:
+        tg("sendMessage", chat_id=m["chat"]["id"], text="⚠️ Kalit faylini öqib bölmadi. kun_bot_kalit.txt faylini qayta taşlang.")
+        return False
+    st["portal_kun_key"] = val
+    PORTAL_KEY = val
+    st.setdefault("portal", {"sig": {}, "next": 0, "full": "", "cmp": ""})["next"] = 0
+    audit(st, "portal", "portal kaliti egasidan qabul qilindi (şifrlangan holatda saqlandi)")
+    tg("sendMessage", chat_id=m["chat"]["id"],
+       text="✅ Portal kaliti qabul qilindi va xavfsiz saqlandi (fayl xabari öçirildi).\n"
+            "Postlar portalga yuborila boşlaydi, 18:00 da solişturuv xulosasi faqat sizga keladi.")
+    return True
+
+
+def portal_on(st=None):
     """Ochiq (anon) kalit va manzil — secret bölmasa, portal saytining özidan olinadi (u yerda ochiq turadi).
     Maxfiy PORTAL_KUN_KEY esa faqat GitHub Secrets'dan."""
-    global PORTAL_URL, PORTAL_ANON
+    global PORTAL_URL, PORTAL_ANON, PORTAL_KEY
+    if not PORTAL_KEY and st is not None and st.get("portal_kun_key"):
+        PORTAL_KEY = st["portal_kun_key"]
     if PORTAL_KEY and not (PORTAL_URL and PORTAL_ANON) and not getattr(portal_on, "tried", 0) > time.time() - 3600:
         portal_on.tried = time.time()
         try:
@@ -2495,7 +2524,7 @@ def portal_post(r):
 def portal_tick(st, t, force_day=None):
     """Hisobdagi postlarni portalga yuboradi: yangi/özgarganlari (imzo bo'yiça), 17:55 da bugungi hammasi.
     Portal ishlamasa — bot öz işini davom ettiradi (5 daqiqadan keyin qayta urinadi)."""
-    if not portal_on():
+    if not portal_on(st):
         return False
     ps = st.setdefault("portal", {"sig": {}, "next": 0, "full": "", "cmp": ""})
     if time.time() < ps.get("next", 0):
@@ -2532,7 +2561,7 @@ def portal_tick(st, t, force_day=None):
 
 def portal_cmp_tick(st, t):
     """18:00 — portal bilan solişturuv xulosasi, faqat egasiga."""
-    if not portal_on() or not ish_kuni(t) or t.strftime("%H:%M") < "18:00":
+    if not portal_on(st) or not ish_kuni(t) or t.strftime("%H:%M") < "18:00":
         return False
     ps = st.setdefault("portal", {"sig": {}, "next": 0, "full": "", "cmp": ""})
     d = t.date().isoformat()
