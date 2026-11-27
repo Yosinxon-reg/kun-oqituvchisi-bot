@@ -2444,7 +2444,25 @@ def author_of(m):
     return n or None
 
 
+PORTAL_SITE = "https://yosinxon-reg.github.io/monitoring-portal/"
+
+
 def portal_on():
+    """Ochiq (anon) kalit va manzil — secret bölmasa, portal saytining özidan olinadi (u yerda ochiq turadi).
+    Maxfiy PORTAL_KUN_KEY esa faqat GitHub Secrets'dan."""
+    global PORTAL_URL, PORTAL_ANON
+    if PORTAL_KEY and not (PORTAL_URL and PORTAL_ANON) and not getattr(portal_on, "tried", 0) > time.time() - 3600:
+        portal_on.tried = time.time()
+        try:
+            html = requests.get(PORTAL_SITE, timeout=20).text
+            if not PORTAL_ANON:
+                m = re.search(r"SUPABASE_ANON_KEY\s*[=:]\s*[\"'`]([^\"'`]+)", html)
+                PORTAL_ANON = m.group(1) if m else ""
+            if not PORTAL_URL:
+                m = re.search(r"SUPABASE_URL\s*[=:]\s*[\"'`]([^\"'`]+)", html)
+                PORTAL_URL = (m.group(1) if m else "").rstrip("/")
+        except Exception:
+            traceback.print_exc()
     return bool(PORTAL_URL and PORTAL_ANON and PORTAL_KEY)
 
 
