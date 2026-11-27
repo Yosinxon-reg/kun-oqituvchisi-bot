@@ -38,6 +38,9 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           STATE_KEY: ${{ secrets.STATE_KEY }}
+          PORTAL_URL: ${{ secrets.PORTAL_URL }}
+          PORTAL_ANON: ${{ secrets.PORTAL_ANON }}
+          PORTAL_KUN_KEY: ${{ secrets.PORTAL_KUN_KEY }}
           RUN_SECONDS: "20400"
           GIT_SYNC: "1"
         run: |
